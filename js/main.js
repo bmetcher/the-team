@@ -7,7 +7,7 @@ const state = {
     
 }
 
-
+console.log("hi")
 function update() {
     
 }
