@@ -11,4 +11,5 @@ console.log("hi")
 function update() {
     console.log("testing!");
     shape.rectangle(200, 200, 60, 30);
+    shape.rectangle(400, 400, 35, 72);
 }
