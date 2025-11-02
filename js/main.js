@@ -1,15 +1,21 @@
-import { tad, shape, make } from "../lib/TeachAndDraw.js";
+import { tad, shape } from "../lib/TeachAndDraw.js";
+import { EnvironmentManager } from "./environment_manager.js";
 
 tad.use(update);
 tad.debug = true;
 
-const state = {
-    
-}
-
 console.log("hi")
+
+const unit = 64;
+tad.w = 640;
+tad.h = 640;
+
+const environment = new EnvironmentManager(unit);
+
+tad.use(update);
+tad.debug = true;
+
 function update() {
-    console.log("testing!");
-    shape.rectangle(200, 200, 60, 30);
-    shape.rectangle(400, 400, 35, 72);
+    environment.update();
+    
 }
