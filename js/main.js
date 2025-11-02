@@ -9,5 +9,6 @@ const state = {
 
 console.log("hi")
 function update() {
-    
+    console.log("testing!");
+    shape.rectangle(200, 200, 60, 30);
 }
