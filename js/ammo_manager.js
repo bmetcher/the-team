@@ -20,6 +20,7 @@ export class AmmoManager {
 
     }
 
+
     update(){
 
         if(time.frameCount==1){
@@ -36,16 +37,14 @@ export class AmmoManager {
     }
 
 
-
-
     fire(ship_x, ship_y){
         /*
         Parameters:
             ship_x : current centre x-coordinate of ship
             ship_y : current centre y-coordinate of ship
         */
-
-        for (const this_ammo of this.ship_ammo_data.ammo){
+        console.log(this.ship_ammo_data)
+        for (let this_ammo of this.ship_ammo_data.ammo){
             console.log(this_ammo);
             console.log("Firing");
         }

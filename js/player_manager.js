@@ -49,10 +49,10 @@ export class PlayerManager {
             this.collider.direction = 270;
         }
         if (keys.down("S")){     // down
-            this.collider.direction = 90;
+            this.collider.direction = 180;
         }
         if (keys.down("D")){     // right
-            this.collider.direction = 180;
+            this.collider.direction = 90;
         }
 
         // ---- Change Speed ----
@@ -78,7 +78,7 @@ export class PlayerManager {
         }
 
         if (keys.down(" ")){
-            this.fire();
+            this.ammo_manager.fire(this.collider.x, this.collider.y);
         }
 
         this.collider.draw();
@@ -95,11 +95,6 @@ export class PlayerManager {
         tmp.direction = 270;
         tmp.friction = 0;
         return tmp;
-    }
-
-    fire(){
-        const ammo_manager = new AmmoManager(this.ship_name, this.ship_ammo_data, this.x, this.y);
-        ammo_manager.update();
     }
 
 };
