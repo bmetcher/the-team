@@ -1,4 +1,4 @@
-import { tad, load, make, keys, time } from "../lib/TeachAndDraw.js";
+import { tad, load, make, keys, time, text } from "../lib/TeachAndDraw.js";
 import { AmmoManager } from "./ammo_manager.js";
 
 export class PlayerManager {
@@ -42,19 +42,26 @@ export class PlayerManager {
     update(){
 
         // ---- Change Direction based on WASD ----
+        
+        this.collider.friction = 60;     // Make ship stationary when not in motion
+
         if (keys.down("W")){        // up
             this.collider.direction = 0;
+            this.collider.friction = 0.3;
         } 
         if (keys.down("A")){     // left
             this.collider.direction = 270;
+            this.collider.friction = 0.3;
         }
         if (keys.down("S")){     // down
             this.collider.direction = 180;
+            this.collider.friction = 0.3;
         }
         if (keys.down("D")){     // right
             this.collider.direction = 90;
+            this.collider.friction = 0.3;
         }
-
+       
         // ---- Accelerate ----
         if (keys.down("shift")){
             this.collider.speed += 3;
@@ -81,8 +88,8 @@ export class PlayerManager {
         }
 
         // ---- Set Minimum Speed ----
-        if (this.collider.speed < 10){
-            this.collider.speed = 10;
+        if (this.collider.speed < 20){
+            this.collider.speed = 20;
         }
 
 
@@ -96,7 +103,7 @@ export class PlayerManager {
     create_player_collider(){
         const tmp = make.boxCollider(this.x, this.y, this.width, this.height); 
         tmp.asset = this.ship_image;
-        tmp.speed = 10;
+        tmp.speed = 20;
         tmp.direction = 270;
         tmp.friction = 0.3;
         return tmp;
