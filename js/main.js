@@ -15,7 +15,7 @@ let game_state = MAIN_MENU;
 
 
 const environment = new EnvironmentManager(unit);
-const player = new PlayerManager(unit, 40, 50, "player1");
+const player = new PlayerManager("player1", 40, 50);
 
 tad.use(update);
 tad.debug = true;

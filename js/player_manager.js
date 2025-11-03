@@ -1,20 +1,17 @@
-import { tad, load, make, keys, camera } from "../lib/TeachAndDraw.js";
+import { tad, load, make, keys } from "../lib/TeachAndDraw.js";
 
 export class PlayerManager {
-    constructor(unit, player_width, player_height, player_name) {
+    constructor(player_name, player_width, player_height) {
         /*
         Parameters;
-            unit :
+            player_name : allow selection of player image and knowing weapons, ammo, etc. belonging to specific player
             player_width : width of player collider
             player_height : height of player collider
-            player_name : allow selection of player image and knowing weapons, ammo, etc. belonging to specific player
         */
-
-        this.unit = unit;
 
         // ---- Name of Player to Determine Appropriate Actions ----
         this.name = player_name;
-
+        
         // ---- Initial Position of Player on Canvas ----
         this.x = tad.w/2;        // midway width-wise
         this.y = tad.h/3*2;     // 2/3 down height-wise
