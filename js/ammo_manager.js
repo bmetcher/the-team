@@ -35,23 +35,33 @@ export class AmmoManager {
             ship_y : current centre y-coordinate of ship
         */
     
+        // ---- Extract Data for Current Ship ----
         const ship_data = this.all_ships_ammo_data[this.ship_name]
 
-        for (const this_ammo of ship_data.ammo){
+        // ---- Create Ammo Colliders ----
+        for (const this_ammo of ship_data.ammo){    // for each ammo type
+
+            // get image for current ammo
             const this_ammo_img = this.all_ammo_images[this_ammo.ammo_name];
             this_ammo_img.scale = 10;
+
+            // get speed and direction of current amo
             const this_ammo_speed = this_ammo.speed;
             const this_ammo_direction = this_ammo.direction;
 
-            for (const coordinates of this_ammo.firing_origin_xy_offset_from_player_centre){
+            for (const coordinates of this_ammo.firing_origin_xy_offset_from_player_centre){        // for each instance of ammo type
+
+                // calculate ammo coordinates
                 const this_ammo_x = ship_x + coordinates[0];
                 const this_ammo_y = ship_y + coordinates[1];
+
+                // create ammo collider and add to fired_ammo group
                 this.create_ammo(this_ammo_x, this_ammo_y, this_ammo_img, this_ammo_speed, this_ammo_direction);
             }
-            
         }
     }
 
+    
     create_ammo(this_ammo_x, this_ammo_y, this_ammo_img, this_ammo_speed, this_ammo_direction){
         const tmp = make.boxCollider(this_ammo_x, this_ammo_y, 4, 5);
         tmp.asset = this_ammo_img;

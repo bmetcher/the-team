@@ -23,7 +23,7 @@ export class PlayerManager {
 
         // ---- Get Player Ship Image ----
         this.ship_image = all_players_images[this.ship_name];
-        this.ship_image.scale = this.height/2      // ⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️ SCALE NOT WORKING FLEXIBLY
+        this.ship_image.scale = this.height/2;
 
 
         // ---- Create Player Collider ----
@@ -34,8 +34,6 @@ export class PlayerManager {
 
         // ---- Create Ammo Mananger ----
         this.ammo_manager = new AmmoManager(this.ship_name, this.collider.x, this.collider.y, all_ammo_images, all_ships_ammo_data);
-
-
     }
 
     update(){
@@ -92,7 +90,6 @@ export class PlayerManager {
         this.collider.draw();
 
         // 🛑🛑🛑🛑 NO CAMERA USED (YET???) 🛑🛑🛑🛑
-
     }
 
 

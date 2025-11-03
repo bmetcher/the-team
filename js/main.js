@@ -26,7 +26,7 @@ const all_ammo_images = {
 }
 // Enemy images
 // Ship-Ammo data
-const all_ships_ammo_data = load.json("./data/ship_ammo.json")
+const all_ships_ammo_data = load.json("./data/ship_ammo.json");
 
 
 // ---- Start Background Environment ----
