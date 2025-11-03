@@ -1,0 +1,37 @@
+{
+    "player1": {
+        "ammo": [
+            {
+                "ammo_name": "bullet",
+                "filepath": "./images/ammo/bullet.png",
+                "speed": "3",
+                "firing_origin_xy_offset_from_player_centre": [
+                    [-10, 30], 
+                    [10, 30]
+                ]
+            },
+            {
+                "ammo_name": "missile",
+                "filepath": "./images/ammo/missile.png",
+                "speed": "2",
+                "firing_origin_xy_offset_from_player_centre": [
+                    [-5, 30], 
+                    [5, 30]
+                ]
+            }
+        ]
+    },
+    "player2": {
+        "ammo": [
+            {
+                "ammo_name": "bullet",
+                "filepath": "./images/ammo/bullet.png",
+                "speed": "4",
+                "firing_origin_xy_offset_from_player_centre": [
+                    [-10, 30], 
+                    [10, 30]
+                ]
+            }
+        ]
+    }
+}

@@ -1,89 +1,57 @@
-import { tad, load, make, keys } from "../lib/TeachAndDraw.js";
+import { tad, time, load, make, keys } from "../lib/TeachAndDraw.js";
+
+const ammo_info = {
+    bullet: {
+        filepath: "./images/ammo/bullet.png",
+        speed: 3
+    },
+    missile: {
+        filepath: "./images/ammo/missile.png",
+        speed: 2
+    }
+}
 
 export class AmmoManager {
-    constructor(player_width, player_height, player_name) {
+    constructor(ammo_name, ship_x, ship_y, offset_points) {
         /*
-        Parameters;
-            player_width : width of player collider
-            player_height : height of player collider
-            player_name : allow selection of player image and knowing weapons, ammo, etc. belonging to specific player
+        Parameters:
+            ammo_name : str : name of ammunition being fired
+            ship_x : centre x-coordinate of ship
+            ship_y : centre y-coordinate of ship
+            offsets_points : array of tuples of numbers : offset of coordinates from centre of ship; allows multiple turrets
+                                                                        e.g. [ (0,3) , (5,6) ] indicates ammo should fire from points (0,3) and (5,6)
         */
 
-        // ---- Name of Player to Determine Appropriate Actions ----
-        this.name = player_name;
+        this.ammo_name = ammo_name;
+        // this.ammo_image = load.image(0,0,ammo_info.ammo_name)    
 
-        // ---- Initial Position of Player on Canvas ----
-        this.x = tad.w/2;        // midway width-wise
-        this.y = tad.h/3*2;     // 2/3 down height-wise
-
-        // ---- Dimensions of Player Collider ----
-        this.width = player_width;
-        this.height = player_height;
-
-        // ---- Load Ship Image ----
-        if (this.name === "player1"){
-            this.ship_image = load.image(0,0,"./images/player/player1.png");
-        } else if (this.name === "player2"){
-            this.ship_image = load.image(0,0,"./images/player/player2.png");
+        this.origin_firepoints = []
+        for (let offset_point in offset_points){
+            
         }
-        this.ship_image.scale = this.height/2;      // ⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️ SCALE NOT WORKING FLEXIBLY
 
-        // ---- Create Player Collider ----
-        this.collider = this.create_player_collider();
+        this.collider = this.create_ammo_collider();
+
 
     }
 
     update(){
-        // ---- Change Direction based on WASD ----
-        if (keys.down("W")){        // up
-            this.collider.direction = 0;
-        } 
-        if (keys.down("A")){     // left
-            this.collider.direction = 270;
-        }
-        if (keys.down("S")){     // down
-            this.collider.direction = 90;
-        }
-        if (keys.down("D")){     // right
-            this.collider.direction = 180;
-        }
-
-        // ---- Change Speed ----
-        if (keys.down("Q")){    // accelerate
-            this.collider.speed += 0.1;
-        } else if (keys.down("E")){    // decelerate
-            this.collider.speed -= 0.11;
-        }
-
-        // ---- Keep Player Within Bounds ----
-        const GAP = this.width/2 + 40; // keep a gap of pixels so player does not go off edge
-        if (this.collider.x < GAP){
-            this.collider.direction = 90;
-        }
-        if (this.collider.x > tad.w - GAP){ 
-            this.collider.direction = 270;
-        }
-        if (this.collider.y < GAP){
-            this.collider.direction = 180;
-        }
-        if (this.collider.y > tad.h - GAP){
-            this.collider.direction = 0;
-        }
-
-        this.collider.draw();
-
-        // 🛑🛑🛑🛑 NO CAMERA USED (YET???) 🛑🛑🛑🛑
-
+        console.log("Here");
     }
 
-    create_player_collider(){
-        const tmp = make.boxCollider(this.x, this.y, this.width, this.height); 
+
+
+
+    create_ammo_collider(){
+        const tmp = make.boxCollider(this.ship_x, this.ship_y, 4, 5);
         tmp.asset = this.ship_image;
         tmp.speed = 10;
-        tmp.direction = 270;
+        tmp.direction = 0;
         tmp.friction = 0;
         return tmp;
     }
+
+
 
 };
 

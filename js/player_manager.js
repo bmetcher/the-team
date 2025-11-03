@@ -1,17 +1,21 @@
-import { tad, load, make, keys } from "../lib/TeachAndDraw.js";
+import { tad, load, make, keys, time } from "../lib/TeachAndDraw.js";
+import { AmmoManager } from "./ammo_manager.js";
 
 export class PlayerManager {
-    constructor(player_name, player_width, player_height) {
+    constructor(player_name, player_width, player_height, all_players_images, all_ammo_images, all_ships_ammo_data) {
         /*
         Parameters;
-            player_name : allow selection of player image and knowing weapons, ammo, etc. belonging to specific player
-            player_width : width of player collider
-            player_height : height of player collider
+            player_name : str : allow selection of player image and knowing weapons, ammo, etc. belonging to specific player
+            player_width : int : width of player collider
+            player_height : int : height of player collider
+            all_players_images : dictionary of images : all player-related images
+            all_ammo_images : dictionary of images : all ammunition-images
+            all_ships_ammo_data : JSON data from ship_ammo.json
         */
 
         // ---- Name of Player to Determine Appropriate Actions ----
-        this.name = player_name;
-        
+        this.ship_name = player_name;
+
         // ---- Initial Position of Player on Canvas ----
         this.x = tad.w/2;        // midway width-wise
         this.y = tad.h/3*2;     // 2/3 down height-wise
@@ -20,20 +24,30 @@ export class PlayerManager {
         this.width = player_width;
         this.height = player_height;
 
-        // ---- Load Ship Image ----
-        if (this.name === "player1"){
-            this.ship_image = load.image(0,0,"./images/player/player1.png");
-        } else if (this.name === "player2"){
-            this.ship_image = load.image(0,0,"./images/player/player2.png");
-        }
-        this.ship_image.scale = this.height/2;      // ⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️ SCALE NOT WORKING FLEXIBLY
+        // ---- Separate Assets ----
+        this.ship_image = all_players_images[this.ship_name]
+        this.ship_image.scale = this.height/2      // ⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️ SCALE NOT WORKING FLEXIBLY
+        this.all_ammo_images = all_ammo_images;
+        this.all_ships_ammo_data = all_ships_ammo_data;
+
 
         // ---- Create Player Collider ----
         this.collider = this.create_player_collider();
 
+        // ---- Create Ammo Mananger ----
+        // this.ammo_manager = new AmmoManager(this.ship_ammo_data, this.ammo_images);
+
+
     }
 
     update(){
+
+        if(time.frameCount==1){
+            // --- Retrieve All ship_ammo.json Data Relevant to Player Ship ---
+            this.ship_ammo_data = this.all_ships_ammo_data[this.ship_name];
+        }
+
+
         // ---- Change Direction based on WASD ----
         if (keys.down("W")){        // up
             this.collider.direction = 0;
@@ -70,11 +84,16 @@ export class PlayerManager {
             this.collider.direction = 0;
         }
 
+        // if (keys.down(" ")){
+        //     this.fire();
+        // }
+
         this.collider.draw();
 
         // 🛑🛑🛑🛑 NO CAMERA USED (YET???) 🛑🛑🛑🛑
 
     }
+
 
     create_player_collider(){
         const tmp = make.boxCollider(this.x, this.y, this.width, this.height); 
@@ -83,6 +102,11 @@ export class PlayerManager {
         tmp.direction = 270;
         tmp.friction = 0;
         return tmp;
+    }
+
+    fire(){
+        const ammo_manager = new AmmoManager(this.ship_name, this.ship_ammo_data, this.x, this.y);
+        ammo_manager.update();
     }
 
 };
