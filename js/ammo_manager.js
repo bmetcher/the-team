@@ -43,7 +43,7 @@ export class AmmoManager {
 
             // get image for current ammo
             const this_ammo_img = this.all_ammo_images[this_ammo.ammo_name];
-            this_ammo_img.scale = 10;
+            this_ammo_img.scale = 7.2;
 
             // get speed and direction of current amo
             const this_ammo_speed = this_ammo.speed;
