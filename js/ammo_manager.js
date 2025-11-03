@@ -15,39 +15,38 @@ export class AmmoManager {
         this.ship_name = ship_name;                                                                    
         this.all_ammo_images = all_ammo_images;
         this.all_ships_ammo_data = all_ships_ammo_data;
+        this.ship_ammo_data = this.all_ships_ammo_data[this.ship_name];
 
         this.fired_ammmo = make.group() // hold all live ammo colliders
 
     }
 
 
-    update(){
+    fire(ship_x, ship_y){
 
         if(time.frameCount==1){
             // --- Retrieve All ship_ammo.json Data Relevant to Player Ship ---
-            this.ship_ammo_data = this.all_ships_ammo_data[this.ship_name];
+            // this.ship_ammo_data = this.all_ships_ammo_data[this.ship_name];
         }
 
         console.log("Updating");
 
         for (const this_ammo of this.fired_ammmo){
-            ammo.draw();
+            this_ammo.draw();
         }
 
-    }
-
-
-    fire(ship_x, ship_y){
-        /*
-        Parameters:
-            ship_x : current centre x-coordinate of ship
-            ship_y : current centre y-coordinate of ship
-        */
         console.log(this.ship_ammo_data)
         for (let this_ammo of this.ship_ammo_data.ammo){
             console.log(this_ammo);
             console.log("Firing");
         }
+
+        /*
+        Parameters:
+            ship_x : current centre x-coordinate of ship
+            ship_y : current centre y-coordinate of ship
+        */
+        
         
         // const tmp = make.boxCollider(this.ship_x, this.ship_y, 4, 5);
         // tmp.asset = this.ship_image;
@@ -55,6 +54,7 @@ export class AmmoManager {
         // tmp.direction = 0;
         // tmp.friction = 0;
         // return tmp;
+
     }
 
 

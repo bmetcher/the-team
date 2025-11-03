@@ -56,8 +56,8 @@ export class PlayerManager {
         }
 
         // ---- Change Speed ----
-        if (keys.down("Q")){    // accelerate
-            this.collider.speed += 0.1;
+        if (keys.down("shift")){    // accelerate
+            this.collider.speed += 3;
         } else if (keys.down("E")){    // decelerate
             this.collider.speed -= 0.11;
         }
@@ -93,7 +93,7 @@ export class PlayerManager {
         tmp.asset = this.ship_image;
         tmp.speed = 10;
         tmp.direction = 270;
-        tmp.friction = 0;
+        tmp.friction = 0.3;
         return tmp;
     }
 
