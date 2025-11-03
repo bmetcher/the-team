@@ -4,19 +4,21 @@
             {
                 "ammo_name": "bullet",
                 "filepath": "./images/ammo/bullet.png",
-                "speed": "3",
+                "speed": 100,
                 "firing_origin_xy_offset_from_player_centre": [
-                    [-10, 30], 
-                    [10, 30]
+                    [-15, 30], 
+                    [15, 30],
+                    [-5, 30],
+                    [5,30]
                 ]
             },
             {
                 "ammo_name": "missile",
                 "filepath": "./images/ammo/missile.png",
-                "speed": "2",
+                "speed": 80,
                 "firing_origin_xy_offset_from_player_centre": [
-                    [-5, 30], 
-                    [5, 30]
+                    [-35, 30], 
+                    [35, 30]
                 ]
             }
         ]
@@ -26,7 +28,7 @@
             {
                 "ammo_name": "bullet",
                 "filepath": "./images/ammo/bullet.png",
-                "speed": "4",
+                "speed": 70,
                 "firing_origin_xy_offset_from_player_centre": [
                     [-10, 30], 
                     [10, 30]

@@ -17,21 +17,20 @@ export class PlayerManager {
         // ---- Name of Player to Determine Appropriate Actions ----
         this.ship_name = player_name;
 
-        // ---- Initial Position of Player on Canvas ----
-        this.x = tad.w/2;        // midway width-wise
-        this.y = tad.h/3*2;     // 2/3 down height-wise
-
         // ---- Dimensions of Player Collider ----
         this.width = player_width;
         this.height = player_height;
 
         // ---- Get Player Ship Image ----
-        this.ship_image = all_players_images[this.ship_name]
+        this.ship_image = all_players_images[this.ship_name];
         this.ship_image.scale = this.height/2      // ⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️ SCALE NOT WORKING FLEXIBLY
 
 
         // ---- Create Player Collider ----
-        this.collider = this.create_player_collider();
+        // initial position of player on canvase
+        const init_x = tad.w/2;        // midway width-wise
+        const init_y = tad.h/3*2;     // 2/3 down height-wise
+        this.collider = this.create_player_collider(init_x, init_y);
 
         // ---- Create Ammo Mananger ----
         this.ammo_manager = new AmmoManager(this.ship_name, this.collider.x, this.collider.y, all_ammo_images, all_ships_ammo_data);
@@ -83,7 +82,7 @@ export class PlayerManager {
         }
 
         // ---- Boost ----
-        if (keys.down(" ")){
+        if (keys.released(" ")){
             this.ammo_manager.fire(this.collider.x, this.collider.y);
         }
 
@@ -94,14 +93,15 @@ export class PlayerManager {
 
 
         this.collider.draw();
+        this.ammo_manager.update();
 
         // 🛑🛑🛑🛑 NO CAMERA USED (YET???) 🛑🛑🛑🛑
 
     }
 
 
-    create_player_collider(){
-        const tmp = make.boxCollider(this.x, this.y, this.width, this.height); 
+    create_player_collider(init_x, init_y){
+        const tmp = make.boxCollider(init_x, init_y, this.width, this.height); 
         tmp.asset = this.ship_image;
         tmp.speed = 20;
         tmp.direction = 270;

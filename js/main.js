@@ -3,9 +3,6 @@ import { tad, load } from "../lib/TeachAndDraw.js";
 import { EnvironmentManager } from "./environment_manager.js";
 import { PlayerManager } from "./player_manager.js";
 
-tad.use(update);
-tad.debug = true;
-
 const unit = 64;
 tad.w = 640;
 tad.h = 640;
@@ -36,7 +33,7 @@ const all_ships_ammo_data = load.json("./data/ship_ammo.json")
 const environment = new EnvironmentManager(unit);
 
 
-const player = new PlayerManager("player2", 40, 50, all_players_images, all_ammo_images, all_ships_ammo_data);
+const player = new PlayerManager("player1", 40, 50, all_players_images, all_ammo_images, all_ships_ammo_data);
 
 
 tad.use(update);
