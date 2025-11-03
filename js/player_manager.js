@@ -23,7 +23,7 @@ export class PlayerManager {
 
         // ---- Get Player Ship Image ----
         this.ship_image = all_players_images[this.ship_name];
-        this.ship_image.scale = this.height/2;
+        //this.ship_image.scale = this.height/2;
 
 
         // ---- Create Player Collider ----

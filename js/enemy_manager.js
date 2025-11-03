@@ -56,7 +56,7 @@ export class EnemyManager {
         let temp = make.boxCollider(x, y, spec.height, spec.width);
         temp.direction = 180;
         temp.speed = 10;
-        temp.friction = 0.5;
+        temp.friction = 1;
         temp.lifespan = 8;
         if (type === "grunt") {
             this.all.push(temp);
@@ -69,11 +69,17 @@ export class EnemyManager {
             if (this.grunts[i].speed < 1) {
                 this.grunts[i].speed = 5;
                 if (this.grunts[i].y > tad.h/3 && this.grunts[i].x > tad.w/2) {
-                    // bottom right quadrant
+                    // bottom right
                     this.grunts[i].direction = 270 + (math.random(0, 1) * 90);
                 } else if (this.grunts[i].y > tad.h/3 && this.grunts[i].x < tad.w/2) {
-                    // above threshold -> move down
-                    this.grunts[i].direction = 90 + (math.random(0, 1) * 180);
+                    // bottom left 
+                    this.grunts[i].direction = (math.random(0, 1) * 90);
+                } else if (this.grunts[i].y < tad.h/3 && this.grunts[i].x < tad.w/2) {
+                    // top left
+                    this.grunts[i].direction = 90 + (math.random(0, 1) * 90);
+                } else if (this.grunts[i].y < tad.h/3 && this.grunts[i].x > tad.w/2) {
+                    // top right
+                    this.grunts[i].direction = 180 + (math.random(0, 1) * 90);
                 }
 
 
