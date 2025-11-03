@@ -51,7 +51,6 @@ export class EnvironmentManager {
             temp.color = null;
             temp.speed = 0;
             result.push(temp);
-            console.log("made a generator!");
         }
 
         return result;
