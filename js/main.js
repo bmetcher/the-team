@@ -38,7 +38,7 @@ const player = new PlayerManager("player1", 40, 50, all_players_images, all_ammo
 const enemy = new EnemyManager(unit);
 
 tad.use(update);
-tad.debug = true;
+//tad.debug = true;
 
 function update() {
     environment.update();

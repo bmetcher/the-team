@@ -1,4 +1,4 @@
-import { tad, make, keys, time, math } from "../../lib/TeachAndDraw.js";
+import { tad, make, keys, time, math } from "../lib/TeachAndDraw.js";
 
 export class EnemyManager {
     constructor(unit) {
