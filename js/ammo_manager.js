@@ -27,6 +27,7 @@ export class AmmoManager {
         if(time.frameCount==1){
             // --- Retrieve All ship_ammo.json Data Relevant to Player Ship ---
             // this.ship_ammo_data = this.all_ships_ammo_data[this.ship_name];
+            console.log("In 'if' statement");
         }
 
         console.log("Updating");

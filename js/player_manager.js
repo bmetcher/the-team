@@ -77,9 +77,16 @@ export class PlayerManager {
             this.collider.direction = 0;
         }
 
+        // ---- Boost ----
         if (keys.down(" ")){
             this.ammo_manager.fire(this.collider.x, this.collider.y);
         }
+
+        // ---- Set Minimum Speed ----
+        if (this.collider.speed < 10){
+            this.collider.speed = 10;
+        }
+
 
         this.collider.draw();
 
@@ -92,7 +99,7 @@ export class PlayerManager {
         const tmp = make.boxCollider(this.x, this.y, this.width, this.height); 
         tmp.asset = this.ship_image;
         tmp.speed = 10;
-        tmp.direction = 270;
+        tmp.direction = 0;
         tmp.friction = 0.3;
         return tmp;
     }
