@@ -92,21 +92,21 @@ export class EnemyManager {
                 // angle away from the edge of canvas when beyond a threshold
                 if (unit.x > threshold_right) {
                     unit.direction = 225 + (math.random(0, 1) * 90);
-                    console.log("RIGHT: " + threshold_right);
+                    //console.log("RIGHT: " + threshold_right);
                 } else if (unit.x < threshold_left) {
                     unit.direction = 45 + (math.random(0, 1) * 90);
-                    console.log("LEFT: " + threshold_left);
+                    //console.log("LEFT: " + threshold_left);
                 } else if ((unit.y < threshold_top)) {
                     unit.direction = 135 + (math.random(0, 1) * 90);
-                    console.log("TOP: " + threshold_top);
+                    //console.log("TOP: " + threshold_top);
                 } else if (unit.y > threshold_bottom) {
                     unit.direction = 45 - (math.random(0, 1) * 90);
-                    console.log("BOTTOM: " + threshold_bottom);
+                    //console.log("BOTTOM: " + threshold_bottom);
                 } else {            
                     unit.direction = 360 * math.random(0.1);
-                    console.log("RANDOM");
+                    //console.log("RANDOM");
                 }
-                console.log("new direction: " + unit.direction);
+                //console.log("new direction: " + unit.direction);
             }
         }
     }
