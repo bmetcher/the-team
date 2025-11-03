@@ -40,25 +40,22 @@ export class PlayerManager {
 
     update(){
 
-        // ---- Change Direction based on WASD ----
-        
-        this.collider.friction = 60;     // Make ship stationary when not in motion
+        // ---- Change Direction based on WASD (Allows Diagonal) ----
+        let dx = 0;
+        let dy = 0;
 
-        if (keys.down("W")){        // up
-            this.collider.direction = 0;
+        if (keys.down("W")) dy -= 1;
+        if (keys.down("S")) dy += 1;
+        if (keys.down("A")) dx -= 1;
+        if (keys.down("D")) dx += 1;
+
+        if (dx !== 0 || dy !== 0) {
+            let angle_rad = Math.atan2(dy, dx);  // standard math angle (0 = right); in radians
+            let angle_deg = angle_rad * 180 / Math.PI;        // convert to degrees
+            this.collider.direction = angle_deg + 90; // adjust so 0 = up
             this.collider.friction = 0.3;
-        } 
-        if (keys.down("A")){     // left
-            this.collider.direction = 270;
-            this.collider.friction = 0.3;
-        }
-        if (keys.down("S")){     // down
-            this.collider.direction = 180;
-            this.collider.friction = 0.3;
-        }
-        if (keys.down("D")){     // right
-            this.collider.direction = 90;
-            this.collider.friction = 0.3;
+        } else {
+            this.collider.friction = 60;  // make ship stationary when not in motion
         }
        
         // ---- Accelerate ----
