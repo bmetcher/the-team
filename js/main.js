@@ -4,12 +4,12 @@ tad.use(update);
 tad.debug = true;
 
 const state = {
-    
+
 }
 
 console.log("hi")
 function update() {
     console.log("testing!");
-    shape.rectangle(200, 200, 60, 30);
-    shape.rectangle(400, 400, 35, 72);
+    shape.square(200, 200, 60, 30);
+    shape.square(400, 400, 35, 72);
 }
