@@ -38,7 +38,6 @@ export class AmmoManager {
         const ship_data = this.all_ships_ammo_data[this.ship_name]
 
         for (const this_ammo of ship_data.ammo){
-            console.log(this_ammo.ammo_name)
             const this_ammo_img = this.all_ammo_images[this_ammo.ammo_name];
             this_ammo_img.scale = 10;
             const this_ammo_speed = this_ammo.speed;

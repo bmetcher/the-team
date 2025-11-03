@@ -91,9 +91,8 @@ export class PlayerManager {
             this.collider.speed = 20;
         }
 
-
-        this.collider.draw();
         this.ammo_manager.update();
+        this.collider.draw();
 
         // 🛑🛑🛑🛑 NO CAMERA USED (YET???) 🛑🛑🛑🛑
 
