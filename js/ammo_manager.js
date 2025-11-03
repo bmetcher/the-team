@@ -41,21 +41,22 @@ export class AmmoManager {
             const this_ammo_img = this.all_ammo_images[this_ammo.ammo_name];
             this_ammo_img.scale = 10;
             const this_ammo_speed = this_ammo.speed;
+            const this_ammo_direction = this_ammo.direction;
 
             for (const coordinates of this_ammo.firing_origin_xy_offset_from_player_centre){
                 const this_ammo_x = ship_x + coordinates[0];
                 const this_ammo_y = ship_y + coordinates[1];
-                this.create_ammo(this_ammo_x, this_ammo_y, this_ammo_img, this_ammo_speed);
+                this.create_ammo(this_ammo_x, this_ammo_y, this_ammo_img, this_ammo_speed, this_ammo_direction);
             }
             
         }
     }
 
-    create_ammo(this_ammo_x, this_ammo_y, this_ammo_img, this_ammo_speed){
+    create_ammo(this_ammo_x, this_ammo_y, this_ammo_img, this_ammo_speed, this_ammo_direction){
         const tmp = make.boxCollider(this_ammo_x, this_ammo_y, 4, 5);
         tmp.asset = this_ammo_img;
         tmp.speed = this_ammo_speed;
-        tmp.direction = 0;
+        tmp.direction = this_ammo_direction;
         tmp.friction = 0;
         this.fired_ammo.push(tmp);
     }
