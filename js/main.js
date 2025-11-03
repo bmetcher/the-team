@@ -26,6 +26,9 @@ const all_ammo_images = {
     missile: load.image(0,0,"./images/ammo/missile.png")
 }
 // Enemy images
+const all_enemy_images = {
+    grunt: load.image(0,0, "./images/enemies/enemy1.png")
+}
 // Ship-Ammo data
 const all_ships_ammo_data = load.json("./data/ship_ammo.json");
 
@@ -35,7 +38,7 @@ const environment = new EnvironmentManager(unit);
 
 
 const player = new PlayerManager("player1", 40, 50, all_players_images, all_ammo_images, all_ships_ammo_data);
-const enemy = new EnemyManager(unit);
+const enemy = new EnemyManager(unit, all_enemy_images);
 
 tad.use(update);
 //tad.debug = true;
