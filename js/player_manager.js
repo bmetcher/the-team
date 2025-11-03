@@ -55,11 +55,9 @@ export class PlayerManager {
             this.collider.direction = 90;
         }
 
-        // ---- Change Speed ----
-        if (keys.down("shift")){    // accelerate
+        // ---- Accelerate ----
+        if (keys.down("shift")){
             this.collider.speed += 3;
-        } else if (keys.down("E")){    // decelerate
-            this.collider.speed -= 0.11;
         }
 
         // ---- Keep Player Within Bounds ----
