@@ -1,5 +1,4 @@
 import { tad, make, keys, time, math } from "../../lib/TeachAndDraw.js";
-import { RepeatingTimer } from "./timer.js";
 
 export class EnemyManager {
     constructor(unit) {
@@ -16,8 +15,6 @@ export class EnemyManager {
                 width: unit/2
             }
         }
-        this.grunt_timer = new RepeatingTimer(5);
-        this.grunt_timer.start();
     }
 
     update() {

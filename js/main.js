@@ -1,4 +1,5 @@
 import { tad, load } from "../lib/TeachAndDraw.js";
+import { EnemyManager } from "./enemy_manager.js";
 
 import { EnvironmentManager } from "./environment_manager.js";
 import { PlayerManager } from "./player_manager.js";
@@ -34,7 +35,7 @@ const environment = new EnvironmentManager(unit);
 
 
 const player = new PlayerManager("player1", 40, 50, all_players_images, all_ammo_images, all_ships_ammo_data);
-
+const enemy = new EnemyManager(unit);
 
 tad.use(update);
 tad.debug = true;
@@ -42,5 +43,6 @@ tad.debug = true;
 function update() {
     environment.update();
     player.update();
+    enemy.update();
     
 }
