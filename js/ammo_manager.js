@@ -70,6 +70,7 @@ export class AmmoManager {
         tmp.speed = this_ammo_speed;
         tmp.direction = this_ammo_direction;
         tmp.friction = 0;
+        tmp.lifespan = 10;  // automatically delete ammo colliders that go off screen
         this.fired_ammo.push(tmp);
     }
 
