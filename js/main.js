@@ -37,7 +37,7 @@ const all_ships_ammo_data = load.json("./data/ship_ammo.json")
 const environment = new EnvironmentManager(unit);
 
 
-const player = new PlayerManager("player1", 40, 50, all_players_images, all_ammo_images, all_ships_ammo_data);
+const player = new PlayerManager("player2", 40, 50, all_players_images, all_ammo_images, all_ships_ammo_data);
 
 
 tad.use(update);

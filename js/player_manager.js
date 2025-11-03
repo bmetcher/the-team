@@ -2,6 +2,7 @@ import { tad, load, make, keys, time } from "../lib/TeachAndDraw.js";
 import { AmmoManager } from "./ammo_manager.js";
 
 export class PlayerManager {
+
     constructor(player_name, player_width, player_height, all_players_images, all_ammo_images, all_ships_ammo_data) {
         /*
         Parameters;
@@ -24,29 +25,21 @@ export class PlayerManager {
         this.width = player_width;
         this.height = player_height;
 
-        // ---- Separate Assets ----
+        // ---- Get Player Ship Image ----
         this.ship_image = all_players_images[this.ship_name]
         this.ship_image.scale = this.height/2      // ⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️ SCALE NOT WORKING FLEXIBLY
-        this.all_ammo_images = all_ammo_images;
-        this.all_ships_ammo_data = all_ships_ammo_data;
 
 
         // ---- Create Player Collider ----
         this.collider = this.create_player_collider();
 
         // ---- Create Ammo Mananger ----
-        // this.ammo_manager = new AmmoManager(this.ship_ammo_data, this.ammo_images);
+        this.ammo_manager = new AmmoManager(this.ship_name, this.collider.x, this.collider.y, all_ammo_images, all_ships_ammo_data);
 
 
     }
 
     update(){
-
-        if(time.frameCount==1){
-            // --- Retrieve All ship_ammo.json Data Relevant to Player Ship ---
-            this.ship_ammo_data = this.all_ships_ammo_data[this.ship_name];
-        }
-
 
         // ---- Change Direction based on WASD ----
         if (keys.down("W")){        // up
@@ -84,9 +77,9 @@ export class PlayerManager {
             this.collider.direction = 0;
         }
 
-        // if (keys.down(" ")){
-        //     this.fire();
-        // }
+        if (keys.down(" ")){
+            this.fire();
+        }
 
         this.collider.draw();
 
