@@ -30,18 +30,18 @@ const all_enemy_images = {
     grunt: load.image(0,0, "./images/enemies/enemy1.png")
 }
 // Ship-Ammo data
-const all_ships_ammo_data = load.json("./data/ship_ammo.json");
+const all_ships_ammo_data = load.json("./data/ammo_map.json");
 
 
 // ---- Start Background Environment ----
 const environment = new EnvironmentManager(unit);
 
-
-const player = new PlayerManager("player1", 40, 50, all_players_images, all_ammo_images, all_ships_ammo_data);
+// ---- Initialise Player and Enemies ----
+const player = new PlayerManager("player1", all_players_images, all_ammo_images, all_ships_ammo_data);
 const enemy = new EnemyManager(unit, all_enemy_images);
 
 tad.use(update);
-//tad.debug = true;
+tad.debug = true;
 
 function update() {
     environment.update();
