@@ -97,7 +97,7 @@ export class PlayerManager {
         const tmp = make.boxCollider(this.x, this.y, this.width, this.height); 
         tmp.asset = this.ship_image;
         tmp.speed = 10;
-        tmp.direction = 0;
+        tmp.direction = 270;
         tmp.friction = 0.3;
         return tmp;
     }

@@ -2,7 +2,6 @@ import { tad, load } from "../lib/TeachAndDraw.js";
 
 import { EnvironmentManager } from "./environment_manager.js";
 import { PlayerManager } from "./player_manager.js";
-import { AmmoManager } from "./ammo_manager.js";
 
 tad.use(update);
 tad.debug = true;

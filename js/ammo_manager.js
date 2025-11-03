@@ -15,28 +15,20 @@ export class AmmoManager {
         this.ship_name = ship_name;                                                                    
         this.all_ammo_images = all_ammo_images;
         this.all_ships_ammo_data = all_ships_ammo_data;
-        this.ship_ammo_data = this.all_ships_ammo_data[this.ship_name];
 
-        this.fired_ammmo = make.group() // hold all live ammo colliders
+        this.fired_ammo = make.group() // hold all live ammo colliders
 
     }
 
 
     fire(ship_x, ship_y){
 
-        if(time.frameCount==1){
-            // --- Retrieve All ship_ammo.json Data Relevant to Player Ship ---
-            // this.ship_ammo_data = this.all_ships_ammo_data[this.ship_name];
-            console.log("In 'if' statement");
-        }
-
         console.log("Updating");
 
-        for (const this_ammo of this.fired_ammmo){
-            this_ammo.draw();
-        }
+        this.fired_ammo.draw();
 
-        console.log(this.ship_ammo_data)
+        console.log(this.all_ships_ammo_data)
+
         for (let this_ammo of this.ship_ammo_data.ammo){
             console.log(this_ammo);
             console.log("Firing");
