@@ -24,7 +24,7 @@ let game_state = LOADING;
 // ---- Preload Assets ----
 // Player images
 const all_players_images = {
-    default_ship: load.image(0,0,"./images/player/player1.png"),
+    default_ship: load.image(0,0,"./images/player/default_ship.png"),
     tank_ship: load.image(0,0,"./images/player/tank_ship.png")  // Added the ships here with correct names
 }
 // Ammo images

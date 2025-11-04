@@ -99,7 +99,6 @@ export class PlayerManager {
         // 🛑🛑🛑🛑 NO CAMERA USED (YET???) 🛑🛑🛑🛑
     }
 
-
     create_player_collider(init_x, init_y){
         this.width = this.ship_data.collider_width;
         this.height = this.ship_data.collider_height;
@@ -108,8 +107,8 @@ export class PlayerManager {
         tmp.asset = this.ship_image;
         tmp.speed = this.ship_data.minimum_speed;
         tmp.direction = 270;
+        tmp.xOffset = this.ship_data.ship_xoffset;
+        tmp.yOffset = this.ship_data.ship_yoffset;
         return tmp;
     }
-
 };
-
