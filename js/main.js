@@ -1,8 +1,9 @@
-import { tad, load } from "../lib/TeachAndDraw.js";
+import { tad, load, time } from "../lib/TeachAndDraw.js";
 import { EnemyManager } from "./enemy_manager.js";
-
 import { EnvironmentManager } from "./environment_manager.js";
 import { PlayerManager } from "./player_manager.js";
+import { ProjectileManager } from "./projectile_manager.js";
+
 
 const unit = 64;
 tad.w = 640;
@@ -30,31 +31,67 @@ const all_players_images = {
 // Ammo images
 const all_ammo_images = {
     bullet: load.image(0,0,"./images/ammo/bullet.png"),
-    missile: load.image(0,0,"./images/ammo/missile.png")
+    missile: load.image(0,0,"./images/ammo/missile.png"),
+    // temporary for now
+    explosion: load.image(0,0,"./images/explosions/explosion2_animation/placeholder_only.png")
 }
 // Enemy images
 const all_enemy_images = {
     grunt: load.image(0,0, "./images/enemies/enemy1.png")
 }
+// Environment images
+const all_environment_images = {
+    space1: load.image(tad.w/2, 0, "./images/background/space1.jpeg"),
+    space2: load.image(tad.w/2, tad.h, "./images/background/space2.jpeg")
+}
+
 // Ship-Ammo data
 const all_ammo_data = load.json("./data/ammo_map.json");
 const all_ship_data = load.json("./data/ships_map.json");  // Seperated into seperate JSON files
 
 
-// ---- Start Background Environment ----
-const environment = new EnvironmentManager(unit);
+// Declare manager variables
+let environment, player, enemy, projectiles;
 
-// ---- Initialise Player and Enemies ----
-const player = new PlayerManager("tank_ship", all_players_images, all_ammo_images, all_ship_data, all_ammo_data);  // updated for new parameters
-const enemy = new EnemyManager(unit, all_enemy_images);
+// Asset loading & manager initialization
+function initial_setup() {
+
+    if (time.frameCount === 0) {
+        // check if all JSON assets are loaded
+        if (all_ship_data && all_ammo_data) {
+            // Create managers AFTER data has loaded
+            console.log("Assets loaded! Initializing game...");
+
+            // ---- Start Background Environment ----
+            environment = new EnvironmentManager(unit, all_environment_images);
+
+            // ---- Initialise Player and Enemies ----
+            player = new PlayerManager("tank_ship", all_players_images, all_ammo_images, all_ship_data, all_ammo_data);  // updated for new parameters
+            enemy = new EnemyManager(unit, all_enemy_images);
+
+            // ---- Initialize Projectiles -----
+            projectiles = new ProjectileManager(unit, all_ammo_data, all_ammo_images);
+
+            // ?? Set game state here ??
+            // game_state = MAIN_MENU;
+        }
+        return; // skip until it's loaded
+    }
+}
+
 
 tad.use(update);
-tad.debug = true;
+tad.debug = false;
 
 
+// Main draw loop
 function update() {
+    initial_setup();
+    
     environment.update();
+    projectiles.update(player, enemy);
+
     player.update();
     enemy.update();
-    
 }
+

@@ -1,34 +1,27 @@
 {
-    "missile": [
+    "missile":
         {
-            "ammo_name": "missile",
-            "ammo_scale": 7.2,
             "collider_width": 4,
             "collider_height": 5,
             "filepath": "./images/ammo/missile.png",
+            "scale": 7.2,
             "speed": 80,
             "direction": 0,
-            "firing_origin_xy_offset_from_player_centre": [
-                [-10, 0], 
-                [10, 0],
-                [0, -8.7]
-            ]
-        }
-    ],
+            "friction": 0,
+            "mass": 0.1,
+            "damage": 1
+        },
     
-    "bullet": [
+    "bullet":
         {
-            "ammo_name": "bullet",
-            "ammo_scale": 10,
             "collider_width": 4,
             "collider_height": 5,
             "filepath": "./images/ammo/bullet.png",
+            "scale": 10,
             "speed": 70,
             "direction": 0,
-            "firing_origin_xy_offset_from_player_centre": [
-                [-10, 30], 
-                [10, 30]
-            ]
+            "friction": 0,
+            "mass": 0.1,
+            "damage": 1
         }
-    ]
 }

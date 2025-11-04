@@ -1,7 +1,7 @@
 import { tad, make, load } from "../lib/TeachAndDraw.js";
 
 export class EnvironmentManager {
-    constructor(unit) {
+    constructor(unit, all_environment_images) {
         this.unit = unit;
         this.level = 1;
 
@@ -10,9 +10,8 @@ export class EnvironmentManager {
         this.space = make.group();
         this.mountains = make.group();
 
-        this.space1 = load.image(tad.w/2, 0, "./images/background/space1.jpeg");
-        this.space2 = load.image(tad.w/2, tad.h, "./images/background/space2.jpeg");
-        
+        this.space1 = all_environment_images.space1;
+        this.space2 = all_environment_images.space2;
     }
 
     // DRAW updated background elements

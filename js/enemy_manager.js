@@ -1,6 +1,7 @@
 import { tad, make, keys, time, math } from "../lib/TeachAndDraw.js";
 
 export class EnemyManager {
+
     constructor(unit, all_enemy_images) {
         this.unit = unit;
         this.gap = this.width/2 + 40;
@@ -11,11 +12,18 @@ export class EnemyManager {
         // temporary storing set enemy values
         this.spec = {
             "grunt": {
+                max_hp: 2,
                 height: unit/2,
                 width: unit/2,
-                asset: all_enemy_images["grunt"]
+                mass: 1,
+                friction: 1,
+                asset: all_enemy_images["grunt"],
+                primary_weapon: "missile"
             }
         }
+
+        // queue for enemy projectiles to be created
+        this.created_projectiles = [];
     }
 
     update() {
@@ -29,7 +37,7 @@ export class EnemyManager {
             this.spawning = false;
         }
 
-        this.grunt_movement();
+        this.grunt_behaviour();
         this.grunts.collides(this.grunts);
 
         this.grunts.draw();
@@ -54,13 +62,22 @@ export class EnemyManager {
 
     make_enemy(x, y, type) {
         let spec = this.spec[type];
-        console.log(spec);
+        //console.log(spec);
         let temp = make.boxCollider(x, y, spec.height, spec.width);
+        // physics
         temp.direction = 180;
         temp.speed = 10;
-        temp.friction = 1;
+        temp.friction = spec.friction;
+        temp.mass = spec.mass;
+        // set lifespan later
         temp.lifespan = 8;
         temp.asset = spec.asset;
+        
+        // stats
+        temp.max_hp = spec.max_hp;
+        temp.current_hp = temp.max_hp;
+        //console.log("Enemy max hp:", temp.max_hp, "and current hp:", temp.current_hp);
+
         if (type === "grunt") {
             this.all.push(temp);
             this.grunts.push(temp);
@@ -68,11 +85,25 @@ export class EnemyManager {
     }
 
     // handle behaviour for grunts
-    grunt_movement() {
+    grunt_behaviour() {
         for (let i = 0; i < this.grunts.length; i++) {
             this.random_pathing(this.grunts[i]);
+            // temporary attack timer
+            if (time.frameCount%300 === 0) {
+                console.log(`Grunt ${i} firing from:`, this.grunts[i].x, this.grunts[i].y);
+                this.created_projectiles.push({ 
+                    origin: [this.grunts[i].x, this.grunts[i].y], 
+                    target: "player",
+                    type: this.spec["grunt"].primary_weapon,
+                    friendly: false
+                });
+            }
         }
     }
+
+
+
+
     
     // Cause semi-erratic movement whenever "speed < speed_limit"
     random_pathing(unit, speed_limit = 2, threshold = 80) {

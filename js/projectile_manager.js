@@ -2,94 +2,179 @@ import { tad, time, load, make, keys } from "../lib/TeachAndDraw.js";
 
 export class ProjectileManager {
 
-    constructor(unit, ammo_data) {
+    constructor(unit, all_ammo_data, all_ammo_images) {
         this.unit = unit;   // standard unit
 
-        // load ammo data from the .json
-        this.projectile_data = ammo_data;
+        // load all ammo .json data && images
+        this.all_ammo_data = all_ammo_data;
+        this.all_ammo_images = all_ammo_images;
+
+        //console.log("Ammo data: ",this.all_ammo_data)
 
         // track existing projectiles for entities
+        this.all_projectiles = make.group();    // global tracker
+
         this.player_projectiles = make.group();
         this.enemy_projectiles = make.group();
+
+        // temporary -- replace with ACTUAL explosions later
+        this.explodes = make.group();
     }
 
     update(player, enemy){
         // check any projectiles being created
-        this.get_player_projectiles(player);
-        this.get_enemy_projectiles(enemy);
+        this.get_player_projectiles(player, enemy);
+        this.get_enemy_projectiles(player, enemy);
 
         // update projectile movement
-
+        // ... unnecessary for now -- default physics!
+        for (let i = 0; i < this.explodes.length; i++) {
+            this.explodes[i].h += 0.25;
+            this.explodes[i].w += 0.25;
+        }
 
         // check projectile collisions
-
+        this.see_if_player_hits(enemy);
+        this.see_if_enemy_hits(player);
         
         // return entity updates
         
+        // draw all projectiles
+        this.all_projectiles.draw();
     }
 
-    get_player_projectiles(player) {
-        for (let projectile of player.created_projectiles) {
-            console.log(projectile);
-            //this.create_projectile(player.x, player.y, )
-            
+    // process any queued player projectiles to be created
+    get_player_projectiles(player, enemy) {
+        while (player.created_projectiles.length > 0) {
+            let new_projectile = player.created_projectiles[0];
+            // create front projectile (origin, target, type) & then pop it
+            this.create_projectile(
+                new_projectile.origin,
+                new_projectile.target, 
+                new_projectile.type,
+                new_projectile.friendly
+            );
+            player.created_projectiles.shift();
+        }
+    }
+    // enemy version of above function
+    get_enemy_projectiles(player, enemy) {
+        while (enemy.created_projectiles.length > 0) {
+            let new_projectile = enemy.created_projectiles[0];
+            let target;
+            // if their target is the player -- angle the projectile at them
+            if (new_projectile.target === "player") {
+                target = [player.collider.x, player.collider.y];
+            } else if (new_projectile.target === "none") {
+                target = 180;
+            }
+            // console.log("Projectile angle: ", target);
+            this.create_projectile(
+                new_projectile.origin,
+                target,
+                new_projectile.type,
+                new_projectile.friendly
+            );
+            enemy.created_projectiles.shift();
+            //console.log("Enemy attacked!");
         }
     }
 
-    get_enemy_projectiles(enemy) {
-
-    }
-
-    create_projectile(origin_x, origin_y, target, type = "woops") {
-        let pew = make.boxCollider(origin_x, origin_y, 10, 10);
-        console.log(pew);
-    }
-
-
-    fire(ship_x, ship_y){
-        /*
-        Parameters:
-            ship_x : current centre x-coordinate of ship
-            ship_y : current centre y-coordinate of ship
-        */
-    
-        // ---- Extract Data for Current Ship ----
-        const ship_data = this.all_ammo_data[this.ship_name]
-
-        // ---- Create Ammo Colliders ----
-        for (const this_ammo of ship_data.ammo){    // for each ammo type
-
-            // get image for current ammo
-            const this_ammo_img = this.all_ammo_images[this_ammo.ammo_name];
-            this_ammo_img.scale = this_ammo.ammo_scale;
-
-            // get speed, direction, and collider dimensions of current ammo
-            const this_ammo_speed = this_ammo.speed;
-            const this_ammo_direction = this_ammo.direction;
-            const collider_width = this_ammo.collider_width;
-            const collider_height = this_ammo.collider_height;
-
-            for (const coordinates of this_ammo.firing_origin_xy_offset_from_player_centre){        // for each instance of ammo type
-
-                // calculate ammo coordinates
-                const this_ammo_x = ship_x + coordinates[0];
-                const this_ammo_y = ship_y + coordinates[1];
-
-                // create ammo collider and add to fired_ammo group
-                this.create_ammo(this_ammo_x, this_ammo_y, this_ammo_img, this_ammo_speed, this_ammo_direction, collider_width, collider_height);
+    see_if_player_hits(enemies) {
+        // for each enemy, check if any player projectiles landed
+        for (let enemy of enemies.all) {
+            for (let projectile of this.player_projectiles) {
+                if (projectile.collides(enemy)) {
+                    //console.log("BANG! enemy: ", enemy, " was hit");
+                    this.damage_target(enemy, projectile);
+                    this.destroy_projectile(projectile);
+                }
             }
         }
     }
 
-    
-    create_ammo(this_ammo_x, this_ammo_y, this_ammo_img, this_ammo_speed, this_ammo_direction, collider_width, collider_height){
-        const tmp = make.boxCollider(this_ammo_x, this_ammo_y, collider_width, collider_height);
-        tmp.asset = this_ammo_img;
-        tmp.speed = this_ammo_speed;
-        tmp.direction = this_ammo_direction;
-        tmp.friction = 0;
-        tmp.lifespan = 10;  // automatically delete ammo colliders that go off screen
-        this.fired_ammo.push(tmp);
+    see_if_enemy_hits(player) {
+        for (let projectile of this.enemy_projectiles) {
+            if (projectile.collides(player.collider)) {
+                //console.log("OW! player was hit by:", projectile);
+                this.damage_target(player, projectile);
+                this.destroy_projectile(projectile);
+            }
+        }
     }
 
+    damage_target(target, projectile) {
+        // if the target should die
+        if ((target.current_hp -= projectile.damage) <= 0) {
+            target.remove();
+            console.log("Killed!");
+        } else if (target.current_hp > 0) {
+            // just damage the target
+            target.current_hp -= projectile.damage;
+        }
+    }
+
+    destroy_projectile(projectile) {
+        let explode = make.boxCollider(projectile.x, projectile.y, 15, 15);
+        explode.colour = "red";
+        explode.lifespan = 1;
+        explode.static;
+        explode.asset = this.all_ammo_images.explosion;
+        this.explodes.push(explode);
+        this.all_projectiles.push(explode);
+        //console.log("BOOM");
+        projectile.remove();
+    }
+
+
+
+    // Origin Entity, Target Entity (or direction "up"/"down") and Type (e.g.: missile, bullet..)
+    create_projectile(origin, target, type = "woops", friendly) {
+        // fetch data for the type of ammo
+        let ammo = this.all_ammo_data[type];
+
+        //console.log("Creating projectile at origin:", origin[0], origin[1]);
+
+        // initialize the collider
+        let pew = make.boxCollider(
+            origin[0], 
+            origin[1], 
+            ammo.collider_width, 
+            ammo.collider_height
+        );
+        
+        // set movement attributes (speed, friction, mass)
+        pew.speed = ammo.speed;
+        pew.friction = ammo.friction;
+        pew.mass = ammo.mass;
+
+        // 15 seconds default safeguard (just in case)
+        pew.lifespan = 15;  
+
+        // fetch image, scale it, attach as asset
+        let image = this.all_ammo_images[type]
+        image.scale = ammo.scale;
+        pew.asset = image;
+
+        // custom stats
+        pew.damage = ammo.damage;
+
+        //console.log(target[0], target[1]);
+        if (target !== "none") {
+            pew.direction = pew.getAngleToPoint(target[0], target[1]);
+        }
+
+        if (target === "none") {
+            if (friendly) { pew.direction = 0; }
+        }
+
+        // push the projectile to relevant groups
+        if (friendly) { 
+            this.player_projectiles.push(pew)
+        } else if (!friendly) { 
+            this.enemy_projectiles.push(pew) 
+        };
+        // either way goes to "all_projectiles" group
+        this.all_projectiles.push(pew);
+    }
 };
