@@ -13,7 +13,6 @@
                 "ammo_scale": 7.2,
                 "collider_width": 4,
                 "collider_height": 5,
-                "filepath": "./images/ammo/missile.png",
                 "speed": 80,
                 "direction": 0,
                 "firing_origin_xy_offset_from_player_centre": [
@@ -38,7 +37,6 @@
                 "ammo_scale": 10,
                 "collider_width": 4,
                 "collider_height": 5,
-                "filepath": "./images/ammo/bullet.png",
                 "speed": 70,
                 "direction": 0,
                 "firing_origin_xy_offset_from_player_centre": [
