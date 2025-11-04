@@ -46,7 +46,7 @@ const COMMANDS = 5;         // explains game controls; accessible from PAUSE_PLA
 const PLAY = 6;             // actual game
 const PAUSE_PLAY = 7;       // pauses game; provides buttons to access "LEADERBOARD" and "COMMANDS"
 const END_PLAY = 8;         // after game ends, display encouraging message and score; provides "REPLAY" or "RETURN TO MAIN MENU"
-let current_screen = INTRO;      // initial screen
+let current_screen = TUTORIAL;      // initial screen
 
 // ---- Button Locations ----
 const BUTTON_LRG_LEFT_X = tad.w/10*2;
