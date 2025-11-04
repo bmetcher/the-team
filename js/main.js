@@ -11,49 +11,53 @@ tad.w = 640;
 tad.h = 640;
 
 // ---- Preload Game Images ----
-// Player images
+
 const all_players_images = {    // Player ship images
     player1: load.image(0,0,"./images/player/player1.png"),
     player2: load.image(0,0,"./images/player/player2.png")
 }
+
 const all_ammo_images = {       // Ammo images
     bullet: load.image(0,0,"./images/ammo/bullet.png"),
     missile: load.image(0,0,"./images/ammo/missile.png")
 }
+
 const all_enemy_images = {      // Enemy images
     grunt: load.image(0,0, "./images/enemies/enemy1.png")
 }
 
 // ---- Preload FILE Data ----
-const all_ammo_data = load.json("./data/ammo_map.json");
-const commands_data = load.json("./data/commands.json");
+const files = {
+    all_ammo_data: load.json("./data/ammo_map.json"),
+    game_commands_data: load.json("./data/commands.json"),
+    game_tutorial_txt: load.text("./data/tutorial.txt")
+}
 
 
 // --------------------------------------- Initialisation for Screens ---------------------------------------
 
 // ---- Define Screens ----
-const INTRO = 0;        // display game name
-const MAIN_MENU = 1;    // player selects start OR navigates to COMMANDS OR navigates to LEADERBOARD
-const PREPARE = 2;      // after player selects "PREPARE FOR LAUNCH", must select a ship (has default ship); has "PLAY" button
-const LEADERBOARD = 3;  // scores so far + stored; accessible from MAIN_MENU or PAUSE_PLAY
-const HELP = 4;
-const COMMANDS = 5;  // explains game controls, goals, ship options, and enemies; accessible from MAIN_MENU or PAUSE_PLAY
-const PLAY = 6;         // actual game
-const PAUSE_PLAY = 7;   // pauses game; provides buttons to access "LEADERBOARD" and "COMMANDS"
-const END_PLAY = 8;     // after game ends, display encouraging message and score; provides "REPLAY" or "RETURN TO MAIN MENU"
+const INTRO = 0;            // display game name
+const MAIN_MENU = 1;        // player selects start OR navigates to COMMANDS OR navigates to LEADERBOARD
+const PREPARE = 2;          // after player selects "PREPARE FOR LAUNCH", must select a ship (has default ship); has "PLAY" button
+const LEADERBOARD = 3;      // scores so far + stored; accessible from MAIN_MENU or PAUSE_PLAY
+const TUTORIAL = 4;         // explains how game works
+const COMMANDS = 5;         // explains game controls; accessible from PAUSE_PLAY
+const PLAY = 6;             // actual game
+const PAUSE_PLAY = 7;       // pauses game; provides buttons to access "LEADERBOARD" and "COMMANDS"
+const END_PLAY = 8;         // after game ends, display encouraging message and score; provides "REPLAY" or "RETURN TO MAIN MENU"
 let current_screen = INTRO;      // initial screen
-
 
 // ---- Button Locations ----
 const BUTTON_LRG_LEFT_X = tad.w/10*2;
 const BUTTON_LRG_RIGHT_X = tad.w/10*8;
 const BUTTON_LRG_BOTTOM_Y = tad.h/50*47;
 
-
-// ---- Text Colours and Sizes ----
+// ---- Text Constants ----
 const TXT_COL_1 = "white";
 const TXT_COL_2 = "rgb(180,180,180)";
-
+const GAP_BETW_LINES = 30;
+const HIGHEST_NON_TITLE_TEXT = tad.h/3 - GAP_BETW_LINES;
 
 // ---- Load Fonts ----
 const fonts = {
@@ -63,35 +67,37 @@ const fonts = {
 
 }
 
-
 // ---- Preload Game Screens ----
 const game_screens = {
     intro_screen: load.image(tad.w/2,tad.h/2,"./images/screens/intro.jpeg"),
     main_menu_screen: load.image(tad.w/2,tad.h/2,"./images/screens/main_menu.jpeg"),
     prepare_screen: load.image(tad.w/2,tad.h/2,"./images/screens/prepare.jpeg"),
     leaderboard_screen: load.image(tad.w/2,tad.h/2,"./images/screens/leaderboard.jpeg"),
-    help_screen: load.image(tad.w/2,tad.h/2,"./images/screens/help.jpeg"),
+    tutorial_screen: load.image(tad.w/2,tad.h/2,"./images/screens/tutorial.jpeg"),
     controls_screen: load.image(tad.w/2,tad.h/2,"./images/screens/commands.jpeg")
 }
-
 
 // ---- Create Buttons ----
 const buttons = {
     go_to_prepare: create_menu_button("large", "prepare for launch"),
     go_to_leaderboard: create_menu_button("large", "leaderboard"),
-    go_to_help: create_menu_button("large", "help"),
+    go_to_tutorial: create_menu_button("large", "tutorial"),
     go_to_main_menu: create_menu_button("large", "return to main menu"),
     go_to_play: create_menu_button("large", "play now"),
     go_to_commands: create_menu_button("large", "commands"),
 }
 
 
-// // ---- Start Background Environment ----
-// const environment = new EnvironmentManager(unit);
+// ---- Create Dropdown ----
+const player_ship_dropdown = create_ship_dropwdown();
 
-// // ---- Initialise Player and Enemies ----
-// const player = new PlayerManager("player1", all_players_images, all_ammo_images, all_ammo_data);
-// const enemy = new EnemyManager(unit, all_enemy_images);
+
+// ---- Start Background Environment ----
+const environment = new EnvironmentManager(unit);
+
+// ---- Initialise Player and Enemies ----
+const player = new PlayerManager("player1", all_players_images, all_ammo_images, files.all_ammo_data);
+const enemy = new EnemyManager(unit, all_enemy_images);
 
 
 // ------------------------------------------------- Update -------------------------------------------------
@@ -99,11 +105,10 @@ const buttons = {
 tad.use(update);
 //tad.debug = true;
 
-
 function update() {
 
     if (current_screen === INTRO){
-        // display game name; press any key to continue
+        // display game name; press space key to continue
         display_intro_screen();
     } else if (current_screen === MAIN_MENU){
         // player selects start OR navigates to COMMANDS OR navigates to LEADERBOARD
@@ -114,11 +119,11 @@ function update() {
     } else if (current_screen === LEADERBOARD){
         // scores so far + stored; accessible from MAIN_MENU or PAUSE_PLAY
         display_leaderboard_screen();
-    } else if (current_screen === HELP){
-        // explains game controls, goals, ship options, and enemies; accessible from MAIN_MENU or PAUSE_PLAY
-        display_help_screen();
+    } else if (current_screen === TUTORIAL){
+        // explains how game works
+        display_tutorial_screen();
     } else if (current_screen === COMMANDS){
-        // explains game controls, goals, ship options, and enemies; accessible from MAIN_MENU or PAUSE_PLAY
+        // explains game controls; accessible from PAUSE_PLAY
         display_commands_screen();
     } else if (current_screen === PLAY){
         // actual game
@@ -147,7 +152,6 @@ function display_intro_screen(){
     text.print(tad.w/2, tad.h/5, "game name");
 
     // directions to continue text
-    text.colour = TXT_COL_1;
     text.size = 18;
     text.font = fonts.pixel_italic;
     text.print(tad.w/2, tad.h/5*4, "press space key to continue");
@@ -169,17 +173,17 @@ function display_main_menu_screen(){
     text.font = fonts.pixel_regular;
     draw_button(buttons.go_to_prepare, tad.w/2, tad.h/50*28);
     draw_button(buttons.go_to_leaderboard, tad.w/2, buttons.go_to_prepare.y + GAP_BETW_BUTTONS);
-    draw_button(buttons.go_to_help, tad.w/2, buttons.go_to_leaderboard.y + GAP_BETW_BUTTONS);
+    draw_button(buttons.go_to_tutorial, tad.w/2, buttons.go_to_leaderboard.y + GAP_BETW_BUTTONS);
 }
 
 
 function display_prepare_screen(){
     game_screens.prepare_screen.draw();    // display prepare screen image
     display_menu_title("preparations");     // prepare menu title text
+    //player_ship_dropdown.draw();
     check_buttons()     // change screens logic
     draw_button(buttons.go_to_main_menu, BUTTON_LRG_LEFT_X, BUTTON_LRG_BOTTOM_Y);  // button to return to main menu
     draw_button(buttons.go_to_play, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);     // button to go to game
-
 }
 
 
@@ -188,25 +192,28 @@ function display_leaderboard_screen(){
     display_menu_title("leaderboard");  // leaderboard menu title text
     check_buttons()     // change screens logic
     draw_button(buttons.go_to_main_menu, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);    // button to return to main menu
-
 }
 
 
-function display_help_screen(){
-    game_screens.help_screen.draw();    // display help screen image
-    display_menu_title("help");     // help menu title text
+function display_tutorial_screen(){
+    game_screens.tutorial_screen.draw();    // display help screen image
+    display_menu_title("tutorial");     // help menu title text
+    display_tutorial_txt();
     check_buttons()     // change screens logic
     draw_button(buttons.go_to_main_menu, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);  // button to return to main menu
-
 }
 
 
 function display_commands_screen(){
     game_screens.controls_screen.draw();    // display controls screen image
     display_menu_title("commands");     // commands menu title text
-    display_commands();
+    display_commands_json();
     check_buttons()     // change screens logic
     draw_button(buttons.go_to_main_menu, tad.w/10*8, tad.h/50*47);  // button to return to main menu
+}
+
+
+function display_game_screen(){
 
 }
 
@@ -245,8 +252,8 @@ function check_buttons(){
         current_screen = PREPARE;
     } else if (buttons.go_to_leaderboard.released){
         current_screen = LEADERBOARD;
-    } else if (buttons.go_to_help.released){
-        current_screen = HELP;
+    } else if (buttons.go_to_tutorial.released){
+        current_screen = TUTORIAL;
     } else if (buttons.go_to_main_menu.released){
         current_screen = MAIN_MENU;
     } else if (buttons.go_to_play.released){
@@ -257,15 +264,22 @@ function check_buttons(){
 }
 
 
+// -----------------------------------------  Dropdown Helper Functions -----------------------------------------
+function create_ship_dropwdown(){
+    const options = ["options1", "options2", "options2"];
+    const tmp = make.dropdown(tad.w/2, tad.h/2, 30, options);
+    return tmp;
+}
+
+
+
 // ---------------------------------------- Text Display Helper Functions ----------------------------------------
 
-function display_commands(){
-
+function display_commands_json(){
     text.colour = TXT_COL_2;
     text.font = fonts.pixel_regular
-    const GAP_BETW_H2_LINES = 30;
     const DIST_FROM_VERTICAL_CENTRE = 30; 
-    let current_y = tad.h/3;
+    let current_y = HIGHEST_NON_TITLE_TEXT;
 
     // column headers
     text.size = 20;
@@ -276,15 +290,30 @@ function display_commands(){
 
     // info
     text.size = 15;
-    for (const command of commands_data.commands){
-        current_y += GAP_BETW_H2_LINES;
+    for (const command of files.game_commands_data.commands){
+
+        current_y += GAP_BETW_LINES;
 
         text.alignment.x = "right";
         text.print(tad.w/2-DIST_FROM_VERTICAL_CENTRE, current_y, command.action);
 
         text.alignment.x = "left";
         text.print(tad.w/2+DIST_FROM_VERTICAL_CENTRE, current_y, command.command);
+
     }
+}
+
+
+function display_tutorial_txt(){
+    // Precondition: Assumes tutorial is written using only one line
+    text.alignment.x = "left";
+    text.alignment.y = "top";
+    text.colour = TXT_COL_2;
+    text.font = fonts.pixel_regular;
+    text.maxWidth = tad.w/8*6;
+    let current_y = HIGHEST_NON_TITLE_TEXT;
+
+    text.print(tad.w/8, current_y, files.game_tutorial_txt[0]);
 }
 
 
