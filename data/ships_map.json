@@ -1,0 +1,21 @@
+{
+    "default_ship": {
+        "ship_scale": 100,
+        "collider_width": 40,
+        "collider_height": 10,
+        "minimum_speed": 20,
+        "boost_amount": 40,
+        "movement_friction": 0.3,
+        "stationary_friction": 60
+    },
+
+    "tank_ship": {
+        "ship_scale": 66,
+        "collider_width": 105,
+        "collider_height": 107,
+        "minimum_speed": 16,
+        "boost_amount": 4,
+        "movement_friction": 0.3,
+        "stationary_friction": 60
+    }
+}
