@@ -10,8 +10,8 @@ export class EnvironmentManager {
         this.space = make.group();
         this.mountains = make.group();
 
-        this.space1 = load.image(tad.w/2, 0, "./images/background/space1.jpeg");
-        this.space2 = load.image(tad.w/2, tad.h, "./images/background/space2.jpeg");
+        this.space1 = load.image(tad.w/2, 0, "./images/game_background/space1.jpeg");
+        this.space2 = load.image(tad.w/2, tad.h, "./images/game_background/space2.jpeg");
         
     }
 
