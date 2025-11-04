@@ -1,9 +1,11 @@
-[
-    {"key": "W", "action": "move up"},
-    {"key": "A", "action": "move left"},
-    {"key": "S", "action": "move down"},
-    {"key": "D", "action": "move right"},
-    {"key": "two WASD keys", "action": "diagonal"},
-    {"key": "Shift", "action": "boost: increase speed"},
-    {"key": "Space", "action": "fire"}
-]
+{
+    "commands": [
+        {"action": "FIRE", "command": "SPACE"},
+        {"action": "BOOST", "command": "SHIFT"},
+        {"action": "MOVE UP", "command": "W"},
+        {"action": "MOVE LEFT", "command": "A"},
+        {"action": "MOVE DOWN", "command": "S"},
+        {"action": "MOVE RIGHT", "command": "D"},
+        {"action": "DIAGONAL", "command": "TWO WASD KEYS"}
+    ]
+}

@@ -4,7 +4,7 @@
         "collider_width": 40,
         "collider_height": 10,
         "minimum_speed": 20,
-        "boost_amount": 40,
+        "boost_amount": 10,
         "movement_friction": 0.3,
         "stationary_friction": 60,
         "ammo": [

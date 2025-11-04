@@ -31,6 +31,7 @@ export class PlayerManager {
         if (time.frameCount === 0){
             // ---- Separately Save Data for Current Ship ----
             this.ship_ammo_data = this.all_ammo_data[this.ship_name];
+            console.log(this.ship_ammo_data)
 
             // ---- Create Player Collider ----
             // initial position of player on canvase
