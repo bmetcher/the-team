@@ -1,0 +1,96 @@
+{
+
+    "steps_to_play": [
+        "Select your space ship.", 
+        "Kill as many enemies as possible.",
+        "Throw your computer out the window"
+    ],
+    "keyboard_commands": [
+        {"key": "W", "action": "move up"},
+        {"key": "A", "action": "move left"},
+        {"key": "S", "action": "move down"},
+        {"key": "D", "action": "move right"},
+        {"key": "two WASD keys", "action": "diagonal"},
+        {"key": "Shift", "action": "boost: increase speed"},
+        {"key": "Space", "action": "fire"}
+    ],
+    "extra": "Note: achieve diagonal movement by pressing two WASD keys simultaneously."
+}
+
+/*
+
+function display_how_to_play_screen(){
+    game_screens.controls_screen.draw();
+
+    // how to play menu title text
+    text.colour = TXT_COL_1;
+    text.size = 60;
+    text.font = fonts.titles;
+    text.print(tad.w/2, tad.h/6, "commands");
+
+    // how to play info
+
+    const HEADING1_w = tad.w/7;
+    const HEADING1_size = 20;
+    const HEADING2_w = HEADING1_w * 1.25;
+    const HEADING2_size = 15;
+    const GAP_BETW_H2_LINES = 30;
+
+
+    // steps
+    let current_steps_y = tad.h/6*1.8
+    // header
+    text.alignment.x = "left";
+    text.colour = TXT_COL_2;
+    text.size = HEADING1_size;
+    text.font = fonts.pixel_regular;
+    text.print(HEADING1_w, current_steps_y, "steps:");
+    // info
+    text.alignment.x = "left";
+    text.colour = TXT_COL_2;
+    text.size = HEADING2_size;
+    text.font = fonts.pixel_regular;
+    let numbering = 1;
+    for (const i in how_to_play_info.steps_to_play){
+        const line = how_to_play_info.steps_to_play[i];
+        current_steps_y += GAP_BETW_H2_LINES
+        text.print(
+            HEADING2_w, 
+            current_steps_y, 
+            numbering + ". " + line);
+        numbering++;
+    }
+
+    // commands
+    let current_commands_y = tad.h/10*5.5;
+    const ACTION_X = HEADING2_w + 150;
+    // header
+    text.alignment.x = "left";
+    text.colour = TXT_COL_2;
+    text.size = HEADING1_size;
+    text.font = fonts.pixel_regular;
+    text.print(HEADING1_w, current_commands_y, "commands:");
+    // info
+    text.alignment.x = "left";
+    text.colour = TXT_COL_2;
+    text.size = HEADING2_size;
+    text.font = fonts.pixel_regular;
+    for (const command of how_to_play_info.keyboard_commands){
+        current_commands_y += GAP_BETW_H2_LINES;
+
+        text.print(HEADING2_w, current_commands_y, command.key);
+        text.print(ACTION_X, current_commands_y, command.action);
+    }
+
+    // change screens logic
+    if (buttons.go_to_prepare.released === true){
+        current_screen = PREPARE;
+    }
+
+    // buttons
+    text.font = fonts.pixel_regular;
+    draw_button(buttons.go_to_main_menu, tad.w/10*2, tad.h/50*47);
+
+}
+
+*/

@@ -1,0 +1,9 @@
+[
+    {"key": "W", "action": "move up"},
+    {"key": "A", "action": "move left"},
+    {"key": "S", "action": "move down"},
+    {"key": "D", "action": "move right"},
+    {"key": "two WASD keys", "action": "diagonal"},
+    {"key": "Shift", "action": "boost: increase speed"},
+    {"key": "Space", "action": "fire"}
+]
