@@ -50,11 +50,7 @@ const enemy = new EnemyManager(unit, all_enemy_images);
 tad.use(update);
 tad.debug = true;
 
-const state = {
-    
-}
 
-console.log("hi")
 function update() {
     environment.update();
     player.update();
