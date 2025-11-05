@@ -20,10 +20,10 @@ export class ProjectileManager {
         this.explodes = make.group();
     }
 
-    update(player, enemy){
+    update(player, enemies){
         // check any projectiles being created
-        this.get_player_projectiles(player, enemy);
-        this.get_enemy_projectiles(player, enemy);
+        this.get_player_projectiles(player, enemies);
+        this.get_enemy_projectiles(player, enemies);
 
         // update projectile movement
         // ... unnecessary for now -- default physics!
@@ -33,7 +33,7 @@ export class ProjectileManager {
         }
 
         // check projectile collisions
-        this.see_if_player_hits(enemy);
+        this.see_if_player_hits(enemies);
         this.see_if_enemy_hits(player);
         
         // return entity updates
@@ -46,7 +46,7 @@ export class ProjectileManager {
     }
 
     // process any queued player projectiles to be created
-    get_player_projectiles(player, enemy) {
+    get_player_projectiles(player) {
         while (player.created_projectiles.length > 0) {
             let new_projectile = player.created_projectiles[0];
             // create front projectile (origin, target, type) & then pop it
@@ -60,9 +60,9 @@ export class ProjectileManager {
         }
     }
     // enemy version of above function
-    get_enemy_projectiles(player, enemy) {
-        while (enemy.created_projectiles.length > 0) {
-            let new_projectile = enemy.created_projectiles[0];
+    get_enemy_projectiles(player, enemies) {
+        while (enemies.created_projectiles.length > 0) {
+            let new_projectile = enemies.created_projectiles[0];
             let target;
             // if their target is the player -- angle the projectile at them
             if (new_projectile.target === "player") {
@@ -77,19 +77,21 @@ export class ProjectileManager {
                 new_projectile.type,
                 new_projectile.friendly
             );
-            enemy.created_projectiles.shift();
+            enemies.created_projectiles.shift();
         }
     }
 
     see_if_player_hits(enemies) {
         // for each enemy, check if any player projectiles landed
-        for (let enemy of enemies.all) {
-            for (let projectile of this.player_projectiles) {
-                if (projectile.collides(enemy)) {
-                    //console.log("BANG! enemy: ", enemy, " was hit");
-                    this.damage_target(enemy, projectile);
-                    console.log(enemy.name);
-                    this.destroy_projectile(projectile, "enemy");
+        for (let enemy_type in enemies.enemy_groups) {
+            const explosion_animation_name = enemies.all_enemies_data[enemy_type].explosion_animation_name;
+            for (let enemy of enemies.enemy_groups[enemy_type]){
+                for (let projectile of this.player_projectiles) {
+                    if (projectile.collides(enemy)) {
+                        //console.log("BANG! enemy: ", enemy, " was hit");
+                        this.damage_target(enemy, projectile);
+                        this.destroy_projectile(projectile, explosion_animation_name);
+                    }
                 }
             }
         }
@@ -100,7 +102,7 @@ export class ProjectileManager {
             if (projectile.collides(player.collider)) {
                 //console.log("OW! player was hit by:", projectile);
                 this.damage_player(player, projectile);
-                this.destroy_projectile(projectile, "player");
+                this.destroy_projectile(projectile, player.ship_data.explosion_animation_name);
             }
         }
     }
@@ -121,17 +123,12 @@ export class ProjectileManager {
         // console.log("player hit! new hp: ", player.current_hp);
     }
 
-    destroy_projectile(projectile, dieing_sprite_name) {
+    destroy_projectile(projectile, explosion_animation_name) {
         let explode = make.boxCollider(projectile.x, projectile.y, 15, 15);
         explode.colour = "red";
         explode.lifespan = 1;
         explode.static;
-        let this_explosion;
-        if (dieing_sprite_name=="player"){
-            this_explosion = this.all_explosions.player_explosion;
-        } else if (dieing_sprite_name=="enemy"){
-            this_explosion = this.all_explosions.enemy_explosion;
-        }
+        let this_explosion = this.all_explosions[explosion_animation_name];
         this_explosion.duration = 1;
         this_explosion.looping = false;
         explode.asset = this_explosion

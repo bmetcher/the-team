@@ -150,7 +150,6 @@ export class PlayerManager {
 
         this.collider.draw();
 
-        // 🛑🛑🛑🛑 NO CAMERA USED (YET???) 🛑🛑🛑🛑
     }
 
     create_player_collider(){

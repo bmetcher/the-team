@@ -15,14 +15,16 @@
         "mass": 20,
         "ship_xoffset": 0.98,
         "ship_yoffset": -4,
-        
+
         "primary_weapon": "missile",
         "max_hp": 10,
         "firing_origins": [
             [-10, 0],
             [10, 0],
             [0, -8.7]
-        ]
+        ],
+        "explosion_animation_name": "player"
+        
     },
     "tank_ship": {
         "ship_scale": 66,
@@ -46,6 +48,7 @@
         "firing_origins": [
             [-15, -55], 
             [15, -55]
-        ]
+        ],
+        "explosion_animation_name": "player"
     }
 }
