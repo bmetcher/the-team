@@ -1,5 +1,4 @@
 import { tad, load, make, keys, time, text } from "../lib/TeachAndDraw.js";
-import { AmmoManager } from "./ammo_manager.js";
 
 export class PlayerManager {
 

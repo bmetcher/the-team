@@ -29,8 +29,8 @@ export class ProjectileManager {
         // update projectile movement
         // ... unnecessary for now -- default physics!
         for (let i = 0; i < this.explodes.length; i++) {
-            this.explodes[i].h += 0.25;
-            this.explodes[i].w += 0.25;
+            this.explodes[i].h += 1;
+            this.explodes[i].w += 1;
         }
 
         // check projectile collisions

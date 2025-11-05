@@ -101,10 +101,6 @@ export class EnemyManager {
         }
     }
 
-
-
-
-    
     // Cause semi-erratic movement whenever "speed < speed_limit"
     random_pathing(unit, speed_limit = 2, threshold = 80) {
         // triggered when slower than "speed_limit"
