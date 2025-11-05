@@ -32,8 +32,8 @@ const all_enemy_images = {
 }
 // Environment images
 const all_environment_images = {
-    space1: load.image(tad.w/2, 0, "./images/background/space1.jpeg"),
-    space2: load.image(tad.w/2, tad.h, "./images/background/space2.jpeg")
+    space1: load.image(tad.w/2, 0, "./images/game_background/space1.jpeg"),
+    space2: load.image(tad.w/2, tad.h, "./images/game_background/space2.jpeg")
 }
 
 // Animations
@@ -166,41 +166,49 @@ tad.use(update);
 // Main draw loop
 function update() {
 
-    if (current_screen === INTRO){
-        // display game name; press space key to continue
-        display_intro_screen();
-    } else if (current_screen === MAIN_MENU){
-        // player selects start OR navigates to COMMANDS OR navigates to LEADERBOARD
-        display_main_menu_screen();
-    } else if (current_screen === PREPARE){
-        // after player selects "PREPARE FOR LAUNCH", must select a ship (has default ship); has "PLAY" button
-        initial_setup();
-        display_prepare_screen();
-    } else if (current_screen === LEADERBOARD){
-        // scores so far + stored; accessible from MAIN_MENU or PAUSE_PLAY
-        display_leaderboard_screen();
-    } else if (current_screen === TUTORIAL){
-        // explains how game works
-        display_tutorial_screen();
-    } else if (current_screen === COMMANDS){
-        // explains game controls; accessible from PAUSE_PLAY
-        display_commands_screen();
-    } else if (current_screen === PLAY){
-        // actual game
-        // environment.update();
-        // player.update();
-        // enemy.update();
-        environment.update();
-        projectiles.update(player, enemies);
+    // if (current_screen === INTRO){
+    //     // display game name; press space key to continue
+    //     display_intro_screen();
+    // } else if (current_screen === MAIN_MENU){
+    //     // player selects start OR navigates to COMMANDS OR navigates to LEADERBOARD
+    //     display_main_menu_screen();
+    // } else if (current_screen === PREPARE){
+    //     // after player selects "PREPARE FOR LAUNCH", must select a ship (has default ship); has "PLAY" button
+    //     initial_setup();
+    //     display_prepare_screen();
+    // } else if (current_screen === LEADERBOARD){
+    //     // scores so far + stored; accessible from MAIN_MENU or PAUSE_PLAY
+    //     display_leaderboard_screen();
+    // } else if (current_screen === TUTORIAL){
+    //     // explains how game works
+    //     display_tutorial_screen();
+    // } else if (current_screen === COMMANDS){
+    //     // explains game controls; accessible from PAUSE_PLAY
+    //     display_commands_screen();
+    // } else if (current_screen === PLAY){
+    //     // actual game
+    //     // environment.update();
+    //     // player.update();
+    //     // enemy.update();
+    //     environment.update();
+    //     projectiles.update(player, enemies);
     
-        player.update();
-        enemies.update();
-    } else if (current_screen === PAUSE_PLAY){
-        // pauses game; provides buttons to access "LEADERBOARD" and "COMMANDS"
-    } else if (current_screen === END_PLAY){
-        // after game ends, display encouraging message and score; provides "REPLAY" or "RETURN TO MAIN MENU"
-    }
+    //     player.update();
+    //     enemies.update();
+    // } else if (current_screen === PAUSE_PLAY){
+    //     // pauses game; provides buttons to access "LEADERBOARD" and "COMMANDS"
+    // } else if (current_screen === END_PLAY){
+    //     // after game ends, display encouraging message and score; provides "REPLAY" or "RETURN TO MAIN MENU"
+    // }
     
+    initial_setup();
+    
+    environment.update();
+    projectiles.update(player, enemies);
+
+    player.update();
+    enemies.update();
+
 }
 
 
