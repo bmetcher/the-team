@@ -38,6 +38,10 @@ export class PlayerManager {
         if (time.frameCount === 0){
             // ---- Create Player Collider ----
             this.collider = this.create_player_collider();
+            // ---- Create Boost Fuel ----
+            this.current_fuel = this.ship_data.max_boost_fuel;
+            // ---- Create Boost Fuel ----
+            this.current_fuel = this.ship_data.max_boost_fuel;
         }
 
         // ---- Change Direction based on WASD (Allows Diagonal) ----
@@ -92,15 +96,27 @@ export class PlayerManager {
 
         // Slow down ship
         } else {
-            this.collider.friction = this.ship_data.slowdown;
+
+            this.collider.friction = this.ship_data.slowdown;  
         }
+
+        // Recharge Boost
+        if (!boost_status && this.current_fuel < this.ship_data.max_boost_fuel ){
+
+            this.current_fuel += this.ship_data.boost_recharge
+            
+            if (this.current_fuel > this.ship_data.max_boost_fuel){
+
+                this.current_fuel = this.ship_data.max_boost_fuel;
+            }
+        }  
         
         // ---- Keep Player Within Bounds ----
         const x_gap = this.width/2
         const y_gap = this.height/2
 
         if (this.collider.x < x_gap){
-            this.collider.direction = x_gap;
+            this.collider.x = x_gap;
         }
         else if (this.collider.x > tad.w - x_gap){ 
             this.collider.x = tad.w - x_gap;
