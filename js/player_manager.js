@@ -22,7 +22,6 @@ export class PlayerManager {
         this.all_ammo_data = all_ammo_data;
         this.ship_ammo_data = null;
         this.collider = null;
-
     }
 
     update(){
@@ -49,8 +48,8 @@ export class PlayerManager {
         // ---- Change Direction based on WASD (Allows Diagonal) ----
         let dx = 0;
         let dy = 0;
-        let boost_status = 0
-    
+        let boost_status = 0;
+        
         if (keys.down("W")) dy -= 1;
         if (keys.down("S")) dy += 1;
         if (keys.down("A")) dx -= 1;
@@ -59,8 +58,7 @@ export class PlayerManager {
         if (dx !== 0 || dy !== 0) {
             let angle_rad = Math.atan2(dy, dx);  // standard math angle (0 = right); in radians
             let angle_deg = angle_rad * 180 / Math.PI;        // convert to degrees
-            this.collider.direction = angle_deg + 90; // adjust so 0 = up
-
+            this.collider.direction = angle_deg + 90; // adjust so 0 = up          
             // ---- Boost Movement ----
             if (keys.down("shift") && this.current_fuel > 1){
 
@@ -80,7 +78,6 @@ export class PlayerManager {
                 }  
             }
 
-
             // ---- Normal movement ---- 
             else{
 
@@ -97,49 +94,52 @@ export class PlayerManager {
                 this.collider.friction = this.ship_ammo_data.slowdown;
             }
 
+        // Slow down ship
         } else {
 
-            this.collider.friction = this.ship_ammo_data.slowdown;  // Slows down ship
+            this.collider.friction = this.ship_ammo_data.slowdown;  
         }
 
-        if (!boost_status && this.current_fuel <this.ship_ammo_data.max_boost_fuel ){
+        // Recharge Boost
+        if (!boost_status && this.current_fuel < this.ship_ammo_data.max_boost_fuel ){
+
             this.current_fuel += this.ship_ammo_data.boost_recharge
+            
+            if (this.current_fuel > this.ship_ammo_data.max_boost_fuel){
+
+                this.current_fuel = this.ship_ammo_data.max_boost_fuel;
+            }
         }        
         
-        
-
-
         // ---- Keep Player Within Bounds ---- //
-        const GAP = this.width/2 + 40; // keep a gap of pixels so player does not go off edge
-        if (this.collider.x < GAP){
-            this.collider.direction = 90;
+        const x_GAP = this.width/2; // Horizontal gap
+        const y_GAP = this.height/2; // Vertical gap
+
+        if (this.collider.x < x_GAP){
+            this.collider.x = x_GAP;
         }
-        if (this.collider.x > tad.w - GAP){ 
-            this.collider.direction = 270;
-        }
-        if (this.collider.y < GAP){
-            this.collider.direction = 180;
-        }
-        if (this.collider.y > tad.h - GAP){
-            this.collider.direction = 0;
+        else if (this.collider.x > tad.w - x_GAP){ 
+            this.collider.x = tad.w - x_GAP;
         }
 
-        // ---- Boost ----
+        if (this.collider.y < y_GAP){
+            this.collider.y = y_GAP
+
+        }
+        else if (this.collider.y > tad.h - y_GAP){
+            this.collider.y = tad.h - y_GAP
+        }
+
+        // ---- Shoot ----
         if (keys.released(" ")){
             this.ammo_manager.fire(this.collider.x, this.collider.y);
         }
-
-        // // ---- Set Minimum Speed ----
-        // if (this.collider.speed < this.ship_ammo_data.minimum_speed){
-        //     this.collider.speed = this.ship_ammo_data.minimum_speed;
-        // }
 
         this.ammo_manager.update();
         this.collider.draw();
 
         // 🛑🛑🛑🛑 NO CAMERA USED (YET???) 🛑🛑🛑🛑
     }
-
 
     create_player_collider(init_x, init_y){
         this.width = this.ship_ammo_data.collider_width;
