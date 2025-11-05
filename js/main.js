@@ -31,8 +31,11 @@ const all_players_images = {
 // Ammo images
 const all_ammo_images = {
     bullet: load.image(0,0,"./images/ammo/bullet.png"),
-    missile: load.image(0,0,"./images/ammo/missile.png"),
-    // temporary for now
+    missile: load.image(0,0,"./images/ammo/missile.png")
+}
+
+// Animations
+const all_explosions = {
     explosion: load.animation(0,0,
         "./images/explosions/explosion1_animation/step_1.png",
         "./images/explosions/explosion1_animation/step_2.png",
@@ -44,6 +47,7 @@ const all_ammo_images = {
         "./images/explosions/explosion1_animation/step_8.png"
     )
 }
+
 // Enemy images
 const all_enemy_images = {
     grunt: load.image(0,0, "./images/enemies/enemy1.png")
@@ -79,7 +83,7 @@ function initial_setup() {
             enemy = new EnemyManager(unit, all_enemy_images);
 
             // ---- Initialize Projectiles -----
-            projectiles = new ProjectileManager(unit, all_ammo_data, all_ammo_images);
+            projectiles = new ProjectileManager(unit, all_ammo_data, all_ammo_images, all_explosions);
 
             // ?? Set game state here ??
             // game_state = MAIN_MENU;

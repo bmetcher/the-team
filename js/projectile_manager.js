@@ -2,14 +2,15 @@ import { tad, time, load, make, keys } from "../lib/TeachAndDraw.js";
 
 export class ProjectileManager {
 
-    constructor(unit, all_ammo_data, all_ammo_images) {
+    constructor(unit, all_ammo_data, all_ammo_images, all_explosions) {
         this.unit = unit;   // standard unit
 
         // load all ammo .json data && images
         this.all_ammo_data = all_ammo_data;
         this.all_ammo_images = all_ammo_images;
-        this.all_ammo_images.explosion.duration = 1;
-        this.all_ammo_images.explosion.looping = false;
+        this.all_explosions = all_explosions
+        this.all_explosions.explosion.duration = 1;
+        this.all_explosions.explosion.looping = false;
 
         // track existing projectiles for entities
         this.all_projectiles = make.group();    // global tracker
@@ -126,7 +127,7 @@ export class ProjectileManager {
         explode.colour = "red";
         explode.lifespan = 1;
         explode.static;
-        explode.asset = this.all_ammo_images.explosion;
+        explode.asset = this.all_explosions.explosion;
         explode.scale = 0.5;
         this.explodes.push(explode);
         this.all_projectiles.push(explode);
