@@ -4,7 +4,7 @@ const FLY_IN_TIME = 5;
 
 let speed = 1;
 const FINAL_SPEED = 0.4;
-const amt_to_reduce_by = (speed - FINAL_SPEED) / (FLY_IN_TIME * time.fps);
+const AMT_TO_REDUCE_BY = (speed - FINAL_SPEED) / (FLY_IN_TIME * time.fps);
 
 export class EnvironmentManager {
     constructor(unit, all_environment_images) {
@@ -32,7 +32,7 @@ export class EnvironmentManager {
     draw_space() {
         // move grass down
         if (time.seconds < FLY_IN_TIME){
-            speed -= amt_to_reduce_by
+            speed -= AMT_TO_REDUCE_BY;
         }
         this.space1.y+=speed;
         this.space2.y+=speed;
