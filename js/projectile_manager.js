@@ -9,8 +9,6 @@ export class ProjectileManager {
         this.all_ammo_data = all_ammo_data;
         this.all_ammo_images = all_ammo_images;
         this.all_explosions = all_explosions
-        this.all_explosions.explosion.duration = 1;
-        this.all_explosions.explosion.looping = false;
 
         // track existing projectiles for entities
         this.all_projectiles = make.group();    // global tracker
@@ -90,7 +88,8 @@ export class ProjectileManager {
                 if (projectile.collides(enemy)) {
                     //console.log("BANG! enemy: ", enemy, " was hit");
                     this.damage_target(enemy, projectile);
-                    this.destroy_projectile(projectile);
+                    console.log(enemy.name);
+                    this.destroy_projectile(projectile, "enemy");
                 }
             }
         }
@@ -101,7 +100,7 @@ export class ProjectileManager {
             if (projectile.collides(player.collider)) {
                 //console.log("OW! player was hit by:", projectile);
                 this.damage_player(player, projectile);
-                this.destroy_projectile(projectile);
+                this.destroy_projectile(projectile, "player");
             }
         }
     }
@@ -122,12 +121,20 @@ export class ProjectileManager {
         console.log("player hit! new hp: ", player.current_hp);
     }
 
-    destroy_projectile(projectile) {
+    destroy_projectile(projectile, dieing_sprite_name) {
         let explode = make.boxCollider(projectile.x, projectile.y, 15, 15);
         explode.colour = "red";
         explode.lifespan = 1;
         explode.static;
-        explode.asset = this.all_explosions.explosion;
+        let this_explosion;
+        if (dieing_sprite_name=="player"){
+            this_explosion = this.all_explosions.player_explosion;
+        } else if (dieing_sprite_name=="enemy"){
+            this_explosion = this.all_explosions.enemy_explosion;
+        }
+        this_explosion.duration = 1;
+        this_explosion.looping = false;
+        explode.asset = this_explosion
         explode.scale = 0.5;
         this.explodes.push(explode);
         this.all_projectiles.push(explode);

@@ -8,7 +8,7 @@ export class EnemyManager {
         this.all = make.group();    // use this maybe later?
 
         this.grunts = make.group();
-
+        
         // temporary storing set enemy values
         this.spec = {
             "grunt": {

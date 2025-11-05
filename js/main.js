@@ -36,15 +36,25 @@ const all_ammo_images = {
 
 // Animations
 const all_explosions = {
-    explosion: load.animation(0,0,
-        "./images/explosions/explosion1_animation/step_1.png",
-        "./images/explosions/explosion1_animation/step_2.png",
-        "./images/explosions/explosion1_animation/step_3.png",
-        "./images/explosions/explosion1_animation/step_4.png",
-        "./images/explosions/explosion1_animation/step_5.png",
-        "./images/explosions/explosion1_animation/step_6.png",
-        "./images/explosions/explosion1_animation/step_7.png",
-        "./images/explosions/explosion1_animation/step_8.png"
+    player_explosion: load.animation(0,0,
+        "./images/explosions/player_explosion_animation/step_1.png",
+        "./images/explosions/player_explosion_animation/step_2.png",
+        "./images/explosions/player_explosion_animation/step_3.png",
+        "./images/explosions/player_explosion_animation/step_4.png",
+        "./images/explosions/player_explosion_animation/step_5.png",
+        "./images/explosions/player_explosion_animation/step_6.png",
+        "./images/explosions/player_explosion_animation/step_7.png",
+        "./images/explosions/player_explosion_animation/step_8.png"
+    ),
+    enemy_explosion: load.animation(0,0,
+        "./images/explosions/enemy_explosion_animation/step_1.png",
+        "./images/explosions/enemy_explosion_animation/step_2.png",
+        "./images/explosions/enemy_explosion_animation/step_3.png",
+        "./images/explosions/enemy_explosion_animation/step_4.png",
+        "./images/explosions/enemy_explosion_animation/step_5.png",
+        "./images/explosions/enemy_explosion_animation/step_6.png",
+        "./images/explosions/enemy_explosion_animation/step_7.png",
+        "./images/explosions/enemy_explosion_animation/step_8.png"
     )
 }
 
@@ -94,7 +104,7 @@ function initial_setup() {
 
 
 tad.use(update);
-tad.debug = true;
+//tad.debug = true;
 
 
 // Main draw loop
