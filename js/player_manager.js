@@ -104,13 +104,6 @@ export class PlayerManager {
                 this.current_fuel = this.ship_data.max_boost_fuel;
             }
         }        
-
-        // ---- Keep Player Within Bounds ---- //
-        const x_GAP = this.width/2; // Horizontal gap
-        const y_GAP = this.height/2; // Vertical gap
-        if (this.collider.x < x_GAP){
-            this.collider.x = x_GAP;
-         }
         
         // ---- Keep Player Within Bounds ----
         const x_gap = this.width/2
