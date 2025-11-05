@@ -37,6 +37,8 @@ export class PlayerManager {
             this.collider = this.create_player_collider();
             // ---- Create Boost Fuel ----
             this.current_fuel = this.ship_data.max_boost_fuel;
+            // ---- Create Boost Fuel ----
+            this.current_fuel = this.ship_data.max_boost_fuel;
         }
 
         // ---- Change Direction based on WASD (Allows Diagonal) ----
