@@ -20,7 +20,6 @@ export class PlayerManager {
         this.ship_data = all_ship_data[this.ship_name];
         
         this.collider = null;
-
         // track projectiles to be created
         this.created_projectiles = [];
     }
@@ -33,12 +32,16 @@ export class PlayerManager {
             const init_x = tad.w/2;        // midway width-wise
             const init_y = tad.h/3*2;     // 2/3 down height-wise
             this.collider = this.create_player_collider(init_x, init_y);
+            // ---- Create Boost Fuel ----
+            this.current_fuel = this.ship_data.max_boost_fuel;
+
         }
 
         // ---- Change Direction based on WASD (Allows Diagonal) ----
         let dx = 0;
         let dy = 0;
-
+        let boost_status = 0;
+        
         if (keys.down("W")) dy -= 1;
         if (keys.down("S")) dy += 1;
         if (keys.down("A")) dx -= 1;
@@ -47,34 +50,79 @@ export class PlayerManager {
         if (dx !== 0 || dy !== 0) {
             let angle_rad = Math.atan2(dy, dx);  // standard math angle (0 = right); in radians
             let angle_deg = angle_rad * 180 / Math.PI;        // convert to degrees
-            this.collider.direction = angle_deg + 90; // adjust so 0 = up
-            this.collider.friction = this.ship_data.movement_friction;
-            this.collider.speed = 5;
+            this.collider.direction = angle_deg + 90; // adjust so 0 = up          
+            // ---- Boost Movement ----
+            if (keys.down("shift") && this.current_fuel > 1){
+
+                boost_status = 1
+
+                if (this.collider.speed < this.ship_data.boost_max_speed){
+                    this.collider.speed += this.ship_data.boost_acceleration;
+                }
+                else{
+                    this.collider.speed = this.ship_data.boost_max_speed;
+                }
+
+                // Use boost fuel
+                this.current_fuel -= 1;
+                if (this.current_fuel <= 0) {
+                    this.current_fuel = 0;
+                }  
+            }
+
+            // ---- Normal movement ---- 
+            else{
+
+                boost_status = 0;
+
+                if (this.collider.speed < this.ship_data.max_speed){
+                    this.collider.speed += this.ship_data.acceleration;
+                }
+
+                else{
+                    this.collider.speed = this.ship_data.max_speed;
+                }
+
+                this.collider.friction = this.ship_data.slowdown;
+            }
+
+        // Slow down ship
         } else {
-            this.collider.friction = this.ship_data.stationary_friction;  // make ship stationary when not in motion
+
+            this.collider.friction = this.ship_data.slowdown;  
         }
+
+        // Recharge Boost
+        if (!boost_status && this.current_fuel < this.ship_data.max_boost_fuel ){
+
+            this.current_fuel += this.ship_data.boost_recharge
+            
+            if (this.current_fuel > this.ship_data.max_boost_fuel){
+
+                this.current_fuel = this.ship_data.max_boost_fuel;
+            }
+        }        
         
-        // ---- Accelerate ----
-        if (keys.down("shift")){
-            this.collider.speed += this.ship_data.boost_amount;
+        // ---- Keep Player Within Bounds ---- //
+        const x_GAP = this.width/2; // Horizontal gap
+        const y_GAP = this.height/2; // Vertical gap
+
+        if (this.collider.x < x_GAP){
+            this.collider.x = x_GAP;
+        }
+        else if (this.collider.x > tad.w - x_GAP){ 
+            this.collider.x = tad.w - x_GAP;
         }
 
-        // ---- Keep Player Within Bounds ----
-        const GAP = this.width/2 + 40; // keep a gap of pixels so player does not go off edge
-        if (this.collider.x < GAP){
-            this.collider.direction = 90;
+        if (this.collider.y < y_GAP){
+            this.collider.y = y_GAP
+
         }
-        if (this.collider.x > tad.w - GAP){ 
-            this.collider.direction = 270;
-        }
-        if (this.collider.y < GAP){
-            this.collider.direction = 180;
-        }
-        if (this.collider.y > tad.h - GAP){
-            this.collider.direction = 0;
+        else if (this.collider.y > tad.h - y_GAP){
+            this.collider.y = tad.h - y_GAP
         }
 
-        // ---- Boost ----
+        // ---- Shoot ----
         if (keys.released(" ")){
             //this.ammo_manager.fire(this.collider.x, this.collider.y);
             for (const this_point in this.ship_data.firing_origins){
@@ -89,11 +137,6 @@ export class PlayerManager {
                 });
             }
         }
-
-        // ---- Set Minimum Speed ----
-        // if (this.collider.speed < this.ship_data.minimum_speed){
-        //     this.collider.speed = this.ship_data.minimum_speed;
-        // }
 
         this.collider.draw();
 
