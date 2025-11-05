@@ -77,12 +77,17 @@ export class PlayerManager {
         // ---- Boost ----
         if (keys.released(" ")){
             //this.ammo_manager.fire(this.collider.x, this.collider.y);
-            this.created_projectiles.push({
-                origin: [this.collider.x, this.collider.y],
-                target: "none",
-                type: this.ship_data.primary_weapon,
-                friendly: true
-            });
+            for (const this_point in this.ship_data.firing_origins){
+                console.log(this.ship_data.firing_origins[this_point]);
+                const this_x = this.collider.x + this.ship_data.firing_origins[this_point][0];
+                const this_y = this.collider.y + this.ship_data.firing_origins[this_point][1];
+                this.created_projectiles.push({
+                    origin: [this_x, this_y],
+                    target: "none",
+                    type: this.ship_data.primary_weapon,
+                    friendly: true
+                });
+            }
         }
 
         // ---- Set Minimum Speed ----
