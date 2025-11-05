@@ -8,6 +8,8 @@ export class ProjectileManager {
         // load all ammo .json data && images
         this.all_ammo_data = all_ammo_data;
         this.all_ammo_images = all_ammo_images;
+        this.all_ammo_images.explosion.duration = 1;
+        this.all_ammo_images.explosion.looping = false;
 
         // track existing projectiles for entities
         this.all_projectiles = make.group();    // global tracker

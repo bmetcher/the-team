@@ -50,6 +50,7 @@ export class PlayerManager {
         if (keys.down("D")) dx += 1;
 
         if (dx !== 0 || dy !== 0) {
+            
             let angle_rad = Math.atan2(dy, dx);  // standard math angle (0 = right); in radians
             let angle_deg = angle_rad * 180 / Math.PI;        // convert to degrees
             this.collider.direction = angle_deg + 90; // adjust so 0 = up          
@@ -111,26 +112,23 @@ export class PlayerManager {
             this.collider.x = x_GAP;
          }
         
-        // ---- Accelerate ----
-        if (keys.down("shift")){
-            this.collider.speed += this.ship_data.boost_amount;
-        }
-
         // ---- Keep Player Within Bounds ----
-        const GAP = this.width/2 + 40; // keep a gap of pixels so player does not go off edge
-        if (this.collider.x < GAP){
-            this.collider.direction = 90;
+        const x_gap = this.width/2
+        const y_gap = this.height/2
+
+        if (this.collider.x < x_gap){
+            this.collider.direction = x_gap;
         }
-        else if (this.collider.x > tad.w - x_GAP){ 
-            this.collider.x = tad.w - x_GAP;
+        else if (this.collider.x > tad.w - x_gap){ 
+            this.collider.x = tad.w - x_gap;
         }
 
-        if (this.collider.y < y_GAP){
-            this.collider.y = y_GAP
+        if (this.collider.y < y_gap){
+            this.collider.y = y_gap
 
         }
-        else if (this.collider.y > tad.h - y_GAP){
-            this.collider.y = tad.h - y_GAP
+        else if (this.collider.y > tad.h - y_gap){
+            this.collider.y = tad.h - y_gap
         }
 
         // ---- Shoot ----
