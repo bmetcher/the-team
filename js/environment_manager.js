@@ -33,7 +33,6 @@ export class EnvironmentManager {
         // move grass down
         if (time.seconds < FLY_IN_TIME){
             speed -= amt_to_reduce_by
-            console.log("here")
         }
         this.space1.y+=speed;
         this.space2.y+=speed;

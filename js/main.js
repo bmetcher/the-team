@@ -53,8 +53,8 @@ const all_explosions = {
         "./images/explosions/enemy_explosion_animation/step_4.png",
         "./images/explosions/enemy_explosion_animation/step_5.png",
         "./images/explosions/enemy_explosion_animation/step_6.png",
-        "./images/explosions/enemy_explosion_animation/step_7.png",
-        "./images/explosions/enemy_explosion_animation/step_8.png"
+        // "./images/explosions/enemy_explosion_animation/step_7.png",
+        // "./images/explosions/enemy_explosion_animation/step_8.png"
     )
 }
 
