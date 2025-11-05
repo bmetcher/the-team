@@ -66,7 +66,7 @@ function initial_setup() {
             environment = new EnvironmentManager(unit, all_environment_images);
 
             // ---- Initialise Player and Enemies ----
-            player = new PlayerManager("tank_ship", all_players_images, all_ammo_images, all_ship_data, all_ammo_data);  // updated for new parameters
+            player = new PlayerManager("default_ship", all_players_images, all_ammo_images, all_ship_data, all_ammo_data);  // updated for new parameters
             enemy = new EnemyManager(unit, all_enemy_images);
 
             // ---- Initialize Projectiles -----

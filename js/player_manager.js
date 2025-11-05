@@ -1,5 +1,7 @@
 import { tad, load, make, keys, time, text } from "../lib/TeachAndDraw.js";
 
+const FLY_IN_TIME = 5;
+
 export class PlayerManager {
 
     constructor(player_name, all_players_images, all_ammo_images, all_ship_data, all_ammo_data) {
@@ -26,15 +28,13 @@ export class PlayerManager {
 
     update(){
 
+        if (time.seconds === FLY_IN_TIME){
+            this.specialise_player_settings();
+        }
+
         if (time.frameCount === 0){
             // ---- Create Player Collider ----
-            // initial position of player on canvase
-            const init_x = tad.w/2;        // midway width-wise
-            const init_y = tad.h/3*2;     // 2/3 down height-wise
-            this.collider = this.create_player_collider(init_x, init_y);
-            // ---- Create Boost Fuel ----
-            this.current_fuel = this.ship_data.max_boost_fuel;
-
+            this.collider = this.create_player_collider();
         }
 
         // ---- Change Direction based on WASD (Allows Diagonal) ----
@@ -88,27 +88,18 @@ export class PlayerManager {
 
         // Slow down ship
         } else {
-
-            this.collider.friction = this.ship_data.slowdown;  
+            this.collider.friction = this.ship_data.stationary_friction;  // make ship stationary when not in motion
+        }
+        
+        // ---- Accelerate ----
+        if (keys.down("shift")){
+            this.collider.speed += this.ship_data.boost_amount;
         }
 
-        // Recharge Boost
-        if (!boost_status && this.current_fuel < this.ship_data.max_boost_fuel ){
-
-            this.current_fuel += this.ship_data.boost_recharge
-            
-            if (this.current_fuel > this.ship_data.max_boost_fuel){
-
-                this.current_fuel = this.ship_data.max_boost_fuel;
-            }
-        }        
-        
-        // ---- Keep Player Within Bounds ---- //
-        const x_GAP = this.width/2; // Horizontal gap
-        const y_GAP = this.height/2; // Vertical gap
-
-        if (this.collider.x < x_GAP){
-            this.collider.x = x_GAP;
+        // ---- Keep Player Within Bounds ----
+        const GAP = this.width/2 + 40; // keep a gap of pixels so player does not go off edge
+        if (this.collider.x < GAP){
+            this.collider.direction = 90;
         }
         else if (this.collider.x > tad.w - x_GAP){ 
             this.collider.x = tad.w - x_GAP;
@@ -126,7 +117,6 @@ export class PlayerManager {
         if (keys.released(" ")){
             //this.ammo_manager.fire(this.collider.x, this.collider.y);
             for (const this_point in this.ship_data.firing_origins){
-                console.log(this.ship_data.firing_origins[this_point]);
                 const this_x = this.collider.x + this.ship_data.firing_origins[this_point][0];
                 const this_y = this.collider.y + this.ship_data.firing_origins[this_point][1];
                 this.created_projectiles.push({
@@ -143,19 +133,27 @@ export class PlayerManager {
         // 🛑🛑🛑🛑 NO CAMERA USED (YET???) 🛑🛑🛑🛑
     }
 
-    create_player_collider(init_x, init_y){
+    create_player_collider(){
         this.width = this.ship_data.collider_width;
         this.height = this.ship_data.collider_height;
-        const tmp = make.boxCollider(init_x, init_y, this.width, this.height); 
+        const INIT_X = tad.w/2;        // midway width-wise
+        const INIT_Y = tad.h + this.height * 2; //3*2;     // 2/3 down height-wise
+        const tmp = make.boxCollider(INIT_X, INIT_Y, this.width, this.height); 
         this.ship_image.scale = this.ship_data.ship_scale;
         tmp.asset = this.ship_image;
-        tmp.speed = this.ship_data.minimum_speed;
-        // mass or static?
-        // tmp.static = true;
-        tmp.mass = this.ship_data.mass;
-        tmp.direction = 270;
+        tmp.speed = 30;
+        tmp.direction = 0;
         tmp.xOffset = this.ship_data.ship_xoffset;
         tmp.yOffset = this.ship_data.ship_yoffset;
         return tmp;
+    }
+
+
+    specialise_player_settings(){
+        // mass or static?
+        // tmp.static = true;
+        this.collider.mass = this.ship_data.mass;
+        this.collider.direction = 270;
+        this.collider.speed = this.ship_data.minimum_speed;
     }
 };
