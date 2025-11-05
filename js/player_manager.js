@@ -1,15 +1,15 @@
 import { tad, load, make, keys, time, text } from "../lib/TeachAndDraw.js";
-import { AmmoManager } from "./ammo_manager.js";
 
 export class PlayerManager {
 
-    constructor(player_name, all_players_images, all_ammo_images, all_ammo_data) {
+    constructor(player_name, all_players_images, all_ammo_images, all_ship_data, all_ammo_data) {
         /*
         Parameters;
             player_name : str : allow selection of player image and knowing weapons, ammo, etc. belonging to specific player
             all_players_images : dictionary of images : all player-related images
             all_ammo_images : dictionary of images : all ammunition-images
-            all_ammo_data : JSON data from ship_ammo.json
+            all_ship_data : JSON data from ships.json
+            all_ammo_data : JSON data from ammo.json
         */
 
         // ---- Name of Player to Determine Appropriate Actions ----
@@ -17,29 +17,22 @@ export class PlayerManager {
 
         // ---- Get Player Ship Image ----
         this.ship_image = all_players_images[this.ship_name];
-
-        this.all_ammo_images = all_ammo_images;
-        this.all_ammo_data = all_ammo_data;
-        this.ship_ammo_data = null;
-
+        this.ship_data = all_ship_data[this.ship_name];
+        
         this.collider = null;
 
+        // track projectiles to be created
+        this.created_projectiles = [];
     }
 
     update(){
 
         if (time.frameCount === 0){
-            // ---- Separately Save Data for Current Ship ----
-            this.ship_ammo_data = this.all_ammo_data[this.ship_name];
-
             // ---- Create Player Collider ----
             // initial position of player on canvase
             const init_x = tad.w/2;        // midway width-wise
             const init_y = tad.h/3*2;     // 2/3 down height-wise
             this.collider = this.create_player_collider(init_x, init_y);
-
-            // ---- Create Ammo Mananger ----
-            this.ammo_manager = new AmmoManager(this.ship_name, this.collider.x, this.collider.y, this.all_ammo_images, this.all_ammo_data);
         }
 
         // ---- Change Direction based on WASD (Allows Diagonal) ----
@@ -55,14 +48,15 @@ export class PlayerManager {
             let angle_rad = Math.atan2(dy, dx);  // standard math angle (0 = right); in radians
             let angle_deg = angle_rad * 180 / Math.PI;        // convert to degrees
             this.collider.direction = angle_deg + 90; // adjust so 0 = up
-            this.collider.friction = this.ship_ammo_data.movement_friction;
+            this.collider.friction = this.ship_data.movement_friction;
+            this.collider.speed = 5;
         } else {
-            this.collider.friction = this.ship_ammo_data.stationary_friction;  // make ship stationary when not in motion
+            this.collider.friction = this.ship_data.stationary_friction;  // make ship stationary when not in motion
         }
-       
+        
         // ---- Accelerate ----
         if (keys.down("shift")){
-            this.collider.speed += this.ship_ammo_data.boost_amount;
+            this.collider.speed += this.ship_data.boost_amount;
         }
 
         // ---- Keep Player Within Bounds ----
@@ -82,31 +76,38 @@ export class PlayerManager {
 
         // ---- Boost ----
         if (keys.released(" ")){
-            this.ammo_manager.fire(this.collider.x, this.collider.y);
+            //this.ammo_manager.fire(this.collider.x, this.collider.y);
+            this.created_projectiles.push({
+                origin: [this.collider.x, this.collider.y],
+                target: "none",
+                type: this.ship_data.primary_weapon,
+                friendly: true
+            });
         }
 
         // ---- Set Minimum Speed ----
-        if (this.collider.speed < this.ship_ammo_data.minimum_speed){
-            this.collider.speed = this.ship_ammo_data.minimum_speed;
-        }
+        // if (this.collider.speed < this.ship_data.minimum_speed){
+        //     this.collider.speed = this.ship_data.minimum_speed;
+        // }
 
-        this.ammo_manager.update();
         this.collider.draw();
 
         // 🛑🛑🛑🛑 NO CAMERA USED (YET???) 🛑🛑🛑🛑
     }
 
-
     create_player_collider(init_x, init_y){
-        this.width = this.ship_ammo_data.collider_width;
-        this.height = this.ship_ammo_data.collider_height;
+        this.width = this.ship_data.collider_width;
+        this.height = this.ship_data.collider_height;
         const tmp = make.boxCollider(init_x, init_y, this.width, this.height); 
-        this.ship_image.scale = this.ship_ammo_data.ship_scale;
+        this.ship_image.scale = this.ship_data.ship_scale;
         tmp.asset = this.ship_image;
-        tmp.speed = this.ship_ammo_data.minimum_speed;
+        tmp.speed = this.ship_data.minimum_speed;
+        // mass or static?
+        // tmp.static = true;
+        tmp.mass = this.ship_data.mass;
         tmp.direction = 270;
+        tmp.xOffset = this.ship_data.ship_xoffset;
+        tmp.yOffset = this.ship_data.ship_yoffset;
         return tmp;
     }
-
 };
-

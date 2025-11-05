@@ -1,0 +1,40 @@
+{
+    "default_ship": {
+        "ship_scale": 100,
+        "collider_width": 28,
+        "collider_height": 23,
+        "minimum_speed": 20,
+        "max_speed": 40,
+        "boost_amount": 40,
+        "movement_friction": 0.3,
+        "stationary_friction": 60,
+        "mass": 20,
+        "ship_xoffset": 0,
+        "ship_yoffset": 0,
+        "primary_weapon": "missile",
+        "firing_origins": [
+            [-10, 0],
+            [10, 0],
+            [0, -8.7]
+        ]
+    },
+
+    "tank_ship": {
+        "ship_scale": 66,
+        "collider_width": 105,
+        "collider_height": 100,
+        "minimum_speed": 16,
+        "max_speed": 32,
+        "boost_amount": 4,
+        "movement_friction": 0.3,
+        "stationary_friction": 0.5,
+        "mass": 20,
+        "ship_xoffset": 0,
+        "ship_yoffset": 10,
+        "primary_weapon": "bullet",
+        "firing_origins": [
+            [-10, 30], 
+            [10, 30]
+        ]
+    }
+}
