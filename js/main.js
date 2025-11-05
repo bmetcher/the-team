@@ -33,7 +33,16 @@ const all_ammo_images = {
     bullet: load.image(0,0,"./images/ammo/bullet.png"),
     missile: load.image(0,0,"./images/ammo/missile.png"),
     // temporary for now
-    explosion: load.image(0,0,"./images/explosions/explosion2_animation/placeholder_only.png")
+    explosion: load.animation(0,0,
+        "./images/explosions/explosion1_animation/step_1.png",
+        "./images/explosions/explosion1_animation/step_2.png",
+        "./images/explosions/explosion1_animation/step_3.png",
+        "./images/explosions/explosion1_animation/step_4.png",
+        "./images/explosions/explosion1_animation/step_5.png",
+        "./images/explosions/explosion1_animation/step_6.png",
+        "./images/explosions/explosion1_animation/step_7.png",
+        "./images/explosions/explosion1_animation/step_8.png"
+    )
 }
 // Enemy images
 const all_enemy_images = {

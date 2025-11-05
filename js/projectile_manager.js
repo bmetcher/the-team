@@ -9,8 +9,6 @@ export class ProjectileManager {
         this.all_ammo_data = all_ammo_data;
         this.all_ammo_images = all_ammo_images;
 
-        //console.log("Ammo data: ",this.all_ammo_data)
-
         // track existing projectiles for entities
         this.all_projectiles = make.group();    // global tracker
 
@@ -38,6 +36,9 @@ export class ProjectileManager {
         this.see_if_enemy_hits(player);
         
         // return entity updates
+
+        // clean-up out of bounds projectiles
+        this.clean_up_all();
         
         // draw all projectiles
         this.all_projectiles.draw();
@@ -68,7 +69,7 @@ export class ProjectileManager {
             } else if (new_projectile.target === "none") {
                 target = 180;
             }
-            // console.log("Projectile angle: ", target);
+
             this.create_projectile(
                 new_projectile.origin,
                 target,
@@ -76,7 +77,6 @@ export class ProjectileManager {
                 new_projectile.friendly
             );
             enemy.created_projectiles.shift();
-            //console.log("Enemy attacked!");
         }
     }
 
@@ -122,18 +122,14 @@ export class ProjectileManager {
         explode.asset = this.all_ammo_images.explosion;
         this.explodes.push(explode);
         this.all_projectiles.push(explode);
-        //console.log("BOOM");
         projectile.remove();
     }
 
-
-
     // Origin Entity, Target Entity (or direction "up"/"down") and Type (e.g.: missile, bullet..)
+    // origin = [x,y], target = direction, type = <ammo name>, friendly = true/false 
     create_projectile(origin, target, type = "woops", friendly) {
         // fetch data for the type of ammo
         let ammo = this.all_ammo_data[type];
-
-        //console.log("Creating projectile at origin:", origin[0], origin[1]);
 
         // initialize the collider
         let pew = make.boxCollider(
@@ -159,7 +155,6 @@ export class ProjectileManager {
         // custom stats
         pew.damage = ammo.damage;
 
-        //console.log(target[0], target[1]);
         if (target !== "none") {
             pew.direction = pew.getAngleToPoint(target[0], target[1]);
         }
@@ -176,5 +171,15 @@ export class ProjectileManager {
         };
         // either way goes to "all_projectiles" group
         this.all_projectiles.push(pew);
+    }
+
+    clean_up_all() {
+        for (let projectile of this.all_projectiles) {
+
+            if (projectile.x < 0 || projectile.x > tad.w ||
+                projectile.y < 0 || projectile.y > tad.h) {
+                projectile.remove();
+            }
+        }
     }
 };
