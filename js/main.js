@@ -82,7 +82,7 @@ const COMMANDS = 5;         // explains game controls; accessible from PAUSE_PLA
 const PLAY = 6;             // actual game
 const PAUSE_PLAY = 7;       // pauses game; provides buttons to access "LEADERBOARD" and "COMMANDS"
 const END_PLAY = 8;         // after game ends, display encouraging message and score; provides "REPLAY" or "RETURN TO MAIN MENU"
-let current_screen = TUTORIAL;      // initial screen
+let current_screen = INTRO;      // initial screen
 
 // ---- Button Locations ----
 const BUTTON_LRG_LEFT_X = tad.w/10*2;
@@ -130,20 +130,21 @@ const player_ship_dropdown = create_ship_dropwdown();
 // Declare manager variables
 let environment, player, enemies, projectiles;
 
+// Declare var to hold starting frame of PREPARE screen
+let prep_frame_count;
+
 // Asset loading & manager initialization
 function initial_setup() {
 
-    if (time.frameCount === 0) {
+    if (time.frameCount === prep_frame_count) {
         // check if all JSON assets are loaded
         if (files.all_ship_data && files.all_ammo_data) {
             // Create managers AFTER data has loaded
-            console.log("Assets loaded! Initializing game...");
-
             // ---- Start Background Environment ----
             environment = new EnvironmentManager(unit, all_environment_images);
 
             // ---- Initialise Player and Enemies ----
-            player = new PlayerManager("default_ship", all_players_images, files.all_ship_data);  // updated for new parameters
+            player = new PlayerManager("tank_ship", all_players_images, files.all_ship_data);  // updated for new parameters
             enemies = new EnemyManager(all_enemy_images, files.all_enemies_data);
 
             // ---- Initialize Projectiles -----
@@ -166,48 +167,48 @@ tad.use(update);
 // Main draw loop
 function update() {
 
-    // if (current_screen === INTRO){
-    //     // display game name; press space key to continue
-    //     display_intro_screen();
-    // } else if (current_screen === MAIN_MENU){
-    //     // player selects start OR navigates to COMMANDS OR navigates to LEADERBOARD
-    //     display_main_menu_screen();
-    // } else if (current_screen === PREPARE){
-    //     // after player selects "PREPARE FOR LAUNCH", must select a ship (has default ship); has "PLAY" button
-    //     initial_setup();
-    //     display_prepare_screen();
-    // } else if (current_screen === LEADERBOARD){
-    //     // scores so far + stored; accessible from MAIN_MENU or PAUSE_PLAY
-    //     display_leaderboard_screen();
-    // } else if (current_screen === TUTORIAL){
-    //     // explains how game works
-    //     display_tutorial_screen();
-    // } else if (current_screen === COMMANDS){
-    //     // explains game controls; accessible from PAUSE_PLAY
-    //     display_commands_screen();
-    // } else if (current_screen === PLAY){
-    //     // actual game
-    //     // environment.update();
-    //     // player.update();
-    //     // enemy.update();
-    //     environment.update();
-    //     projectiles.update(player, enemies);
+    if (current_screen === INTRO){
+        // display game name; press space key to continue
+        display_intro_screen();
+    } else if (current_screen === MAIN_MENU){
+        // player selects start OR navigates to COMMANDS OR navigates to LEADERBOARD
+        display_main_menu_screen();
+    } else if (current_screen === PREPARE){
+        // after player selects "PREPARE FOR LAUNCH", must select a ship (has default ship); has "PLAY" button
+        display_prepare_screen();
+        initial_setup();
+    } else if (current_screen === LEADERBOARD){
+        // scores so far + stored; accessible from MAIN_MENU or PAUSE_PLAY
+        display_leaderboard_screen();
+    } else if (current_screen === TUTORIAL){
+        // explains how game works
+        display_tutorial_screen();
+    } else if (current_screen === COMMANDS){
+        // explains game controls; accessible from PAUSE_PLAY
+        display_commands_screen();
+    } else if (current_screen === PLAY){
+        // actual game
+        // environment.update();
+        // player.update();
+        // enemy.update();
+        environment.update();
+        projectiles.update(player, enemies);
     
-    //     player.update();
-    //     enemies.update();
-    // } else if (current_screen === PAUSE_PLAY){
-    //     // pauses game; provides buttons to access "LEADERBOARD" and "COMMANDS"
-    // } else if (current_screen === END_PLAY){
-    //     // after game ends, display encouraging message and score; provides "REPLAY" or "RETURN TO MAIN MENU"
-    // }
+        player.update();
+        enemies.update();
+    } else if (current_screen === PAUSE_PLAY){
+        // pauses game; provides buttons to access "LEADERBOARD" and "COMMANDS"
+    } else if (current_screen === END_PLAY){
+        // after game ends, display encouraging message and score; provides "REPLAY" or "RETURN TO MAIN MENU"
+    }
     
-    initial_setup();
+    // initial_setup();
     
-    environment.update();
-    projectiles.update(player, enemies);
+    // environment.update();
+    // projectiles.update(player, enemies);
 
-    player.update();
-    enemies.update();
+    // player.update();
+    // enemies.update();
 
 }
 
@@ -321,6 +322,7 @@ function draw_button(button, desired_x, desired_y){
 
 function check_buttons(){
     if (buttons.go_to_prepare.released){
+        prep_frame_count = time.frameCount + 1;
         current_screen = PREPARE;
     } else if (buttons.go_to_leaderboard.released){
         current_screen = LEADERBOARD;

@@ -25,21 +25,26 @@ export class PlayerManager {
         this.collider = null;
         // track projectiles to be created
         this.created_projectiles = [];
+
+        this.init_time = time.seconds + 1;
+        this.init_frame_count = time.frameCount;
+        this.has_started = false;
     }
 
     update(){
 
-        if (time.seconds === FLY_IN_TIME){
-            this.specialise_player_settings();
-        }
+        if (!this.has_started){
+            this.init_time = time.seconds;
+            this.has_started = true;
 
-        if (time.frameCount === 0){
             // ---- Create Player Collider ----
             this.collider = this.create_player_collider();
             // ---- Create Boost Fuel ----
             this.current_fuel = this.ship_data.max_boost_fuel;
-            // ---- Create Boost Fuel ----
-            this.current_fuel = this.ship_data.max_boost_fuel;
+        }
+
+        if (time.seconds >= this.init_time + FLY_IN_TIME){
+            this.specialise_player_settings();
         }
 
         // ---- Change Direction based on WASD (Allows Diagonal) ----

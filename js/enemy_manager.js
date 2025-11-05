@@ -1,5 +1,7 @@
 import { tad, make, keys, time, math } from "../lib/TeachAndDraw.js";
 
+const FLY_IN_TIME = 5;
+
 export class EnemyManager {
 
     constructor (all_enemy_images, all_enemies_data) {
@@ -21,17 +23,33 @@ export class EnemyManager {
 
         // ---- Queue for enemy projectiles to be created ----
         this.created_projectiles = [];
+
+        this.has_started = false;
+        this.started_spawning = false;
     }
 
 
     update() {
-        // spawn wave of enemies periodically
-        if (time.seconds%5 === 0 && this.spawning === false) {
-            this.spawn_wave();
-            this.spawning = true;
-        } else if (time.seconds%5 !== 0) {
-            this.spawning = false;
+        if (!this.has_started){
+            this.has_started = true;
+            this.init_time = time.seconds;
         }
+
+        // spawn wave of enemies periodically
+        if (time.seconds >= this.init_time + FLY_IN_TIME){
+            if (!this.started_spawning){
+                this.started_spawning = true;
+                this.adjust_by = (time.seconds - this.init_time)%5;
+            }
+            
+            const adjusted_time = Math.floor(time.seconds - this.adjust_by);
+            const ready = adjusted_time%5 === 0;
+            if (ready && !this.spawning){
+                this.spawn_wave();
+            }
+            this.spawning = ready;
+        }
+
 
         // firing methods for each enemy group
         this.general_enemy_behaviour()
