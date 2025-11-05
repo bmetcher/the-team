@@ -1,7 +1,9 @@
-import { tad, load, text, keys, make } from "../lib/TeachAndDraw.js";
+import { tad, load, text, keys, make, time } from "../lib/TeachAndDraw.js";
 import { EnemyManager } from "./enemy_manager.js";
 import { EnvironmentManager } from "./environment_manager.js";
 import { PlayerManager } from "./player_manager.js";
+import { ProjectileManager } from "./projectile_manager.js";
+
 
 
 // ----------------------------------------- Initialisation for Game -----------------------------------------
@@ -10,31 +12,65 @@ const unit = 64;
 tad.w = 640;
 tad.h = 640;
 
-// ---- Preload Game Images ----
-
-const all_players_images = {    // Player ship images
-    player1: load.image(0,0,"./images/player/player1.png"),
-    player2: load.image(0,0,"./images/player/player2.png")
+// ---- Preload Assets ----
+// Player images
+const all_players_images = {
+    default_ship: load.image(0,0,"./images/player/default_ship.png"),
+    tank_ship: load.image(0,0,"./images/player/tank_ship.png")  // Added the ships here with correct names
 }
 
-const all_ammo_images = {       // Ammo images
+// Ammo images
+const all_ammo_images = {
     bullet: load.image(0,0,"./images/ammo/bullet.png"),
     missile: load.image(0,0,"./images/ammo/missile.png")
 }
 
-const all_enemy_images = {      // Enemy images
-    grunt: load.image(0,0, "./images/enemies/enemy1.png")
+// Enemy images
+const all_enemy_images = {
+    grunt: load.image(0,0, "./images/enemies/grunt.png"),
+    enemy2: load.image(0,0, "./images/enemies/enemy2.png"),
+}
+// Environment images
+const all_environment_images = {
+    space1: load.image(tad.w/2, 0, "./images/background/space1.jpeg"),
+    space2: load.image(tad.w/2, tad.h, "./images/background/space2.jpeg")
+}
+
+// Animations
+const all_explosions = {
+    player: load.animation(0,0,
+        "./images/explosions/player_explosion_animation/step_1.png",
+        // "./images/explosions/player_explosion_animation/step_2.png",
+        // "./images/explosions/player_explosion_animation/step_3.png",
+        // "./images/explosions/player_explosion_animation/step_4.png",
+        // "./images/explosions/player_explosion_animation/step_5.png",
+        // "./images/explosions/player_explosion_animation/step_6.png",
+        // "./images/explosions/player_explosion_animation/step_7.png",
+        // "./images/explosions/player_explosion_animation/step_8.png"
+    ),
+    grunt: load.animation(0,0,
+        "./images/explosions/enemy_explosion_animation/step_1.png",
+        "./images/explosions/enemy_explosion_animation/step_2.png",
+        "./images/explosions/enemy_explosion_animation/step_3.png",
+        "./images/explosions/enemy_explosion_animation/step_4.png",
+        // "./images/explosions/enemy_explosion_animation/step_5.png",
+        // "./images/explosions/enemy_explosion_animation/step_6.png",
+        // "./images/explosions/enemy_explosion_animation/step_7.png",
+        // "./images/explosions/enemy_explosion_animation/step_8.png"
+    )
 }
 
 // ---- Preload FILE Data ----
 const files = {
     all_ammo_data: load.json("./data/ammo_map.json"),
+    all_ship_data: load.json("./data/ships_map.json"),  // Seperated into seperate JSON files
+    all_enemies_data: load.json("./data/enemies_map.json"),
     game_commands_data: load.json("./data/commands.json"),
     game_tutorial_txt: load.text("./data/tutorial.txt")
 }
 
-
 // --------------------------------------- Initialisation for Screens ---------------------------------------
+// NOTE: game files are loaded above
 
 // ---- Define Screens ----
 const INTRO = 0;            // display game name
@@ -91,13 +127,34 @@ const buttons = {
 // ---- Create Dropdown ----
 const player_ship_dropdown = create_ship_dropwdown();
 
+// Declare manager variables
+let environment, player, enemies, projectiles;
 
-// ---- Start Background Environment ----
-const environment = new EnvironmentManager(unit);
+// Asset loading & manager initialization
+function initial_setup() {
 
-// ---- Initialise Player and Enemies ----
-const player = new PlayerManager("player1", all_players_images, all_ammo_images, files.all_ammo_data);
-const enemy = new EnemyManager(unit, all_enemy_images);
+    if (time.frameCount === 0) {
+        // check if all JSON assets are loaded
+        if (files.all_ship_data && files.all_ammo_data) {
+            // Create managers AFTER data has loaded
+            console.log("Assets loaded! Initializing game...");
+
+            // ---- Start Background Environment ----
+            environment = new EnvironmentManager(unit, all_environment_images);
+
+            // ---- Initialise Player and Enemies ----
+            player = new PlayerManager("default_ship", all_players_images, files.all_ship_data);  // updated for new parameters
+            enemies = new EnemyManager(all_enemy_images, files.all_enemies_data);
+
+            // ---- Initialize Projectiles -----
+            projectiles = new ProjectileManager(unit, files.all_ammo_data, all_ammo_images, all_explosions);
+
+            // ?? Set game state here ??
+            // game_state = MAIN_MENU;
+        }
+        return; // skip until it's loaded
+    }
+}
 
 
 // ------------------------------------------------- Update -------------------------------------------------
@@ -105,6 +162,8 @@ const enemy = new EnemyManager(unit, all_enemy_images);
 tad.use(update);
 //tad.debug = true;
 
+
+// Main draw loop
 function update() {
 
     if (current_screen === INTRO){
@@ -115,6 +174,7 @@ function update() {
         display_main_menu_screen();
     } else if (current_screen === PREPARE){
         // after player selects "PREPARE FOR LAUNCH", must select a ship (has default ship); has "PLAY" button
+        initial_setup();
         display_prepare_screen();
     } else if (current_screen === LEADERBOARD){
         // scores so far + stored; accessible from MAIN_MENU or PAUSE_PLAY
@@ -127,15 +187,19 @@ function update() {
         display_commands_screen();
     } else if (current_screen === PLAY){
         // actual game
+        // environment.update();
+        // player.update();
+        // enemy.update();
+        environment.update();
+        projectiles.update(player, enemies);
+    
+        player.update();
+        enemies.update();
     } else if (current_screen === PAUSE_PLAY){
         // pauses game; provides buttons to access "LEADERBOARD" and "COMMANDS"
     } else if (current_screen === END_PLAY){
         // after game ends, display encouraging message and score; provides "REPLAY" or "RETURN TO MAIN MENU"
     }
-
-    // environment.update();
-    // player.update();
-    // enemy.update();
     
 }
 

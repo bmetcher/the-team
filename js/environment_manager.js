@@ -1,7 +1,13 @@
-import { tad, make, load } from "../lib/TeachAndDraw.js";
+import { tad, make, time } from "../lib/TeachAndDraw.js";
+
+const FLY_IN_TIME = 5;
+
+let speed = 1;
+const FINAL_SPEED = 0.4;
+const AMT_TO_REDUCE_BY = (speed - FINAL_SPEED) / (FLY_IN_TIME * time.fps);
 
 export class EnvironmentManager {
-    constructor(unit) {
+    constructor(unit, all_environment_images) {
         this.unit = unit;
         this.level = 1;
 
@@ -10,9 +16,8 @@ export class EnvironmentManager {
         this.space = make.group();
         this.mountains = make.group();
 
-        this.space1 = load.image(tad.w/2, 0, "./images/game_background/space1.jpeg");
-        this.space2 = load.image(tad.w/2, tad.h, "./images/game_background/space2.jpeg");
-        
+        this.space1 = all_environment_images.space1;
+        this.space2 = all_environment_images.space2;
     }
 
     // DRAW updated background elements
@@ -26,9 +31,11 @@ export class EnvironmentManager {
 
     draw_space() {
         // move grass down
-        const SPEED = 0.4
-        this.space1.y+=SPEED;
-        this.space2.y+=SPEED;
+        if (time.seconds < FLY_IN_TIME){
+            speed -= AMT_TO_REDUCE_BY;
+        }
+        this.space1.y+=speed;
+        this.space2.y+=speed;
         // when it moves below the bottom -> move above the top
         if (this.space1.y > tad.h * 1.5) {
             this.space1.y -= 2 * tad.h;

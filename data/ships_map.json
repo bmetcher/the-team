@@ -1,0 +1,54 @@
+{
+    "default_ship": {
+        "ship_scale": 100,
+        "collider_width": 24.9,
+        "collider_height": 21,
+        "minimum_speed": 24,
+        "boost_amount": 10.5,
+        "slowdown": 3,
+        "max_speed": 50,
+        "acceleration": 5,
+        "boost_acceleration":20,
+        "boost_max_speed":100,
+        "max_boost_fuel": 100,
+        "boost_recharge": 0.5,
+        "mass": 20,
+        "ship_xoffset": 0.98,
+        "ship_yoffset": -4,
+
+        "primary_weapon": "missile",
+        "max_hp": 10,
+        "firing_origins": [
+            [-10, 0],
+            [10, 0],
+            [0, -8.7]
+        ],
+        "explosion_animation_name": "player"
+        
+    },
+    "tank_ship": {
+        "ship_scale": 66,
+        "collider_width": 91.2,
+        "collider_height": 52.4,
+        "minimum_speed": 15.5,
+        "boost_amount": 4.3,
+        "slowdown": 4,
+        "max_speed": 32,
+        "acceleration": 4,
+        "boost_acceleration": 18,
+        "boost_max_speed": 100,
+        "max_boost_fuel": 100,
+        "boost_recharge": 0.4,
+        "mass": 20,
+        "ship_xoffset": 0,
+        "ship_yoffset": 9.5,
+        
+        "primary_weapon": "bullet",
+        "max_hp": 20,
+        "firing_origins": [
+            [-15, -55], 
+            [15, -55]
+        ],
+        "explosion_animation_name": "player"
+    }
+}
