@@ -175,7 +175,7 @@ export class PlayerManager {
         // mass or static?
         // tmp.static = true;
         this.collider.mass = this.ship_data.mass;
-        this.collider.direction = 270;
-        this.collider.speed = this.ship_data.minimum_speed;
+        // this.collider.direction = 270;
+        // this.collider.speed = this.ship_data.minimum_speed;
     }
 };

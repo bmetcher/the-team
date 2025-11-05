@@ -38,13 +38,13 @@ const all_ammo_images = {
 const all_explosions = {
     player_explosion: load.animation(0,0,
         "./images/explosions/player_explosion_animation/step_1.png",
-        "./images/explosions/player_explosion_animation/step_2.png",
-        "./images/explosions/player_explosion_animation/step_3.png",
-        "./images/explosions/player_explosion_animation/step_4.png",
-        "./images/explosions/player_explosion_animation/step_5.png",
-        "./images/explosions/player_explosion_animation/step_6.png",
-        "./images/explosions/player_explosion_animation/step_7.png",
-        "./images/explosions/player_explosion_animation/step_8.png"
+        // "./images/explosions/player_explosion_animation/step_2.png",
+        // "./images/explosions/player_explosion_animation/step_3.png",
+        // "./images/explosions/player_explosion_animation/step_4.png",
+        // "./images/explosions/player_explosion_animation/step_5.png",
+        // "./images/explosions/player_explosion_animation/step_6.png",
+        // "./images/explosions/player_explosion_animation/step_7.png",
+        // "./images/explosions/player_explosion_animation/step_8.png"
     ),
     enemy_explosion: load.animation(0,0,
         "./images/explosions/enemy_explosion_animation/step_1.png",

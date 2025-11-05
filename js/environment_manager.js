@@ -1,4 +1,10 @@
-import { tad, make, load } from "../lib/TeachAndDraw.js";
+import { tad, make, time } from "../lib/TeachAndDraw.js";
+
+const FLY_IN_TIME = 5;
+
+let speed = 1;
+const FINAL_SPEED = 0.4;
+const amt_to_reduce_by = (speed - FINAL_SPEED) / (FLY_IN_TIME * time.fps);
 
 export class EnvironmentManager {
     constructor(unit, all_environment_images) {
@@ -25,9 +31,12 @@ export class EnvironmentManager {
 
     draw_space() {
         // move grass down
-        const SPEED = 0.4
-        this.space1.y+=SPEED;
-        this.space2.y+=SPEED;
+        if (time.seconds < FLY_IN_TIME){
+            speed -= amt_to_reduce_by
+            console.log("here")
+        }
+        this.space1.y+=speed;
+        this.space2.y+=speed;
         // when it moves below the bottom -> move above the top
         if (this.space1.y > tad.h * 1.5) {
             this.space1.y -= 2 * tad.h;
