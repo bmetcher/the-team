@@ -109,7 +109,7 @@ export class ProjectileManager {
         // if the target should die
         if ((target.current_hp -= projectile.damage) <= 0) {
             target.remove();
-            console.log("Enemy Killed!");
+            // console.log("Enemy Killed!");
         } else if (target.current_hp > 0) {
             // just damage the target
             target.current_hp -= projectile.damage;
@@ -118,7 +118,7 @@ export class ProjectileManager {
     
     damage_player(player, projectile) {
         player.current_hp -= projectile.damage;
-        console.log("player hit! new hp: ", player.current_hp);
+        // console.log("player hit! new hp: ", player.current_hp);
     }
 
     destroy_projectile(projectile, dieing_sprite_name) {

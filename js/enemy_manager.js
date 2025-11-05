@@ -50,7 +50,7 @@ export class EnemyManager {
     }
 
     spawn_wave() {
-        console.log("Spawned wave");
+        // console.log("Spawned wave");
         let wave_size = 5;
         for (let i = 0; i < wave_size; i++) {
             let gap = i * 50;
@@ -90,7 +90,7 @@ export class EnemyManager {
             this.random_pathing(this.grunts[i]);
             // temporary attack timer
             if (time.frameCount%300 === 0) {
-                console.log(`Grunt ${i} firing from:`, this.grunts[i].x, this.grunts[i].y);
+                // console.log(`Grunt ${i} firing from:`, this.grunts[i].x, this.grunts[i].y);
                 this.created_projectiles.push({ 
                     origin: [this.grunts[i].x, this.grunts[i].y], 
                     target: "player",

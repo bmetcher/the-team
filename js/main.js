@@ -51,8 +51,8 @@ const all_explosions = {
         "./images/explosions/enemy_explosion_animation/step_2.png",
         "./images/explosions/enemy_explosion_animation/step_3.png",
         "./images/explosions/enemy_explosion_animation/step_4.png",
-        "./images/explosions/enemy_explosion_animation/step_5.png",
-        "./images/explosions/enemy_explosion_animation/step_6.png",
+        // "./images/explosions/enemy_explosion_animation/step_5.png",
+        // "./images/explosions/enemy_explosion_animation/step_6.png",
         // "./images/explosions/enemy_explosion_animation/step_7.png",
         // "./images/explosions/enemy_explosion_animation/step_8.png"
     )
@@ -68,9 +68,11 @@ const all_environment_images = {
     space2: load.image(tad.w/2, tad.h, "./images/background/space2.jpeg")
 }
 
-// Ship-Ammo data
-const all_ammo_data = load.json("./data/ammo_map.json");
-const all_ship_data = load.json("./data/ships_map.json");  // Seperated into seperate JSON files
+// Files
+const files = {
+    all_ammo_data: load.json("./data/ammo_map.json"),
+    all_ship_data: load.json("./data/ships_map.json"),  // Seperated into seperate JSON files
+}
 
 
 // Declare manager variables
@@ -81,7 +83,7 @@ function initial_setup() {
 
     if (time.frameCount === 0) {
         // check if all JSON assets are loaded
-        if (all_ship_data && all_ammo_data) {
+        if (files.all_ship_data && files.all_ammo_data) {
             // Create managers AFTER data has loaded
             console.log("Assets loaded! Initializing game...");
 
@@ -89,11 +91,11 @@ function initial_setup() {
             environment = new EnvironmentManager(unit, all_environment_images);
 
             // ---- Initialise Player and Enemies ----
-            player = new PlayerManager("default_ship", all_players_images, all_ammo_images, all_ship_data, all_ammo_data);  // updated for new parameters
+            player = new PlayerManager("default_ship", all_players_images, files.all_ship_data);  // updated for new parameters
             enemy = new EnemyManager(unit, all_enemy_images);
 
             // ---- Initialize Projectiles -----
-            projectiles = new ProjectileManager(unit, all_ammo_data, all_ammo_images, all_explosions);
+            projectiles = new ProjectileManager(unit, files.all_ammo_data, all_ammo_images, all_explosions);
 
             // ?? Set game state here ??
             // game_state = MAIN_MENU;

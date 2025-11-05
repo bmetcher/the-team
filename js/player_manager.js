@@ -4,14 +4,12 @@ const FLY_IN_TIME = 5;
 
 export class PlayerManager {
 
-    constructor(player_name, all_players_images, all_ammo_images, all_ship_data, all_ammo_data) {
+    constructor(player_name, all_players_images, all_ship_data) {
         /*
         Parameters;
             player_name : str : allow selection of player image and knowing weapons, ammo, etc. belonging to specific player
             all_players_images : dictionary of images : all player-related images
-            all_ammo_images : dictionary of images : all ammunition-images
             all_ship_data : JSON data from ships.json
-            all_ammo_data : JSON data from ammo.json
         */
 
         // ---- Name of Player to Determine Appropriate Actions ----
