@@ -20,6 +20,9 @@ export class PlayerManager {
         // ---- Get Player Ship Image ----
         this.ship_image = all_players_images[this.ship_name];
         this.ship_data = all_ship_data[this.ship_name];
+        this.max_hp = this.ship_data.max_hp;
+        this.current_hp = this.max_hp;
+        // TODO player iframe
         
         this.collider = null;
         // track projectiles to be created
@@ -124,6 +127,11 @@ export class PlayerManager {
                     friendly: true
                 });
             }
+        }
+
+        if (keys.down("g")) {
+            //tad.camera.rotation += 1;
+            tad.camera.zoom -= 0.01;
         }
 
         this.collider.draw();

@@ -90,7 +90,7 @@ function initial_setup() {
 
 
 tad.use(update);
-//tad.debug = true;
+tad.debug = true;
 
 
 // Main draw loop

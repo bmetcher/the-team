@@ -29,8 +29,8 @@ export class ProjectileManager {
         // update projectile movement
         // ... unnecessary for now -- default physics!
         for (let i = 0; i < this.explodes.length; i++) {
-            this.explodes[i].h += 1;
-            this.explodes[i].w += 1;
+            this.explodes[i].h += 0.2;
+            this.explodes[i].w += 0.2;
         }
 
         // check projectile collisions
@@ -99,7 +99,7 @@ export class ProjectileManager {
         for (let projectile of this.enemy_projectiles) {
             if (projectile.collides(player.collider)) {
                 //console.log("OW! player was hit by:", projectile);
-                this.damage_target(player, projectile);
+                this.damage_player(player, projectile);
                 this.destroy_projectile(projectile);
             }
         }
@@ -109,11 +109,16 @@ export class ProjectileManager {
         // if the target should die
         if ((target.current_hp -= projectile.damage) <= 0) {
             target.remove();
-            console.log("Killed!");
+            console.log("Enemy Killed!");
         } else if (target.current_hp > 0) {
             // just damage the target
             target.current_hp -= projectile.damage;
         }
+    }
+    
+    damage_player(player, projectile) {
+        player.current_hp -= projectile.damage;
+        console.log("player hit! new hp: ", player.current_hp);
     }
 
     destroy_projectile(projectile) {
@@ -122,6 +127,7 @@ export class ProjectileManager {
         explode.lifespan = 1;
         explode.static;
         explode.asset = this.all_ammo_images.explosion;
+        explode.scale = 0.5;
         this.explodes.push(explode);
         this.all_projectiles.push(explode);
         projectile.remove();
