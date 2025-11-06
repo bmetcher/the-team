@@ -69,6 +69,8 @@ const files = {
     game_tutorial_txt: load.text("./data/tutorial.txt")
 }
 
+let game_in_progress = false;
+
 // --------------------------------------- Initialisation for Screens ---------------------------------------
 // NOTE: game files are loaded above
 
@@ -124,7 +126,8 @@ const buttons = {
     go_to_play: create_menu_button("large", "play now"),
     go_to_commands: create_menu_button("large", "commands"),
     go_to_pause: create_menu_button("small", ""),
-    return_to_game: create_menu_button("large", "return to game")
+    return_to_game: create_menu_button("large", "return to game"),
+    end_game: create_menu_button("large", "end game"),
 }
 const img_pause_button = load.image(tad.w/2,tad.h/2,"./images/screens/pause_button.png")
 
@@ -289,7 +292,7 @@ function display_pause_screen(){
     display_menu_title("game paused");     // commands menu title text
     check_buttons()     // change screens logic
     draw_button(buttons.return_to_game, BUTTON_LRG_LEFT_X, BUTTON_LRG_BOTTOM_Y);     // button to return to game
-    draw_button(buttons.go_to_main_menu, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);     // button to delte current game progress and return to main menu
+    draw_button(buttons.end_game, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);     // button to delte current game progress and return to main menu
 }
 
 
@@ -337,9 +340,19 @@ function check_buttons(){
     } else if (buttons.go_to_main_menu.released){
         current_screen = MAIN_MENU;
 
-    } else if (buttons.go_to_play.released || buttons.return_to_game.released){
-        initial_setup(ship_name_map[player_ship_dropdown.value]);
-        console.log(ship_name_map[player_ship_dropdown.value])
+    } else if (buttons.end_game.released){
+        current_screen = MAIN_MENU;
+        game_in_progress = false;
+
+    } else if (buttons.go_to_play.released){
+        if (!game_in_progress){
+            initial_setup(ship_name_map[player_ship_dropdown.value]);
+            game_in_progress = true;
+        }
+        current_screen = PLAY;
+
+    } else if (buttons.return_to_game.released){
+        // initial_setup(ship_name_map[player_ship_dropdown.value]);
         current_screen = PLAY;
         environment.play();
         player.play();
@@ -420,24 +433,21 @@ function display_menu_title(title){
 
 function initial_setup(player_ship_name) {
     // Asset loading & manager initialization
+    // check if all JSON assets are loaded
+    if (files.all_ship_data && files.all_ammo_data) {
+        // Create managers AFTER data has loaded
+        // ---- Start Background Environment ----
+        environment = new EnvironmentManager(unit, all_environment_images);
 
-    if (time.frameCount === prep_frame_count) {
-        // check if all JSON assets are loaded
-        if (files.all_ship_data && files.all_ammo_data) {
-            // Create managers AFTER data has loaded
-            // ---- Start Background Environment ----
-            environment = new EnvironmentManager(unit, all_environment_images);
+        // ---- Initialise Player and Enemies ----
+        player = new PlayerManager(player_ship_name, all_players_images, files.all_ship_data);  // updated for new parameters
+        enemies = new EnemyManager(all_enemy_images, files.all_enemies_data);
 
-            // ---- Initialise Player and Enemies ----
-            player = new PlayerManager(player_ship_name, all_players_images, files.all_ship_data);  // updated for new parameters
-            enemies = new EnemyManager(all_enemy_images, files.all_enemies_data);
+        // ---- Initialize Projectiles -----
+        projectiles = new ProjectileManager(unit, files.all_ammo_data, all_ammo_images, all_explosions);
 
-            // ---- Initialize Projectiles -----
-            projectiles = new ProjectileManager(unit, files.all_ammo_data, all_ammo_images, all_explosions);
-
-            // ?? Set game state here ??
-            // game_state = MAIN_MENU;
-        }
-        return; // skip until it's loaded
+        // ?? Set game state here ??
+        // game_state = MAIN_MENU;
     }
+    return; // skip until it's loaded
 }
