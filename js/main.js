@@ -18,7 +18,7 @@ const all_effects = assets.all_effects;
 const all_enemy_images = assets.all_enemy_images;
 const all_environment_images = assets.all_environment_images;
 const all_ammo_data = assets.all_ammo_data;
-const all_ship_data = assets.files.all_ship_data;
+const all_ship_data = assets.all_ship_data;
 
 
 // ---- Define Screens ----
@@ -45,7 +45,7 @@ function initial_setup() {
             console.log("Assets loaded! Initializing game...");
 
             // ---- Start Background Environment ----
-            environment = new EnvironmentManager(unit, all_environment_images);
+            environment = new EnvironmentManager(all_environment_images);
 
             // ---- Initialise Player and Enemies ----
             player = new PlayerManager("default_ship", all_players_images, all_ship_data, all_effects);  // updated for new parameters

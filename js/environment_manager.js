@@ -4,11 +4,10 @@ const FLY_IN_TIME = 5;
 
 let speed = 1;
 const FINAL_SPEED = 0.4;
-const amt_to_reduce_by = (speed - FINAL_SPEED) / (FLY_IN_TIME * 144); // 60 for fps
+const amt_to_reduce_by = (speed - FINAL_SPEED) / (FLY_IN_TIME * 90); // 60 for fps
 
 export class EnvironmentManager {
-    constructor(unit, all_environment_images) {
-        this.unit = unit;
+    constructor(all_environment_images) {
         this.images = all_environment_images;
         this.level = 1;
 
@@ -18,13 +17,22 @@ export class EnvironmentManager {
         this.rocks = make.group();
 
 
-        this.space1 = this.images.space1;
-        this.space1.h = tad.h;
-        this.space1.w *= 1.5;
+        this.images.space.alignment = "top";
+        // initialize background images
+        this.space1 = this.images.space;
+        this.space2 = this.images.space;
+
+        this.space1.x = tad.w/2;
+        this.space2.x = tad.w/2;
+
+        this.bg_height = this.space1.h;
+        console.log("bg height: ", this.bg_height)
+        console.log("tad height: ", tad.height);
+
+        console.log("tad + bg/2: ", tad.height + this.bg_height/2);
         
-        this.space2 = this.images.space2;
-        this.space2.h = tad.h;
-        this.space2.w *= 1.5;
+        this.space1.y = 0;
+        this.space2.y = -this.bg_height;
 
         //this.space1.movedByCamera = false;
         //this.space2.movedByCamera = false;
@@ -64,12 +72,12 @@ export class EnvironmentManager {
         this.space2.y+=speed*5;
         // when it moves below the bottom -> move above the top
 
-        if (this.space1.y > tad.h * 1.5) {
-            this.space1.y -= 2 * tad.h;
-        }
-        if (this.space2.y > tad.h * 1.5) {
-            this.space2.y -= 2 * tad.h;
-        }
+        // if (this.space1.y > tad.h * 1.5) {
+        //     this.space1.y -= 2 * this.bg_height;
+        // }
+        // if (this.space2.y > tad.h * 1.5) {
+        //     this.space2.y -= 2 * this.bg_height;
+        // }
         // draw them
         this.space1.draw();
         this.space2.draw();
