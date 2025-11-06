@@ -19,9 +19,7 @@
         "primary_weapon": "missile",
         "max_hp": 10,
         "firing_origins": [
-            [-10, 0],
-            [10, 0],
-            [0, -8.7]
+            [-10, 0]
         ],
         "explosion_animation_name": "player"
         

@@ -7,7 +7,8 @@
         "friction": 1,
         "primary_weapon": "missile",
         "scale": 100,
-        "explosion_animation_name": "grunt"
+        "explosion_animation_name": "grunt",
+        "score" : 20
     },
     "enemy2": {
         "max_hp": 2,
@@ -15,8 +16,9 @@
         "width": 32,
         "mass": 1,
         "friction": 1,
-        "scale": 10,
+        "scale": 100,
         "primary_weapon": "bullet",
-        "explosion_animation_name": "player"
+        "explosion_animation_name": "player",
+        "score" : 1
     }
 }

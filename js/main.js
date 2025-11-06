@@ -98,7 +98,7 @@ function initial_setup() {
             enemies = new EnemyManager(all_enemy_images, files.all_enemies_data);
 
             // ---- Initialize Projectiles -----
-            projectiles = new ProjectileManager(unit, files.all_ammo_data, all_ammo_images, all_explosions);
+            projectiles = new ProjectileManager(unit, files.all_ammo_data, files.all_enemies_data, all_ammo_images, all_explosions);
 
             // ?? Set game state here ??
             // game_state = MAIN_MENU;
@@ -109,7 +109,7 @@ function initial_setup() {
 
 
 tad.use(update);
-//tad.debug = true;
+tad.debug = true;
 
 
 // Main draw loop
