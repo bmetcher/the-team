@@ -2,6 +2,13 @@ import { tad, load, make, keys, time, text, camera } from "../lib/TeachAndDraw.j
 
 const FLY_IN_TIME = 5;
 
+// for testing effects
+const effect_dropdown = make.dropdown(tad.w/2, tad.h + 100, 200, [
+            "bubbles", "casting", "emit", "felspell", "fire", "firespin",
+            "flamelash", "freezing", "magic8", "magicka", "midnight", "nebula",
+            "phantom", "protection", "spell", "sunburn", "vortex"
+        ])
+
 export class PlayerManager {
 
     constructor(player_name, all_players_images, all_ship_data, all_effects) {
@@ -22,7 +29,8 @@ export class PlayerManager {
         this.current_hp = this.max_hp;
         
         // TODO player iframe
-        this.all_effects = all_effects
+        this.all_effects = all_effects;
+        this.test_effect = effect_dropdown.value;
         
         this.collider = null;
         // track projectiles to be created
@@ -154,21 +162,32 @@ export class PlayerManager {
         
         // testing whatever functionality
         if (keys.down("t")) {
-            this.all_effects.sunburn.x = this.collider.x + 2;
-            this.all_effects.sunburn.y = this.collider.y + 2;
-            this.all_effects.sunburn.scale = 100;
-            this.all_effects.sunburn.duration = 1;
-            this.all_effects.sunburn.rotation = 180;
-            this.all_effects.sunburn.draw();
+            this.custom_effect_testing(effect_dropdown.value);
 
-            // camera.zoom -= 0.5;
+            //camera.zoom -= 0.5;
         }
 
+        console.log(effect_dropdown.value)
         
+        effect_dropdown.draw();
 
         this.collider.draw();
 
         // 🛑🛑🛑🛑 NO CAMERA USED (YET???) 🛑🛑🛑🛑
+    }
+
+    custom_effect_testing(selection) {
+        // console.log("Selection:", selection);
+        // console.log("Available effects:", Object.keys(this.all_effects));
+
+        this.all_effects[selection].x = this.collider.x + 2;
+        this.all_effects[selection].y = this.collider.y + 2;
+        this.all_effects[selection].scale = 100;
+        this.all_effects[selection].duration = 3;
+        this.all_effects[selection].rotation = 180;
+        this.all_effects[selection].draw();
+
+        this.test_effect = selection;
     }
 
     create_player_collider(){
@@ -185,6 +204,7 @@ export class PlayerManager {
         tmp.yOffset = this.ship_data.ship_yoffset;
         return tmp;
     }
+
 
 
     specialise_player_settings(){

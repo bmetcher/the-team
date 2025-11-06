@@ -4,7 +4,7 @@ const FLY_IN_TIME = 5;
 
 let speed = 1;
 const FINAL_SPEED = 0.4;
-const amt_to_reduce_by = (speed - FINAL_SPEED) / (FLY_IN_TIME * time.fps);
+const amt_to_reduce_by = (speed - FINAL_SPEED) / (FLY_IN_TIME * 144); // 60 for fps
 
 export class EnvironmentManager {
     constructor(unit, all_environment_images) {
@@ -48,7 +48,7 @@ export class EnvironmentManager {
     clean_up_all() {
         for (let debris of this.all) {
             // if out-of-bounds -> remove it
-            if (debris.x < 0 || debris.x > tad.w || debris.y > tad.h) {
+            if (debris.x - 100 < 0 || debris.x + 100 > tad.w || debris.y - 100 > tad.h) {
                 //console.log("Debris removed: ", debris);
                 debris.remove();
             }
@@ -64,7 +64,6 @@ export class EnvironmentManager {
         this.space2.y+=speed*5;
         // when it moves below the bottom -> move above the top
 
-        console.log("Tad.h: ", tad.h, " space1.height: ", this.space1.h);
         if (this.space1.y > tad.h * 1.5) {
             this.space1.y -= 2 * tad.h;
         }
@@ -92,10 +91,10 @@ export class EnvironmentManager {
     }
 
     activate_generators() {
-        if (!this.generators.collides(this.all)) {
+        if (!this.generators.overlaps(this.all)) {
             for (let generator of this.generators) {
-                if (math.round(math.random(0, 444)) === 444) {
-                    console.log("got 99!");
+                if (math.round(math.random(0, 420)) === 420) {
+                    //console.log("got 420!");
                     this.make_rock(generator);
                 }
             }

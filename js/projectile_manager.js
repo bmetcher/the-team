@@ -17,6 +17,8 @@ export class ProjectileManager {
         this.player_projectiles = make.group();
         this.enemy_projectiles = make.group();
 
+        this.test_effect = null;  // TESTING
+
         // temporary -- replace with ACTUAL explosions later
         this.explodes = make.group();
     }
@@ -25,6 +27,9 @@ export class ProjectileManager {
         // check any projectiles being created
         this.get_player_projectiles(player, enemy);
         this.get_enemy_projectiles(player, enemy);
+
+        // TESTING**
+        this.test_effect = player.test_effect;
 
         // update projectile movement
         // ... unnecessary for now -- default physics!
@@ -110,7 +115,6 @@ export class ProjectileManager {
         // if the target should die
         if ((target.current_hp -= projectile.damage) <= 0) {
             target.remove();
-            console.log("Enemy Killed!");
         } else if (target.current_hp > 0) {
             // just damage the target
             target.current_hp -= projectile.damage;
@@ -119,7 +123,6 @@ export class ProjectileManager {
     
     damage_player(player, projectile) {
         player.current_hp -= projectile.damage;
-        console.log("player hit! new hp: ", player.current_hp);
     }
 
     destroy_projectile(projectile, dieing_sprite_name) {
@@ -184,11 +187,13 @@ export class ProjectileManager {
         // push the projectile to relevant groups
         if (friendly) { 
             // TESTING ASSETS
-            // pew.asset = this.all_effects.sunburn;
+            pew.asset = this.all_effects[this.test_effect];
             
-            // pew.rotationalVelocity = tad.math.random(10, 30);
-            // pew.speed = 20;
-            // pew.lifespan = 20;
+            pew.rotationalVelocity = tad.math.random(10, 30);
+            pew.speed = 20;
+            pew.scale = 20;
+            pew.lifespan = 10;
+
             this.player_projectiles.push(pew);
         } else if (!friendly) { 
             this.enemy_projectiles.push(pew);
