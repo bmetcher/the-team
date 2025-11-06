@@ -2,14 +2,18 @@ import { tad, make, time } from "../lib/TeachAndDraw.js";
 
 const FLY_IN_TIME = 5;
 
-let speed = 1;
+const INIT_SPEED = 1;
 const FINAL_SPEED = 0.4;
-const AMT_TO_REDUCE_BY = (speed - FINAL_SPEED) / (FLY_IN_TIME * time.fps);
+const AMT_TO_REDUCE_BY = (INIT_SPEED - FINAL_SPEED) / (FLY_IN_TIME * time.fps);
 
 export class EnvironmentManager {
     constructor(unit, all_environment_images) {
         this.unit = unit;
         this.level = 1;
+        this.game_paused = false;
+
+        this.speed = INIT_SPEED
+        this.stored_speed = this.speed;
 
         this.generators = this.make_generators();
         this.buildings = make.group();
@@ -29,13 +33,29 @@ export class EnvironmentManager {
         this.draw_space();
     }
 
+
+    pause(){
+        if (!this.game_paused){
+            this.stored_speed = this.speed;
+            this.game_paused = true;
+        }
+        this.speed = 0;
+    }
+
+
+    play(){
+        this.game_paused = false;
+        this.speed = this.stored_speed;
+    }
+
+
     draw_space() {
         // move grass down
-        if (time.seconds < FLY_IN_TIME){
-            speed -= AMT_TO_REDUCE_BY;
+        if (!this.game_paused && time.seconds < FLY_IN_TIME){
+            this.speed -= AMT_TO_REDUCE_BY;
         }
-        this.space1.y+=speed;
-        this.space2.y+=speed;
+        this.space1.y+=this.speed;
+        this.space2.y+=this.speed;
         // when it moves below the bottom -> move above the top
         if (this.space1.y > tad.h * 1.5) {
             this.space1.y -= 2 * tad.h;
@@ -47,6 +67,7 @@ export class EnvironmentManager {
         this.space1.draw();
         this.space2.draw();
     }
+
 
     make_generators() {
         const result = make.group();
@@ -63,6 +84,7 @@ export class EnvironmentManager {
         return result;
     }
 
+
     activate_generators() {
         if (!this.generators.collides(this.space)) {
             for (let generator of this.generators) {
@@ -70,6 +92,7 @@ export class EnvironmentManager {
             }
         }
     }
+
 
     make_tile(x, y) {
         const temp = make.boxCollider(x, y, this.unit, this.unit);

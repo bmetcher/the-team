@@ -6,6 +6,7 @@ export class EnemyManager {
 
     constructor (all_enemy_images, all_enemies_data) {
         this.gap = this.width/2 + 40;
+        this.game_paused = false;
         
         this.all_enemy_images = all_enemy_images;
         this.all_enemies_data = all_enemies_data;
@@ -34,9 +35,9 @@ export class EnemyManager {
             this.has_started = true;
             this.init_time = time.seconds;
         }
-
+        
         // spawn wave of enemies periodically
-        if (time.seconds >= this.init_time + FLY_IN_TIME){
+        if (!this.game_paused && time.seconds >= this.init_time + FLY_IN_TIME){
             if (!this.started_spawning){
                 this.started_spawning = true;
                 this.adjust_by = (time.seconds - this.init_time)%5;
@@ -49,15 +50,49 @@ export class EnemyManager {
             }
             this.spawning = ready;
         }
-
-
+        
         // firing methods for each enemy group
         this.general_enemy_behaviour()
         // this.grunt_behaviour();
-
+        
         this.all_groups.collides(this.all_groups);
 
         this.all_groups.draw();
+    }
+
+
+    pause(){
+        if (!this.game_paused){
+            this.game_paused = true;
+            // Freeze all enemies
+            for (let enemy_type in this.enemy_groups){
+                for (let enemy of this.enemy_groups[enemy_type]){
+                    this.stored_speed = enemy.speed;
+                    enemy.speed = 0;
+                    enemy.stored_lifespan = enemy.lifespan;
+                }
+            }
+        } else {
+            for (let enemy_type in this.enemy_groups){
+                for (let enemy of this.enemy_groups[enemy_type]){
+                    enemy.lifespan = enemy.stored_lifespan;
+                }
+            }
+        }
+    }
+
+
+    play(){
+        if (this.game_paused){
+            this.game_paused = false;
+            // Restore all enemy speeds
+            for (let enemy_type in this.enemy_groups){
+                for (let enemy of this.enemy_groups[enemy_type]){
+                    enemy.speed = this.stored_speed;
+                    enemy.lifespan = enemy.stored_lifespan;
+                }
+            }
+        }
     }
 
 
@@ -80,6 +115,7 @@ export class EnemyManager {
         // physics
         temp.direction = 180;
         temp.speed = 10;
+        temp.stored_speed = temp.speed
         temp.friction = this_enemy.friction;
         temp.mass = this_enemy.mass;
         // set lifespan later

@@ -11,6 +11,7 @@ export class PlayerManager {
             all_players_images : dictionary of images : all player-related images
             all_ship_data : JSON data from ships.json
         */
+        this.game_paused = false;
 
         // ---- Name of Player to Determine Appropriate Actions ----
         this.ship_name = player_name;
@@ -156,6 +157,24 @@ export class PlayerManager {
         this.collider.draw();
 
     }
+
+
+    pause(){
+        if (!this.game_paused){
+            this.game_paused = true;
+            this.stored_speed = this.collider.speed;
+            this.collider.speed = 0;
+        }
+    }
+
+
+    play(){
+        if (this.game_paused){
+            this.game_paused = false;
+            this.collider.speed = this.stored_speed;
+        }
+    }
+
 
     create_player_collider(){
         this.width = this.ship_data.collider_width;

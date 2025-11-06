@@ -4,6 +4,7 @@ export class ProjectileManager {
 
     constructor(unit, all_ammo_data, all_ammo_images, all_explosions) {
         this.unit = unit;   // standard unit
+        this.game_paused = false;
 
         // load all ammo .json data && images
         this.all_ammo_data = all_ammo_data;
@@ -21,6 +22,10 @@ export class ProjectileManager {
     }
 
     update(player, enemies){
+        if (this.game_paused){
+            return;
+        }
+
         // check any projectiles being created
         this.get_player_projectiles(player, enemies);
         this.get_enemy_projectiles(player, enemies);
@@ -44,6 +49,17 @@ export class ProjectileManager {
         // draw all projectiles
         this.all_projectiles.draw();
     }
+
+
+    pause(){
+        this.game_paused = true;
+    }
+
+
+    play(){
+        this.game_paused = false;
+    }
+
 
     // process any queued player projectiles to be created
     get_player_projectiles(player) {
@@ -195,4 +211,5 @@ export class ProjectileManager {
             }
         }
     }
+
 };

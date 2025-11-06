@@ -76,17 +76,18 @@ const files = {
 const INTRO = 0;            // display game name
 const MAIN_MENU = 1;        // player selects start OR navigates to COMMANDS OR navigates to LEADERBOARD
 const PREPARE = 2;          // after player selects "PREPARE FOR LAUNCH", must select a ship (has default ship); has "PLAY" button
-const LEADERBOARD = 3;      // scores so far + stored; accessible from MAIN_MENU or PAUSE_PLAY
+const LEADERBOARD = 3;      // scores so far + stored; accessible from MAIN_MENU or PAUSE
 const TUTORIAL = 4;         // explains how game works
-const COMMANDS = 5;         // explains game controls; accessible from PAUSE_PLAY
+const COMMANDS = 5;         // explains game controls; accessible from PAUSE
 const PLAY = 6;             // actual game
-const PAUSE_PLAY = 7;       // pauses game; provides buttons to access "LEADERBOARD" and "COMMANDS"
+const PAUSE = 7;       // pauses game; provides buttons to access "LEADERBOARD" and "COMMANDS"
 const END_PLAY = 8;         // after game ends, display encouraging message and score; provides "REPLAY" or "RETURN TO MAIN MENU"
 let current_screen = INTRO;      // initial screen
 
 // ---- Button Locations ----
 const BUTTON_LRG_LEFT_X = tad.w/10*2;
 const BUTTON_LRG_RIGHT_X = tad.w/10*8;
+const BUTTON_SMALL_RIGHT_X = tad.w/50*47;
 const BUTTON_LRG_BOTTOM_Y = tad.h/50*47;
 
 // ---- Text Constants ----
@@ -110,7 +111,8 @@ const game_screens = {
     prepare_screen: load.image(tad.w/2,tad.h/2,"./images/screens/prepare.jpeg"),
     leaderboard_screen: load.image(tad.w/2,tad.h/2,"./images/screens/leaderboard.jpeg"),
     tutorial_screen: load.image(tad.w/2,tad.h/2,"./images/screens/tutorial.jpeg"),
-    controls_screen: load.image(tad.w/2,tad.h/2,"./images/screens/commands.jpeg")
+    controls_screen: load.image(tad.w/2,tad.h/2,"./images/screens/commands.jpeg"),
+    pause_screen: load.image(tad.w/2,tad.h/2,"./images/screens/pause.jpeg"),
 }
 
 // ---- Create Buttons ----
@@ -121,7 +123,10 @@ const buttons = {
     go_to_main_menu: create_menu_button("large", "return to main menu"),
     go_to_play: create_menu_button("large", "play now"),
     go_to_commands: create_menu_button("large", "commands"),
+    go_to_pause: create_menu_button("small", ""),
 }
+
+const img_pause_button = load.image(tad.w/2,tad.h/2,"./images/screens/pause_button.png")
 
 
 // ---- Create Dropdown ----
@@ -178,26 +183,20 @@ function update() {
         display_prepare_screen();
         initial_setup();
     } else if (current_screen === LEADERBOARD){
-        // scores so far + stored; accessible from MAIN_MENU or PAUSE_PLAY
+        // scores so far + stored; accessible from MAIN_MENU or PAUSE
         display_leaderboard_screen();
     } else if (current_screen === TUTORIAL){
         // explains how game works
         display_tutorial_screen();
     } else if (current_screen === COMMANDS){
-        // explains game controls; accessible from PAUSE_PLAY
+        // explains game controls; accessible from PAUSE
         display_commands_screen();
     } else if (current_screen === PLAY){
         // actual game
-        // environment.update();
-        // player.update();
-        // enemy.update();
-        environment.update();
-        projectiles.update(player, enemies);
-    
-        player.update();
-        enemies.update();
-    } else if (current_screen === PAUSE_PLAY){
+        display_play_screen();
+    } else if (current_screen === PAUSE){
         // pauses game; provides buttons to access "LEADERBOARD" and "COMMANDS"
+        display_pause_screen();
     } else if (current_screen === END_PLAY){
         // after game ends, display encouraging message and score; provides "REPLAY" or "RETURN TO MAIN MENU"
     }
@@ -282,12 +281,45 @@ function display_commands_screen(){
     display_menu_title("commands");     // commands menu title text
     display_commands_json();
     check_buttons()     // change screens logic
-    draw_button(buttons.go_to_main_menu, tad.w/10*8, tad.h/50*47);  // button to return to main menu
+    draw_button(buttons.go_to_main_menu, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);  // button to return to main menu
 }
 
 
-function display_game_screen(){
+function display_play_screen(){
+    // update game elements
+    environment.update();
+    projectiles.update(player, enemies);
+    player.update();
+    enemies.update();
 
+    check_buttons()     // change screens logic
+    // pause button
+    draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_LRG_BOTTOM_Y);  // button to got to pause screen
+    img_pause_button.x = BUTTON_SMALL_RIGHT_X;
+    img_pause_button.y = BUTTON_LRG_BOTTOM_Y;
+    img_pause_button.scale = 80;
+    img_pause_button.draw();
+}
+
+
+function display_pause_screen(){
+    game_screens.pause_screen.draw()    // display pause screen image
+
+    // update game elements
+    // environment.update();
+    // projectiles.update(player, enemies);
+    // player.update();
+    // enemies.update();
+
+    environment.pause();
+    player.pause();
+    enemies.pause();
+    projectiles.pause();
+
+        
+    display_menu_title("game paused");     // commands menu title text
+    check_buttons()     // change screens logic
+    draw_button(buttons.go_to_play, BUTTON_LRG_LEFT_X, BUTTON_LRG_BOTTOM_Y);     // button to return to game
 }
 
 
@@ -301,8 +333,8 @@ function create_menu_button(button_size, button_text){
         button_width = 225;
         button_height = 40;
     } else {
-        button_width = 200;
-        button_height = 50;
+        button_width = 38;
+        button_height = 38;
     }
 
     const tmp = make.button(0,0, button_width, button_height, button_text);
@@ -321,19 +353,32 @@ function draw_button(button, desired_x, desired_y){
 
 
 function check_buttons(){
+
     if (buttons.go_to_prepare.released){
         prep_frame_count = time.frameCount + 1;
         current_screen = PREPARE;
+
     } else if (buttons.go_to_leaderboard.released){
         current_screen = LEADERBOARD;
+
     } else if (buttons.go_to_tutorial.released){
         current_screen = TUTORIAL;
+
     } else if (buttons.go_to_main_menu.released){
         current_screen = MAIN_MENU;
+
     } else if (buttons.go_to_play.released){
         current_screen = PLAY;
+        environment.play();
+        player.play();
+        enemies.play();
+        projectiles.play();
+
     } else if (buttons.go_to_commands.released){
         current_screen = COMMANDS;
+        
+    } else if (buttons.go_to_pause.released){
+        current_screen = PAUSE;
     } 
 }
 
