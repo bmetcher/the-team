@@ -124,43 +124,23 @@ const buttons = {
     go_to_play: create_menu_button("large", "play now"),
     go_to_commands: create_menu_button("large", "commands"),
     go_to_pause: create_menu_button("small", ""),
+    return_to_game: create_menu_button("large", "return to game")
 }
-
 const img_pause_button = load.image(tad.w/2,tad.h/2,"./images/screens/pause_button.png")
 
 
 // ---- Create Dropdown ----
-const player_ship_dropdown = create_ship_dropwdown();
+const ship_name_map = {
+    "Default Ship": "default_ship",
+    "Tank Ship": "tank_ship"
+};
+const player_ship_dropdown = create_ship_dropwdown(Object.keys(ship_name_map));
 
 // Declare manager variables
 let environment, player, enemies, projectiles;
 
 // Declare var to hold starting frame of PREPARE screen
 let prep_frame_count;
-
-// Asset loading & manager initialization
-function initial_setup() {
-
-    if (time.frameCount === prep_frame_count) {
-        // check if all JSON assets are loaded
-        if (files.all_ship_data && files.all_ammo_data) {
-            // Create managers AFTER data has loaded
-            // ---- Start Background Environment ----
-            environment = new EnvironmentManager(unit, all_environment_images);
-
-            // ---- Initialise Player and Enemies ----
-            player = new PlayerManager("tank_ship", all_players_images, files.all_ship_data);  // updated for new parameters
-            enemies = new EnemyManager(all_enemy_images, files.all_enemies_data);
-
-            // ---- Initialize Projectiles -----
-            projectiles = new ProjectileManager(unit, files.all_ammo_data, all_ammo_images, all_explosions);
-
-            // ?? Set game state here ??
-            // game_state = MAIN_MENU;
-        }
-        return; // skip until it's loaded
-    }
-}
 
 
 // ------------------------------------------------- Update -------------------------------------------------
@@ -181,7 +161,6 @@ function update() {
     } else if (current_screen === PREPARE){
         // after player selects "PREPARE FOR LAUNCH", must select a ship (has default ship); has "PLAY" button
         display_prepare_screen();
-        initial_setup();
     } else if (current_screen === LEADERBOARD){
         // scores so far + stored; accessible from MAIN_MENU or PAUSE
         display_leaderboard_screen();
@@ -252,7 +231,7 @@ function display_main_menu_screen(){
 function display_prepare_screen(){
     game_screens.prepare_screen.draw();    // display prepare screen image
     display_menu_title("preparations");     // prepare menu title text
-    //player_ship_dropdown.draw();
+    player_ship_dropdown.draw();
     check_buttons()     // change screens logic
     draw_button(buttons.go_to_main_menu, BUTTON_LRG_LEFT_X, BUTTON_LRG_BOTTOM_Y);  // button to return to main menu
     draw_button(buttons.go_to_play, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);     // button to go to game
@@ -291,12 +270,11 @@ function display_play_screen(){
     projectiles.update(player, enemies);
     player.update();
     enemies.update();
-
     check_buttons()     // change screens logic
     // pause button
     draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_LRG_BOTTOM_Y);  // button to got to pause screen
-    img_pause_button.x = BUTTON_SMALL_RIGHT_X;
-    img_pause_button.y = BUTTON_LRG_BOTTOM_Y;
+    img_pause_button.x = buttons.go_to_pause.x;
+    img_pause_button.y = buttons.go_to_pause.y;
     img_pause_button.scale = 80;
     img_pause_button.draw();
 }
@@ -304,22 +282,14 @@ function display_play_screen(){
 
 function display_pause_screen(){
     game_screens.pause_screen.draw()    // display pause screen image
-
-    // update game elements
-    // environment.update();
-    // projectiles.update(player, enemies);
-    // player.update();
-    // enemies.update();
-
     environment.pause();
     player.pause();
     enemies.pause();
     projectiles.pause();
-
-        
     display_menu_title("game paused");     // commands menu title text
     check_buttons()     // change screens logic
-    draw_button(buttons.go_to_play, BUTTON_LRG_LEFT_X, BUTTON_LRG_BOTTOM_Y);     // button to return to game
+    draw_button(buttons.return_to_game, BUTTON_LRG_LEFT_X, BUTTON_LRG_BOTTOM_Y);     // button to return to game
+    draw_button(buttons.go_to_main_menu, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);     // button to delte current game progress and return to main menu
 }
 
 
@@ -367,7 +337,9 @@ function check_buttons(){
     } else if (buttons.go_to_main_menu.released){
         current_screen = MAIN_MENU;
 
-    } else if (buttons.go_to_play.released){
+    } else if (buttons.go_to_play.released || buttons.return_to_game.released){
+        initial_setup(ship_name_map[player_ship_dropdown.value]);
+        console.log(ship_name_map[player_ship_dropdown.value])
         current_screen = PLAY;
         environment.play();
         player.play();
@@ -376,7 +348,7 @@ function check_buttons(){
 
     } else if (buttons.go_to_commands.released){
         current_screen = COMMANDS;
-        
+
     } else if (buttons.go_to_pause.released){
         current_screen = PAUSE;
     } 
@@ -384,12 +356,12 @@ function check_buttons(){
 
 
 // -----------------------------------------  Dropdown Helper Functions -----------------------------------------
-function create_ship_dropwdown(){
-    const options = ["options1", "options2", "options2"];
-    const tmp = make.dropdown(tad.w/2, tad.h/2, 30, options);
+function create_ship_dropwdown(options){
+    text.font = fonts.pixel_regular;
+    const tmp = make.dropdown(tad.w/2, tad.h/2, 150, options);
+    tmp.openDirection = "down";
     return tmp;
 }
-
 
 
 // ---------------------------------------- Text Display Helper Functions ----------------------------------------
@@ -444,3 +416,28 @@ function display_menu_title(title){
 }
 
 // --------------------------------------------------------------------------------------------------------------
+
+
+function initial_setup(player_ship_name) {
+    // Asset loading & manager initialization
+
+    if (time.frameCount === prep_frame_count) {
+        // check if all JSON assets are loaded
+        if (files.all_ship_data && files.all_ammo_data) {
+            // Create managers AFTER data has loaded
+            // ---- Start Background Environment ----
+            environment = new EnvironmentManager(unit, all_environment_images);
+
+            // ---- Initialise Player and Enemies ----
+            player = new PlayerManager(player_ship_name, all_players_images, files.all_ship_data);  // updated for new parameters
+            enemies = new EnemyManager(all_enemy_images, files.all_enemies_data);
+
+            // ---- Initialize Projectiles -----
+            projectiles = new ProjectileManager(unit, files.all_ammo_data, all_ammo_images, all_explosions);
+
+            // ?? Set game state here ??
+            // game_state = MAIN_MENU;
+        }
+        return; // skip until it's loaded
+    }
+}
