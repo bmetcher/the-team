@@ -55,7 +55,7 @@ export class EnemyManager {
         for (let i = 0; i < wave_size; i++) {
             let gap = i * 50;
             let random_x = 50 + ((i / wave_size) * tad.w);
-            let random_y = 50 - (i / wave_size);
+            let random_y = -50 - (i / wave_size);
             this.make_enemy(random_x, random_y, "grunt");
         }
     }
@@ -66,7 +66,7 @@ export class EnemyManager {
         let temp = make.boxCollider(x, y, spec.height, spec.width);
         // physics
         temp.direction = 180;
-        temp.speed = 10;
+        temp.speed = 15;
         temp.friction = spec.friction;
         temp.mass = spec.mass;
         // set lifespan later
@@ -90,7 +90,7 @@ export class EnemyManager {
             this.random_pathing(this.grunts[i]);
             // temporary attack timer
             if (time.frameCount%300 === 0) {
-                console.log(`Grunt ${i} firing from:`, this.grunts[i].x, this.grunts[i].y);
+                //console.log(`Grunt ${i} firing from:`, this.grunts[i].x, this.grunts[i].y);
                 this.created_projectiles.push({ 
                     origin: [this.grunts[i].x, this.grunts[i].y], 
                     target: "player",

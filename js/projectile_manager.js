@@ -2,13 +2,14 @@ import { tad, time, load, make, keys } from "../lib/TeachAndDraw.js";
 
 export class ProjectileManager {
 
-    constructor(unit, all_ammo_data, all_ammo_images, all_explosions) {
+    constructor(unit, all_ammo_data, all_ammo_images, all_explosions, all_effects) {
         this.unit = unit;   // standard unit
 
         // load all ammo .json data && images
         this.all_ammo_data = all_ammo_data;
         this.all_ammo_images = all_ammo_images;
-        this.all_explosions = all_explosions
+        this.all_explosions = all_explosions;
+        this.all_effects = all_effects;
 
         // track existing projectiles for entities
         this.all_projectiles = make.group();    // global tracker
@@ -132,10 +133,11 @@ export class ProjectileManager {
         } else if (dieing_sprite_name=="enemy"){
             this_explosion = this.all_explosions.enemy_explosion;
         }
-        this_explosion.duration = 1;
+        this_explosion.scale = 10;
+        this_explosion.duration = explode.lifespan * 1.2;
         this_explosion.looping = false;
         explode.asset = this_explosion
-        explode.scale = 0.5;
+        explode.scale = 0.1;
         this.explodes.push(explode);
         this.all_projectiles.push(explode);
         projectile.remove();
@@ -181,9 +183,15 @@ export class ProjectileManager {
 
         // push the projectile to relevant groups
         if (friendly) { 
-            this.player_projectiles.push(pew)
+            // TESTING ASSETS
+            // pew.asset = this.all_effects.sunburn;
+            
+            // pew.rotationalVelocity = tad.math.random(10, 30);
+            // pew.speed = 20;
+            // pew.lifespan = 20;
+            this.player_projectiles.push(pew);
         } else if (!friendly) { 
-            this.enemy_projectiles.push(pew) 
+            this.enemy_projectiles.push(pew);
         };
         // either way goes to "all_projectiles" group
         this.all_projectiles.push(pew);
@@ -191,7 +199,7 @@ export class ProjectileManager {
 
     clean_up_all() {
         for (let projectile of this.all_projectiles) {
-
+            // if out-of-bounds -> remove it
             if (projectile.x < 0 || projectile.x > tad.w ||
                 projectile.y < 0 || projectile.y > tad.h) {
                 projectile.remove();

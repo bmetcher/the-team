@@ -4,10 +4,21 @@ import { EnvironmentManager } from "./environment_manager.js";
 import { PlayerManager } from "./player_manager.js";
 import { ProjectileManager } from "./projectile_manager.js";
 
+import { assets } from "./load.js";
 
 const unit = 64;
-tad.w = 640;
-tad.h = 640;
+tad.w = 720;
+tad.h = 1080;
+
+// ---- Preload Assets ----
+const all_players_images = assets.all_players_images;
+const all_ammo_images = assets.all_ammo_images;
+const all_explosions = assets.all_explosions;
+const all_effects = assets.all_effects;
+const all_enemy_images = assets.all_enemy_images;
+const all_environment_images = assets.all_environment_images;
+const all_ammo_data = assets.all_ammo_data;
+const all_ship_data = assets.files.all_ship_data;
 
 
 // ---- Define Screens ----
@@ -20,58 +31,6 @@ const GAME = 5;         // actual game
 const PAUSED = 6;       // pauses game. Provides buttons to access "LEADERBOARD" and "HELP"
 const END_GAME = 7;     // after game ends, display encouraging message and score; provides "REPLAY" or "RETURN TO MAIN MENU"
 let game_state = LOADING;
-
-
-// ---- Preload Assets ----
-// Player images
-const all_players_images = {
-    default_ship: load.image(0,0,"./images/player/default_ship.png"),
-    tank_ship: load.image(0,0,"./images/player/tank_ship.png")  // Added the ships here with correct names
-}
-// Ammo images
-const all_ammo_images = {
-    bullet: load.image(0,0,"./images/ammo/bullet.png"),
-    missile: load.image(0,0,"./images/ammo/missile.png")
-}
-
-// Animations
-const all_explosions = {
-    player_explosion: load.animation(0,0,
-        "./images/explosions/player_explosion_animation/step_1.png",
-        // "./images/explosions/player_explosion_animation/step_2.png",
-        // "./images/explosions/player_explosion_animation/step_3.png",
-        // "./images/explosions/player_explosion_animation/step_4.png",
-        // "./images/explosions/player_explosion_animation/step_5.png",
-        // "./images/explosions/player_explosion_animation/step_6.png",
-        // "./images/explosions/player_explosion_animation/step_7.png",
-        // "./images/explosions/player_explosion_animation/step_8.png"
-    ),
-    enemy_explosion: load.animation(0,0,
-        "./images/explosions/enemy_explosion_animation/step_1.png",
-        "./images/explosions/enemy_explosion_animation/step_2.png",
-        "./images/explosions/enemy_explosion_animation/step_3.png",
-        "./images/explosions/enemy_explosion_animation/step_4.png",
-        "./images/explosions/enemy_explosion_animation/step_5.png",
-        "./images/explosions/enemy_explosion_animation/step_6.png",
-        // "./images/explosions/enemy_explosion_animation/step_7.png",
-        // "./images/explosions/enemy_explosion_animation/step_8.png"
-    )
-}
-
-// Enemy images
-const all_enemy_images = {
-    grunt: load.image(0,0, "./images/enemies/enemy1.png")
-}
-// Environment images
-const all_environment_images = {
-    space1: load.image(tad.w/2, 0, "./images/background/space1.jpeg"),
-    space2: load.image(tad.w/2, tad.h, "./images/background/space2.jpeg")
-}
-
-// Ship-Ammo data
-const all_ammo_data = load.json("./data/ammo_map.json");
-const all_ship_data = load.json("./data/ships_map.json");  // Seperated into seperate JSON files
-
 
 // Declare manager variables
 let environment, player, enemy, projectiles;
@@ -89,11 +48,11 @@ function initial_setup() {
             environment = new EnvironmentManager(unit, all_environment_images);
 
             // ---- Initialise Player and Enemies ----
-            player = new PlayerManager("default_ship", all_players_images, all_ammo_images, all_ship_data, all_ammo_data);  // updated for new parameters
+            player = new PlayerManager("default_ship", all_players_images, all_ship_data, all_effects);  // updated for new parameters
             enemy = new EnemyManager(unit, all_enemy_images);
 
             // ---- Initialize Projectiles -----
-            projectiles = new ProjectileManager(unit, all_ammo_data, all_ammo_images, all_explosions);
+            projectiles = new ProjectileManager(unit, all_ammo_data, all_ammo_images, all_explosions, all_effects);
 
             // ?? Set game state here ??
             // game_state = MAIN_MENU;

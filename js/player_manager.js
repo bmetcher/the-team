@@ -1,17 +1,15 @@
-import { tad, load, make, keys, time, text } from "../lib/TeachAndDraw.js";
+import { tad, load, make, keys, time, text, camera } from "../lib/TeachAndDraw.js";
 
 const FLY_IN_TIME = 5;
 
 export class PlayerManager {
 
-    constructor(player_name, all_players_images, all_ammo_images, all_ship_data, all_ammo_data) {
+    constructor(player_name, all_players_images, all_ship_data, all_effects) {
         /*
         Parameters;
             player_name : str : allow selection of player image and knowing weapons, ammo, etc. belonging to specific player
             all_players_images : dictionary of images : all player-related images
-            all_ammo_images : dictionary of images : all ammunition-images
             all_ship_data : JSON data from ships.json
-            all_ammo_data : JSON data from ammo.json
         */
 
         // ---- Name of Player to Determine Appropriate Actions ----
@@ -22,7 +20,9 @@ export class PlayerManager {
         this.ship_data = all_ship_data[this.ship_name];
         this.max_hp = this.ship_data.max_hp;
         this.current_hp = this.max_hp;
+        
         // TODO player iframe
+        this.all_effects = all_effects
         
         this.collider = null;
         // track projectiles to be created
@@ -145,10 +145,26 @@ export class PlayerManager {
             }
         }
 
-        if (keys.down("g")) {
-            //tad.camera.rotation += 1;
-            tad.camera.zoom -= 0.01;
+
+        // Experimental! Camera pan/zoom with player's x & y
+        camera.rotation = 1 + ((tad.w/2 - this.collider.x) / 100);  // ? better '+' or '-' ? 
+        camera.x = tad.w/2 - ((tad.w/2 - this.collider.x) / 5);
+        camera.y = tad.h/2 - ((tad.w/2 - this.collider.y) / 5);
+        camera.zoom = 1 + (tad.h/this.collider.y)/100;
+        
+        // testing whatever functionality
+        if (keys.down("t")) {
+            this.all_effects.sunburn.x = this.collider.x + 2;
+            this.all_effects.sunburn.y = this.collider.y + 2;
+            this.all_effects.sunburn.scale = 100;
+            this.all_effects.sunburn.duration = 1;
+            this.all_effects.sunburn.rotation = 180;
+            this.all_effects.sunburn.draw();
+
+            // camera.zoom -= 0.5;
         }
+
+        
 
         this.collider.draw();
 
