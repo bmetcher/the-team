@@ -10,15 +10,15 @@
         "explosion_animation_name": "grunt",
         "score" : 20
     },
-    "enemy2": {
-        "max_hp": 2,
+    "ice_enemy": {
+        "max_hp": 3,
         "height": 32,
         "width": 32,
         "mass": 1,
         "friction": 1,
         "scale": 100,
         "primary_weapon": "bullet",
-        "explosion_animation_name": "player",
-        "score" : 1
+        "explosion_animation_name": "grunt",
+        "score" : 30
     }
 }

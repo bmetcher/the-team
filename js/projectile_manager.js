@@ -142,8 +142,9 @@ export class ProjectileManager {
         explode.lifespan = 1;
         explode.static;
         let this_explosion = this.all_explosions[explosion_animation_name];
-        this_explosion.duration = 1;
+        this_explosion.duration = 1.2;
         this_explosion.looping = false;
+        this_explosion.scale = 25;
         explode.asset = this_explosion
         explode.scale = 0.5;
         this.explodes.push(explode);
