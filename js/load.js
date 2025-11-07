@@ -1,8 +1,8 @@
 import {tad, load} from "../lib/TeachAndDraw.js";
 
 // Same as in main.js :
-tad.w = 640;
-tad.h = 640;
+tad.w = 720;
+tad.h = 1080;
 
 // ---- Preload Assets ----
 
