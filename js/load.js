@@ -21,8 +21,7 @@ const all_ammo_images = {
 // Enemy images
 const all_enemy_images = {
     grunt: load.image(0,0, "./images/enemies/grunt.png"),
-    enemy2: load.image(0,0, "./images/enemies/enemy2.png"),
-    //ice_enemy: load.image(0,0, "./images/enemies/ice_enemy.png"),
+    ice_enemy: load.image(0,0, "./images/enemies/ice_enemy.png"),
 }
 
 // Environment images

@@ -125,6 +125,8 @@ export class EnemyManager {
         // stats
         temp.max_hp = this_enemy.max_hp;
         temp.current_hp = temp.max_hp;
+        temp.score = this_enemy.score;
+
         //console.log("Enemy max hp:", temp.max_hp, "and current hp:", temp.current_hp);
 
         this.enemy_groups[type].push(temp);

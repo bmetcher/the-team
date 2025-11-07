@@ -2,14 +2,17 @@ import { tad, time, load, make, keys } from "../lib/TeachAndDraw.js";
 
 export class ProjectileManager {
 
-    constructor(unit, all_ammo_data, all_ammo_images, all_explosions) {
+    constructor(unit, all_ammo_data, all_enemies_data, all_ammo_images, all_explosions) { // Added enemy data to constructor
         this.unit = unit;   // standard unit
         this.game_paused = false;
 
         // load all ammo .json data && images
         this.all_ammo_data = all_ammo_data;
         this.all_ammo_images = all_ammo_images;
-        this.all_explosions = all_explosions
+        this.all_explosions = all_explosions;
+
+        // Load enemy data from JSON
+        this.all_enemies_data = all_enemies_data;
 
         // track existing projectiles for entities
         this.all_projectiles = make.group();    // global tracker
@@ -19,6 +22,12 @@ export class ProjectileManager {
 
         // temporary -- replace with ACTUAL explosions later
         this.explodes = make.group();
+
+        // Add score system
+        this.player_score = 0;
+
+        // Enemy points
+        this.enemy_score = this.all_enemies_data.grunt.score;
     }
 
     update(player, enemies){
@@ -127,6 +136,10 @@ export class ProjectileManager {
         // if the target should die
         if ((target.current_hp -= projectile.damage) <= 0) {
             target.remove();
+            if (target.score > 0) {
+            this.player_score += target.score;
+            }
+            // console.log(this.player_score);
             // console.log("Enemy Killed!");
         } else if (target.current_hp > 0) {
             // just damage the target
@@ -145,8 +158,9 @@ export class ProjectileManager {
         explode.lifespan = 1;
         explode.static;
         let this_explosion = this.all_explosions[explosion_animation_name];
-        this_explosion.duration = 1;
+        this_explosion.duration = 1.2;
         this_explosion.looping = false;
+        this_explosion.scale = 25;
         explode.asset = this_explosion
         explode.scale = 0.5;
         this.explodes.push(explode);
