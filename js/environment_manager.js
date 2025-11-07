@@ -4,7 +4,7 @@ const FLY_IN_TIME = 5;
 
 const INIT_SPEED = 1;
 const FINAL_SPEED = 0.4;
-const AMT_TO_REDUCE_BY = (INIT_SPEED - FINAL_SPEED) / (FLY_IN_TIME * time.fps);
+const AMT_TO_REDUCE_BY = (INIT_SPEED - FINAL_SPEED) / (FLY_IN_TIME * 60);
 
 export class EnvironmentManager {
     constructor(unit, all_environment_images) {

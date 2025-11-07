@@ -1,4 +1,4 @@
-import { tad, load, text, keys, make, time } from "../lib/TeachAndDraw.js";
+import { tad, text, keys, make, time } from "../lib/TeachAndDraw.js";
 import { EnemyManager } from "./enemy_manager.js";
 import { EnvironmentManager } from "./environment_manager.js";
 import { PlayerManager } from "./player_manager.js";
