@@ -5,13 +5,10 @@ import { PlayerManager } from "./player_manager.js";
 import { ProjectileManager } from "./projectile_manager.js";
 import { assets } from "./load.js";
 
-<<<<<<< HEAD
 
 // ----------------------------------------- Initialisation for Game -----------------------------------------
 
-=======
 // ---- Game Size ----
->>>>>>> main
 const unit = 64;
 tad.w = 720;
 tad.h = 1080;
@@ -27,18 +24,6 @@ const all_ammo_data = assets.all_ammo_data;
 const all_ship_data = assets.all_ship_data;
 const all_enemy_data = assets.all_enemies_data;
 
-// ---- Preload Assets ----
-// Images
-const all_players_images = assets.all_players_images;
-const all_ammo_images = assets.all_ammo_images;
-const all_enemy_images = assets.all_enemy_images;
-const all_environment_images = assets.all_environment_images;
-const all_explosions = assets.all_explosions;
-// Files
-const all_ammo_data = assets.all_ammo_data;
-const all_ship_data = assets.all_ship_data;
-const all_enemies_data = assets.all_enemies_data;
-
 
 // --------------------------------------- Initialisation for Screens ---------------------------------------
 
@@ -53,7 +38,6 @@ const PLAY = 6;             // actual game
 const PAUSE = 7;       // pauses game; provides buttons to access "LEADERBOARD" and "COMMANDS"
 const END_PLAY = 8;         // after game ends, display encouraging message and score; provides "REPLAY" or "RETURN TO MAIN MENU"
 
-<<<<<<< HEAD
 // ---- Preload Assets ----
 // Images
 const game_screens = assets.game_screens;
@@ -102,36 +86,6 @@ let prep_frame_count;       // hold starting frame of PREPARE screen
 let game_in_progress = false;       // is game being played or paused OR has game ended or not begun
 let current_screen = INTRO;      // initial screen
 
-=======
-// Declare manager variables
-let environment, player, enemies, projectiles;
-
-// Asset loading & manager initialization
-function initial_setup() {
-
-    if (time.frameCount === 0) {
-        // check if all JSON assets are loaded
-        if (all_ship_data && all_ammo_data) {
-            // Create managers AFTER data has loaded
-            console.log("Assets loaded! Initializing game...");
-
-            // ---- Start Background Environment ----
-            environment = new EnvironmentManager(unit, all_environment_images);
-
-            // ---- Initialise Player and Enemies ----
-            player = new PlayerManager("default_ship", all_players_images, all_ship_data);  // updated for new parameters
-            enemies = new EnemyManager(all_enemy_images, all_enemy_data);
-
-            // ---- Initialize Projectiles -----
-            projectiles = new ProjectileManager(unit, all_ammo_data, all_enemy_data, all_ammo_images, all_explosions);
-
-            // ?? Set game state here ??
-            // game_state = MAIN_MENU;
-        }
-        return; // skip until it's loaded
-    }
-}
->>>>>>> main
 
 // ------------------------------------------------- Update -------------------------------------------------
 
@@ -170,14 +124,6 @@ function update() {
         // after game ends, display encouraging message and score; provides "REPLAY" or "RETURN TO MAIN MENU"
     }
     
-    // initial_setup();
-    
-    // environment.update();
-    // projectiles.update(player, enemies);
-
-    // player.update();
-    // enemies.update();
-
 }
 
 
