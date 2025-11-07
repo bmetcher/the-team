@@ -22,7 +22,7 @@ const all_enemy_images = assets.all_enemy_images;
 const all_environment_images = assets.all_environment_images;
 const all_ammo_data = assets.all_ammo_data;
 const all_ship_data = assets.all_ship_data;
-const all_enemy_data = assets.all_enemies_data;
+const all_enemies_data = assets.all_enemies_data;
 
 
 // --------------------------------------- Initialisation for Screens ---------------------------------------
@@ -377,7 +377,7 @@ function initial_setup(player_ship_name) {
         enemies = new EnemyManager(all_enemy_images, all_enemies_data);
 
         // ---- Initialize Projectiles -----
-        projectiles = new ProjectileManager(unit, all_ammo_data, all_ammo_images, all_explosions);
+        projectiles = new ProjectileManager(unit, all_ammo_data, all_enemies_data, all_ammo_images, all_explosions);
 
         // ?? Set game state here ??
         // game_state = MAIN_MENU;
