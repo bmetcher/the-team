@@ -72,7 +72,7 @@ function update() {
     
     environment.update();
     projectiles.update(player, enemy);
-
+    
     player.update();
     enemy.update();
 }

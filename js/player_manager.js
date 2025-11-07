@@ -4,9 +4,9 @@ const FLY_IN_TIME = 5;
 
 // for testing effects
 const effect_dropdown = make.dropdown(tad.w/2, tad.h + 100, 200, [
-            "bubbles", "casting", "emit", "felspell", "fire", "firespin",
-            "flamelash", "freezing", "magic8", "magicka", "midnight", "nebula",
-            "phantom", "protection", "spell", "sunburn", "vortex"
+            "emit", "felspell", "fire",
+            "freezing", "magic8", "midnight", 
+            "nebula", "sunburn", "vortex"
         ])
 
 export class PlayerManager {
@@ -154,32 +154,33 @@ export class PlayerManager {
         }
 
 
-        // Experimental! Camera pan/zoom with player's x & y
-        camera.rotation = 1 + ((tad.w/2 - this.collider.x) / 100);  // ? better '+' or '-' ? 
-        camera.x = tad.w/2 - ((tad.w/2 - this.collider.x) / 5);
-        camera.y = tad.h/2 - ((tad.w/2 - this.collider.y) / 5);
-        camera.zoom = 1 + (tad.h/this.collider.y)/100;
+        // --- Experimental Reactive Camera Tilt/Pan Effect ---
+        // rotate camera slightly according to player's x co-ordinate
+        //camera.rotation = 1 + ((tad.w/2 - this.collider.x) / 100);
         
-        // testing whatever functionality
-        if (keys.down("t")) {
-            this.custom_effect_testing(effect_dropdown.value);
-
-            //camera.zoom -= 0.5;
-        }
-
-        console.log(effect_dropdown.value)
-        
-        effect_dropdown.draw();
-
-        this.collider.draw();
+        // pan the camera slightly left/right   (by the player's x; centered at tad.w/2)
+        camera.x = tad.w/2 - ((tad.w/2 - this.collider.x) / 10);
+        // pan the camera slightly up/down      (by the player's y; centered ~= "750")
+        camera.y = tad.h/2 - ((tad.h/2 - this.collider.y) / 10) - this.collider.h;
+        // zoom the camera slightly as the player moves upwards 
+        camera.zoom = 1.4 - (this.collider.y / tad.h) / 2;  // arbitrary; should we clamp this?
 
         // 🛑🛑🛑🛑 NO CAMERA USED (YET???) 🛑🛑🛑🛑
+        // Would we like manual camera controls? We could add them here
+
+        // Dev's "t" hotkey (put whatever you wanna activate/test here if you like!)
+        if (keys.down("t")) {
+            this.custom_effect_testing(effect_dropdown.value);
+            camera.zoom = 0.25;
+        }
+        console.log(effect_dropdown.value)
+        effect_dropdown.draw();
+
+        // --- Draw the Player's Collider ---- 
+        this.collider.draw();
     }
 
     custom_effect_testing(selection) {
-        // console.log("Selection:", selection);
-        // console.log("Available effects:", Object.keys(this.all_effects));
-
         this.all_effects[selection].x = this.collider.x + 2;
         this.all_effects[selection].y = this.collider.y + 2;
         this.all_effects[selection].scale = 100;
@@ -204,8 +205,6 @@ export class PlayerManager {
         tmp.yOffset = this.ship_data.ship_yoffset;
         return tmp;
     }
-
-
 
     specialise_player_settings(){
         // mass or static?

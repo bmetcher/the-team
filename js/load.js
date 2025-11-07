@@ -43,23 +43,15 @@ const all_explosions = {
 }
 // Effect Animations
 const all_effects = {
-    bubbles: load.animation(0,0, ...load_frames("effects/bubbles", 61)),
-    casting: load.animation(0,0, ...load_frames("effects/casting", 73)),
-    // emit: load.animation(0,0, ...load_frames("effects/emit", 31)),
-    // felspell: load.animation(0,0, ...load_frames("effects/felspell", 91)),
-    // fire: load.animation(0,0, ...load_frames("effects/fire", 61)),
-    // firespin: load.animation(0,0, ...load_frames("effects/firespin", 61)),
-    // flamelash: load.animation(0,0, ...load_frames("effects/flamelash", 46)),
-    // freezing: load.animation(0,0, ...load_frames("effects/freezing", 86)),
-    // magic8: load.animation(0,0, ...load_frames("effects/magic8", 61)),
-    // magicka: load.animation(0,0, ...load_frames("effects/magicka", 41)),
-    // midnight: load.animation(0,0, ...load_frames("effects/midnight", 61)),
-    // nebula: load.animation(0,0, ...load_frames("effects/nebula", 61)),
-    // phantom: load.animation(0,0, ...load_frames("effects/phantom", 61)),
-    // protection: load.animation(0,0, ...load_frames("effects/protection", 61)),
-    // spell: load.animation(0,0, ...load_frames("effects/spell", 75)),
-    // sunburn: load.animation(0,0, ...load_frames("effects/sunburn", 61)),
-    // vortex: load.animation(0,0, ...load_frames("effects/vortex", 61))
+    emit: load.animation(0,0, ...load_frames("effects/emit", 31)),
+    felspell: load.animation(0,0, ...load_frames("effects/felspell", 91)),
+    fire: load.animation(0,0, ...load_frames("effects/fire", 61)),
+    freezing: load.animation(0,0, ...load_frames("effects/freezing", 86)),
+    magic8: load.animation(0,0, ...load_frames("effects/magic8", 61)),
+    midnight: load.animation(0,0, ...load_frames("effects/midnight", 61)),
+    nebula: load.animation(0,0, ...load_frames("effects/nebula", 61)),
+    sunburn: load.animation(0,0, ...load_frames("effects/sunburn", 61)),
+    vortex: load.animation(0,0, ...load_frames("effects/vortex", 61))
 }
 
 // Enemy images
@@ -68,8 +60,19 @@ const all_enemy_images = {
 }
 // Environment images
 const all_environment_images = {
-    space: load.image(0, 0, "./images/background/space1.png"),
-    rock: load.image(0, 0, "./images/background/rock.png")
+    // Background Images (with initial co-ordinates)
+    stars1: load.image(tad.w/2,0, "./images/background/stars.png"),
+    stars2: load.image(tad.w/2,1620, "./images/background/stars.png"),
+    dust1: load.image(tad.w/2,0, "./images/background/dust.png"),
+    dust2: load.image(tad.w/2,1620, "./images/background/dust.png"),
+    nebula1: load.image(tad.w/2,0, "./images/background/nebula.png"),
+    nebula2: load.image(tad.w/2,1620, "./images/background/nebula.png"),
+    // Debris
+    rock1: load.image(0, 0, "./images/background/debris/rock1.png"),
+    rock2: load.image(0, 0, "./images/background/debris/rock2.png"),
+    rock3: load.image(0, 0, "./images/background/debris/rock3.png"),
+    fossil: load.image(0, 0, "./images/background/debris/fossil.png"),
+    terran_dry: load.animation(0,0, ...load_frames("background/terran_dry",8))
 }
 
 // Ship-Ammo data
