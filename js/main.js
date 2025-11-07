@@ -395,7 +395,6 @@ function display_results(){
     text.print(tad.w/2, HIGHEST_NON_TITLE_TEXT, "your score:");
 
     text.size=40;
-    console.log(projectiles.player_score)
     text.print(tad.w/2, HIGHEST_NON_TITLE_TEXT+40, projectiles.player_score.toString());
 
 }
