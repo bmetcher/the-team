@@ -52,7 +52,8 @@ const fonts = assets.fonts;
 const TXT_COL_1 = "white";
 const TXT_COL_2 = "rgb(180,180,180)";
 const GAP_BETW_LINES = 30;
-const HIGHEST_NON_TITLE_TEXT = tad.h/3 - GAP_BETW_LINES;
+const HIGHEST_NON_TITLE_TEXT = tad.h/4 - GAP_BETW_LINES;
+const LEFT_X_NON_TITLE_TEXT = tad.w/100*15;
 
 // ---- Buttons ----
 // Locations
@@ -136,12 +137,12 @@ function display_intro_screen(){
     text.colour = TXT_COL_1;
     text.size = 90;
     text.font = fonts.titles;
-    text.print(tad.w/2, tad.h/5, "game name");
+    text.print(tad.w/2, tad.h/10*1.5, "game name");
 
     // directions to continue text
     text.size = 18;
     text.font = fonts.pixel_italic;
-    text.print(tad.w/2, tad.h/5*4, "press space key to continue");
+    text.print(tad.w/2, tad.h/10*9, "press space key to continue");
 
     // change screens logic
     if (keys.down(" ")){
@@ -156,9 +157,10 @@ function display_main_menu_screen(){
     check_buttons();        // change screens logic
 
     // menu buttons
+    const TOP_BUTTON_POSITION = tad.h/50*38;
     const GAP_BETW_BUTTONS = buttons.go_to_prepare.h * 1.5;
     text.font = fonts.pixel_regular;
-    draw_button(buttons.go_to_prepare, tad.w/2, tad.h/50*28);
+    draw_button(buttons.go_to_prepare, tad.w/2, TOP_BUTTON_POSITION);
     draw_button(buttons.go_to_leaderboard, tad.w/2, buttons.go_to_prepare.y + GAP_BETW_BUTTONS);
     draw_button(buttons.go_to_tutorial, tad.w/2, buttons.go_to_leaderboard.y + GAP_BETW_BUTTONS);
 }
@@ -167,36 +169,11 @@ function display_main_menu_screen(){
 function display_prepare_screen(){
     game_screens.prepare_screen.draw();    // display prepare screen image
     display_menu_title("preparations");     // prepare menu title text
+    display_instruction_txt("select your ship");
     player_ship_dropdown.draw();
     check_buttons()     // change screens logic
     draw_button(buttons.go_to_main_menu, BUTTON_LRG_LEFT_X, BUTTON_LRG_BOTTOM_Y);  // button to return to main menu
     draw_button(buttons.go_to_play, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);     // button to go to game
-}
-
-
-function display_leaderboard_screen(){
-    game_screens.leaderboard_screen.draw();    // display leaderboard screen image
-    display_menu_title("leaderboard");  // leaderboard menu title text
-    check_buttons()     // change screens logic
-    draw_button(buttons.go_to_main_menu, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);    // button to return to main menu
-}
-
-
-function display_tutorial_screen(){
-    game_screens.tutorial_screen.draw();    // display help screen image
-    display_menu_title("tutorial");     // help menu title text
-    display_tutorial_txt();
-    check_buttons()     // change screens logic
-    draw_button(buttons.go_to_main_menu, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);  // button to return to main menu
-}
-
-
-function display_commands_screen(){
-    game_screens.controls_screen.draw();    // display controls screen image
-    display_menu_title("commands");     // commands menu title text
-    display_commands_json();
-    check_buttons()     // change screens logic
-    draw_button(buttons.go_to_main_menu, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);  // button to return to main menu
 }
 
 
@@ -226,6 +203,32 @@ function display_pause_screen(){
     check_buttons()     // change screens logic
     draw_button(buttons.return_to_game, BUTTON_LRG_LEFT_X, BUTTON_LRG_BOTTOM_Y);     // button to return to game
     draw_button(buttons.end_game, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);     // button to delte current game progress and return to main menu
+}
+
+
+function display_leaderboard_screen(){
+    game_screens.leaderboard_screen.draw();    // display leaderboard screen image
+    display_menu_title("leaderboard");  // leaderboard menu title text
+    check_buttons()     // change screens logic
+    draw_button(buttons.go_to_main_menu, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);    // button to return to main menu
+}
+
+
+function display_tutorial_screen(){
+    game_screens.tutorial_screen.draw();    // display help screen image
+    display_menu_title("tutorial");     // help menu title text
+    display_instruction_txt(game_tutorial_txt[0]);
+    check_buttons()     // change screens logic
+    draw_button(buttons.go_to_main_menu, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);  // button to return to main menu
+}
+
+
+function display_commands_screen(){
+    game_screens.controls_screen.draw();    // display controls screen image
+    display_menu_title("commands");     // commands menu title text
+    display_commands_json();
+    check_buttons()     // change screens logic
+    draw_button(buttons.go_to_main_menu, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);  // button to return to main menu
 }
 
 
@@ -304,7 +307,12 @@ function check_buttons(){
 // -----------------------------------------  Dropdown Helper Functions -----------------------------------------
 function create_ship_dropwdown(options){
     text.font = fonts.pixel_regular;
-    const tmp = make.dropdown(tad.w/2, tad.h/2, 150, options);
+    const dropdown_width = 300;
+    const tmp = make.dropdown(
+        LEFT_X_NON_TITLE_TEXT + dropdown_width/2, 
+        HIGHEST_NON_TITLE_TEXT+50, 
+        dropdown_width, 
+        options);
     tmp.openDirection = "down";
     return tmp;
 }
@@ -340,17 +348,15 @@ function display_commands_json(){
     }
 }
 
-
-function display_tutorial_txt(){
+function display_instruction_txt(display_text){
     // Precondition: Assumes tutorial is written using only one line
     text.alignment.x = "left";
     text.alignment.y = "top";
     text.colour = TXT_COL_2;
     text.font = fonts.pixel_regular;
     text.maxWidth = tad.w/8*6;
-    let current_y = HIGHEST_NON_TITLE_TEXT;
 
-    text.print(tad.w/8, current_y, game_tutorial_txt[0]);
+    text.print(LEFT_X_NON_TITLE_TEXT, HIGHEST_NON_TITLE_TEXT, display_text);
 }
 
 

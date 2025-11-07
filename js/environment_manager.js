@@ -2,7 +2,7 @@ import { tad, make, time } from "../lib/TeachAndDraw.js";
 
 const FLY_IN_TIME = 5;
 
-const INIT_SPEED = 1;
+const INIT_SPEED = 2;
 const FINAL_SPEED = 0.4;
 const AMT_TO_REDUCE_BY = (INIT_SPEED - FINAL_SPEED) / (FLY_IN_TIME * time.fps);
 
