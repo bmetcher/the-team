@@ -35,7 +35,7 @@ const LEADERBOARD = 3;      // scores so far + stored; accessible from MAIN_MENU
 const TUTORIAL = 4;         // explains how game works
 const COMMANDS = 5;         // explains game controls; accessible from PAUSE
 const PLAY = 6;             // actual game
-const PAUSE = 7;       // pauses game; provides buttons to access "LEADERBOARD" and "COMMANDS"
+const PAUSE = 7;            // pauses game; provides buttons to access "LEADERBOARD" and "COMMANDS"
 const END_PLAY = 8;         // after game ends, display encouraging message and score; provides "REPLAY" or "RETURN TO MAIN MENU"
 
 // ---- Preload Assets ----
@@ -57,9 +57,10 @@ const LEFT_X_NON_TITLE_TEXT = tad.w/100*15;
 
 // ---- Buttons ----
 // Locations
-const BUTTON_LRG_LEFT_X = tad.w/10*2;
-const BUTTON_LRG_RIGHT_X = tad.w/10*8;
+const BUTTON_LRG_LEFT_X = tad.w/10*2.5;
+const BUTTON_LRG_RIGHT_X = tad.w/10*7.5;
 const BUTTON_SMALL_RIGHT_X = tad.w/50*47;
+const BUTTON_SMALL_BOTTOM_Y = tad.h - (tad.w-BUTTON_SMALL_RIGHT_X);
 const BUTTON_LRG_BOTTOM_Y = tad.h/50*47;
 // Creation
 const buttons = {
@@ -185,7 +186,7 @@ function display_play_screen(){
     enemies.update();
     check_buttons()     // change screens logic
     // pause button
-    draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_LRG_BOTTOM_Y);  // button to got to pause screen
+    draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_SMALL_BOTTOM_Y);  // button to got to pause screen
     img_pause_button.x = buttons.go_to_pause.x;
     img_pause_button.y = buttons.go_to_pause.y;
     img_pause_button.scale = 80;
