@@ -88,11 +88,18 @@ const ship_name_map = {
 };
 const player_ship_dropdown = create_dropwdown(Object.keys(ship_name_map), HIGHEST_NON_TITLE_TEXT+50);
 
-// --- Global Variables ----
+// ---- Global Variables ----
 let environment, player, enemies, projectiles;      // game elements manager variables
 let game_in_progress = false;                       // to determine if game elements should be initialised: is game in progress
 let end_game_time;                                  // holds time game ended to add as state to leaderboard
 let current_screen = INTRO;                         // track current screen; initialise to intro screen
+
+
+// ---- Camera Global Variables ----
+let camera_start_x = tad.w/2;
+let camera_start_y = tad.h/2;
+let camera_prev_x = camera_start_x
+let camera_prev_y = camera_start_y;
 
 
 // ------------------------------------------------- Update -------------------------------------------------
@@ -102,6 +109,7 @@ tad.use(update);
 
 // Main draw loop
 function update() {
+    console.log(camera.x, camera.y);
     
     if (time.frameCount===0){
         leaderboard = Object.values(leaderboard) // convert to array
@@ -293,8 +301,10 @@ function display_pause_screen(){
     // Reset the camera from in-game effects
     camera.zoom = 1;
     camera.rotation = 0;
-    camera.x = tad.w/2;
-    camera.y = tad.h/2;
+    camera_prev_x = camera.x;
+    camera.x = camera_start_x;
+    camera_prev_y = camera.y;
+    camera.y = camera_start_y;
         
     // pause screen image
     game_screens.pause_screen.draw()    // display pause screen image
@@ -417,6 +427,8 @@ function check_buttons(game_over, player_won){
         
     } else if (buttons.return_to_game.released){        // to play screen (to resume existing game)
         current_screen = PLAY;
+        camera.x = camera_prev_x;
+        camera.y = camera_prev_y;
         // return all game elements to play mode
         environment.play();
         player.play();
