@@ -1,5 +1,5 @@
 # 🎮 **the-team**
-**Teach and Draw 2025 MicroJam Submission**
+**Teach and Draw 2025 MicroJam Project**
 
 ## 🧠 Overview
 **the-team** is a 2D top-down shooter built for the 2025 Teach and Draw MicroJam.  
