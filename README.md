@@ -39,6 +39,12 @@ Blood splatter:
 ### **Ammo Images**
 Designed by **Thomas Knight**
 
+
+### **Fonts**
+titles from **Smack Laideth Down 2024 by Chequered Ink** at https://www.fontspace.com/smack-laideth-down-2024-font-f124420
+pixel_italic and pixel_regular from **Pixel Digivolve by Pixel Sagas** at https://www.fontspace.com/pixel-sagas
+
+
 ---
 
 ## ⚙️ Tech Stack

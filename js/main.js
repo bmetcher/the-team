@@ -193,6 +193,10 @@ function display_prepare_screen(){
     display_instruction_txt("select your ship");
     player_ship_dropdown.draw();
 
+    // draw selected ship
+    const selected_ship = ship_name_map[player_ship_dropdown.value];
+    all_players_images[selected_ship].draw()
+
     // display instruction on how to control ship
     display_instruction_txt("to control your ship:", 185);
     display_controls(220);
@@ -272,10 +276,12 @@ function display_play_screen(){
     projectiles.game_over = false;
     check_buttons(projectiles.game_over, enemies.won);   
     
-    // pause button 🛑🛑 causes a RangeError: Maximum call stack size exceeded 🛑🛑
+    // pause button
+    buttons.go_to_pause.movedByCamera = false;
     draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_SMALL_BOTTOM_Y);      // to got to pause screen
 
     // image for pause button
+    img_pause_button.movedByCamera = false;
     img_pause_button.x = buttons.go_to_pause.x;
     img_pause_button.y = buttons.go_to_pause.y;
     img_pause_button.scale = 80;
@@ -375,6 +381,7 @@ function draw_button(button, desired_x, desired_y){
     // Generic method to draw each game button to specified x,y position
 
     text.font = fonts.pixel_regular;
+    text.size = 16;
     button.x = desired_x;
     button.y = desired_y;
     button.draw();
