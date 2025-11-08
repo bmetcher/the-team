@@ -137,7 +137,7 @@ export class ProjectileManager {
     // Calculate damage for some target that was hit by a projectile
     damage_target(target, projectile) {
         // Handle if the target should be dead
-        if ((target.current_hp -= projectile.damage) <= 0) {
+        if ((target.current_hp - projectile.damage) <= 0) {
             target.remove();
             if (target.score > 0) {
             this.player_score += target.score;
