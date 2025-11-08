@@ -158,7 +158,7 @@ export class ProjectileManager {
         }
 
         console.log("player hit, hp: ", player.current_hp);
-        if ((player.current_hp -= projectile.damage) <= 0) {
+        if ((player.current_hp - projectile.damage) <= 0) {
             this.game_over = true;
             console.log("Player died!");
         } else if (player.current_hp > 0) {
