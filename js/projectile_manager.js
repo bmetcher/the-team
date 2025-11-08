@@ -1,4 +1,4 @@
-import { tad, time, load, make, keys } from "../lib/TeachAndDraw.js";
+import { tad, make } from "../lib/TeachAndDraw.js";
 
 export class ProjectileManager {
 

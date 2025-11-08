@@ -1,4 +1,4 @@
-import { tad, load, make, keys, time, text } from "../lib/TeachAndDraw.js";
+import { tad, make, keys, time } from "../lib/TeachAndDraw.js";
 
 const FLY_IN_TIME = 5;
 

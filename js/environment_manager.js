@@ -1,4 +1,4 @@
-import { tad, make, time } from "../lib/TeachAndDraw.js";
+import { tad, make } from "../lib/TeachAndDraw.js";
 
 let fly_in_time = 300;
 
