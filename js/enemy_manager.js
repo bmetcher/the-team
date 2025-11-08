@@ -7,6 +7,7 @@ export class EnemyManager {
     constructor (all_enemy_images, all_enemies_data) {
         this.gap = this.width/2 + 40;
         this.game_paused = false;
+        this.won = false;
         
         this.all_enemy_images = all_enemy_images;
         this.all_enemies_data = all_enemies_data;
@@ -114,6 +115,7 @@ export class EnemyManager {
                 }
                 else {
                     //won game
+                    this.won = true;
                     console.log("won game")
                     console.log(this.boss_number)
                 }

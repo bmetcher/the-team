@@ -270,7 +270,7 @@ function display_play_screen(){
     // change screens logic
     // if (projectiles.game_over === true) { current_screen = END_GAME; }
     projectiles.game_over = false;
-    check_buttons(projectiles.game_over);   
+    check_buttons(projectiles.game_over, enemies.won);   
     
     // pause button 🛑🛑 causes a RangeError: Maximum call stack size exceeded 🛑🛑
     //draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_SMALL_BOTTOM_Y);      // to got to pause screen
@@ -312,9 +312,9 @@ function display_end_game_screen(){
     camera.rotation = 0;
     camera.x = tad.w/2;
     camera.y = tad.h/2;
+
     // end game screen image
-    let won = true;
-    if (won){
+    if (enemies.won){
         game_screens.victory_screen.draw();
         // menu title text
         display_menu_title("you won!");     // game over menu title text
@@ -331,7 +331,7 @@ function display_end_game_screen(){
     }
 
     // display player results for this game just finished
-    display_results(won);
+    display_results(enemies.won);
 
     // change screens logic
     check_buttons();   
@@ -375,7 +375,7 @@ function draw_button(button, desired_x, desired_y){
 }
 
 
-function check_buttons(game_over){
+function check_buttons(game_over, player_won){
     // Checks to see if any button has been pressed, and performs relevant state changes and redirects.
 
     if (buttons.go_to_prepare.released || buttons.play_again.released){     // to prepare screen
@@ -390,7 +390,7 @@ function check_buttons(game_over){
     } else if (buttons.return_to_main_menu.released){   // to main menu screen
         current_screen = MAIN_MENU;
 
-    } else if (buttons.end_game.released || game_over){              // to end game screen
+    } else if (buttons.end_game.released || game_over || player_won){              // to end game screen
         end_game_time = new Date();     // to hold time game ended, for leaderboard stat
         game_in_progress = false;       // to ensure that, if new game started, game elements are re-initialised
         current_screen = END_GAME;
