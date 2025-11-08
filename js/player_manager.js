@@ -1,4 +1,4 @@
-import { tad, load, make, keys, time, text, camera, math } from "../lib/TeachAndDraw.js";
+import { tad, load, make, keys, time, text, camera, math, mouse } from "../lib/TeachAndDraw.js";
 import { Timer } from "./timer.js";
 
 const FLY_IN_TIME = 5;
@@ -36,6 +36,8 @@ export class PlayerManager {
         this.ability_percentage = 0;
         this.shots_fired = 0;       // for default ship barrage
         this.invincible = false;    // for tank ship
+
+        this.iframe = new Timer(0.8);   // for projectiles
         
         this.collider = null;
         // track projectiles to be created
@@ -148,9 +150,14 @@ export class PlayerManager {
             this.collider.y = tad.h - y_gap
         }
 
-        // ---- Primary Attack (default: "space") ----
+        // ---- Update Combat Timers ----
+        this.iframe.update();
         this.attack_cooldown_timer.update();
-        if (keys.down(" ")) {
+        this.ability_cooldown_timer.update();
+        this.ability_activation_timer.update();
+
+        // ---- Primary Attack (default: "space") ----
+        if (keys.down(" ") || mouse.leftDown) {
             if (this.attack_cooldown_timer.done()) {
                 for (const this_point in this.ship_data.firing_origins){
                     const this_x = this.collider.x + this.ship_data.firing_origins[this_point][0];
@@ -170,11 +177,8 @@ export class PlayerManager {
 
         // Update invincibility (can be overwritten by later states/cases here)
         this.invincible = false;
-
         // ---- Special Ability (default: "G") ----
-        this.ability_cooldown_timer.update();
-        this.ability_activation_timer.update();
-        if (keys.released("g")) {
+        if (keys.released("g") || mouse.rightReleased) {
             // if "cooldown is finished" and "ability isn't already being used"
             if (this.ability_cooldown_timer.done() && !this.ability_activation_timer.running) {
                 console.log("Ability activated!");
@@ -220,8 +224,6 @@ export class PlayerManager {
                     this.shots_fired = intervals;
                 }
 
-                
-
             }
         }
 
@@ -258,6 +260,8 @@ export class PlayerManager {
         }
         text.print(435, 1000, "Ability");
         text.print(630, 1000, this.ability_percentage.toString());
+
+        // if (this.iframe.running) { text.print(tad.w/2, tad.h/2, "IFRAME ACTIVE!") }
 
         // --- Draw the Player's Collider ---- 
         this.collider.draw();

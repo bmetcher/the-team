@@ -151,8 +151,9 @@ export class ProjectileManager {
     }
     // Handle damaging the player
     damage_player(player, projectile) {
-        if (player.invincible) {
+        if (player.invincible || player.iframe.running) {
             // Tank Ship 
+            console.log("Player took no damage!");
             return;
         }
 
@@ -164,7 +165,8 @@ export class ProjectileManager {
             player.current_hp -= projectile.damage;
         }
         console.log("new hp: ", player.current_hp);
-        // console.log("player hit! new hp: ", player.current_hp);
+
+        player.iframe.start();
     }
 
     destroy_projectile(projectile, explosion_animation_name, ship) {
