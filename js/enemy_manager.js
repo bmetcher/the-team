@@ -11,9 +11,37 @@ export class EnemyManager {
         this.all_enemy_images = all_enemy_images;
         this.all_enemies_data = all_enemies_data;
 
-        // ---- Store number of enemies ----
-        this.num_enemy_types = Object.keys(this.all_enemies_data).length;
+        // ---- Number of enemies ----
+        this.max_enemies = 30;
+        this.wave_size = 5;
 
+        // Precaclulate enemy wave numbers
+        const grunt_percent = 0.9;
+        this.grunt_number = math.floor(grunt_percent * this.wave_size);
+        this.special_number = this.wave_size - this.grunt_number;
+
+        // ---- Retreive Enemy Types ----
+        this.grunt_types = []
+        this.special_types =[]
+        this.boss_types = []
+        
+        for (const key in this.all_enemies_data){
+            if (this.all_enemies_data[key].type === "grunt"){
+                this.grunt_types.push(key);
+            }
+            else if(this.all_enemies_data[key].type === "special"){
+                this.special_types.push(key);
+            }
+            else{
+                this.boss_types.push(key);
+            }
+
+        }
+
+        // Wave/level structure
+        this.wave_count = 5;
+        this.boss_wave = false;
+        
         // ---- Create enemy groups + Scale all enemy images ----
         this.all_groups = make.group();    // to manage drawing for ALL enemies
         this.enemy_groups = {};     // to manage individual enemy types
@@ -28,7 +56,6 @@ export class EnemyManager {
         this.has_started = false;
         this.started_spawning = false;
     }
-
 
     update() {
         if (!this.has_started){
@@ -45,10 +72,25 @@ export class EnemyManager {
             
             const adjusted_time = Math.floor(time.seconds - this.adjust_by);
             const ready = adjusted_time%5 === 0;
-            if (ready && !this.spawning){
-                this.spawn_wave();
+            // spawn wave of enemies periodically while waves remain
+            if (this.wave_count > 0){
+                if (ready && !this.spawning) {
+                    console.log(this.all_groups)
+                    this.spawn_wave();
+                    this.wave_count -=1;
+                }
+                this.spawning = ready;
             }
-            this.spawning = ready;
+            else if (this.boss_wave === false){
+                // remove old waves 
+                for (let enemy of this.all_groups) {
+                    enemy.lifespan = 10;
+                }                               
+
+                // spawn boss
+                this.boss_wave = true;
+                this.make_enemy(tad.w/2, -tad.h/2, "grunt");         
+            }
         }
         
         // firing methods for each enemy group
@@ -97,20 +139,39 @@ export class EnemyManager {
 
 
     spawn_wave() {
-        // console.log("Spawned wave");
-        let wave_size = 5;
-        for (let i = 0; i < wave_size; i++) {
-            let gap = i * 50;
-            let random_x = 50 + ((i / wave_size) * tad.w);
-            let random_y = 50 - (i / wave_size);
-            this.make_enemy(random_x, random_y, "grunt");
+        const new_wave = this.wave_setup();
+        for (let i = 0; i < this.wave_size; i++) {
+            let random_x = 50 + ((i / this.wave_size) * tad.w);
+            let random_y = 50 - (i / this.wave_size);
+            this.make_enemy(random_x, random_y, new_wave[i]);
+            
         }
+
     }
 
+    wave_setup(){
+        // Randomises the enemies of each wave
+        let wave = [];
 
-    make_enemy(x, y, type) {
-        let this_enemy = this.all_enemies_data[type];
-        //console.log(this_enemy);
+        // Add grunt names
+        let rand_int = 0;
+        for (let i = 0; i < this.grunt_number; i++){
+            rand_int = math.random(0,this.grunt_types.length-1);
+            wave.push(this.grunt_types[rand_int]);
+        }
+
+        // Add special names
+        for (let i = 0; i < this.special_number; i++){
+            rand_int = math.random(0,this.special_types.length-1);
+            wave.push(this.special_types[rand_int]);
+        }
+        
+        return wave;
+
+    }
+
+    make_enemy(x, y, name) {
+        let this_enemy = this.all_enemies_data[name];
         let temp = make.boxCollider(x, y, this_enemy.height, this_enemy.width);
         // physics
         temp.direction = 180;
@@ -119,8 +180,7 @@ export class EnemyManager {
         temp.friction = this_enemy.friction;
         temp.mass = this_enemy.mass;
         // set lifespan later
-        temp.lifespan = 8;
-        temp.asset = this.all_enemy_images[type];
+        temp.asset = this.all_enemy_images[name];
         
         // stats
         temp.max_hp = this_enemy.max_hp;
@@ -129,7 +189,7 @@ export class EnemyManager {
 
         //console.log("Enemy max hp:", temp.max_hp, "and current hp:", temp.current_hp);
 
-        this.enemy_groups[type].push(temp);
+        this.enemy_groups[name].push(temp);
         this.all_groups.push(temp);
     }
 

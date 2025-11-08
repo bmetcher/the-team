@@ -1,5 +1,6 @@
 {
     "grunt": {
+        "type": "grunt",
         "max_hp": 2,
         "height": 32,
         "width": 32,
@@ -11,6 +12,7 @@
         "score" : 20
     },
     "ice_enemy": {
+        "type": "special",
         "max_hp": 3,
         "height": 32,
         "width": 32,
