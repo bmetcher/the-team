@@ -26,18 +26,17 @@ Generated using **DeepAI Image Generator**
 #### **Game Background Images**
 Generated using **DeepAI Image Generator**
 
+#### **Pause Button Image**
+> Retrieved from [thoseawesomeguys.com/prompts](https://thoseawesomeguys.com/prompts/)
+
 #### **Player Sprites**
 Designed by **Thomas Knight**
 
 #### **Enemy Sprites**
 Designed by **Thomas Knight**
 
-#### **Pause Button Image**
-> Retrieved from [thoseawesomeguys.com/prompts](https://thoseawesomeguys.com/prompts/)
-
 #### **Ammo Images**
 Designed by **Thomas Knight**
-
 
 #### **Animations**
 
@@ -51,9 +50,6 @@ Designed by **Thomas Knight**
 * Pixel Effects: <a href='https://codemanu.itch.io/pixelart-effect-pack'>Pixelart Effect Pack</a>
 
 * Pixel Effects: <a href='https://codemanu.itch.io/pixelart-effect-pack'>Pixelart Effect Pack</a>
-
-#### **Pause Button Image**
-> Retrieved from [thoseawesomeguys.com/prompts](https://thoseawesomeguys.com/prompts/)
 
 
 ### **Fonts**
