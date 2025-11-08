@@ -22,7 +22,7 @@
             "direction": 0,
             "friction": 0,
             "mass": 0.1,
-            "damage": 1
+            "damage": 2
         },
 
             "big_bullet":

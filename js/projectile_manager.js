@@ -41,11 +41,6 @@ export class ProjectileManager {
         this.see_if_enemy_hits(player);
 
         // update projectile movement
-        // ... unnecessary for now -- default physics!
-        for (let i = 0; i < this.explodes.length; i++) {
-            this.explodes[i].h += 0.2;
-            this.explodes[i].w += 0.2;
-        }
 
         for (let enemy of enemies.all_groups) {
             enemy.rotation = 180 + enemy.getAngleToPoint(player.collider.x, player.collider.y);
@@ -120,8 +115,8 @@ export class ProjectileManager {
                 for (let projectile of this.player_projectiles) {
                     if (projectile.collides(enemy)) {
                         //console.log("BANG! enemy: ", enemy, " was hit");
-                        this.damage_target(enemy, projectile);
                         this.destroy_projectile(projectile, explosion_animation_name, enemy);
+                        this.damage_target(enemy, projectile);
                     }
                 }
 
@@ -133,8 +128,8 @@ export class ProjectileManager {
         for (let projectile of this.enemy_projectiles) {
             if (projectile.collides(player.collider)) {
                 //console.log("OW! player was hit by:", projectile);
-                this.damage_player(player, projectile);
                 this.destroy_projectile(projectile, player.ship_data.explosion_animation_name, player.collider);
+                this.damage_player(player, projectile);
             }
         }
     }
@@ -158,6 +153,7 @@ export class ProjectileManager {
     damage_player(player, projectile) {
         if (player.invincible) {
             // Tank Ship 
+            return;
         }
 
         console.log("player hit, hp: ", player.current_hp);

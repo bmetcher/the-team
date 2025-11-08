@@ -17,7 +17,7 @@
         "ship_yoffset": -4,
 
         "primary_weapon": "missile",
-        "attack_speed": 2,
+        "attack_speed": 4,
         "firing_origins": [
             [0, -20]
         ],
@@ -46,7 +46,7 @@
         "ship_yoffset": 9.5,
         
         "primary_weapon": "bullet",
-        "attack_speed": 1,
+        "attack_speed": 2,
         "firing_origins": [
             [0, -55]
         ],

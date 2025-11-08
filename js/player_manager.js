@@ -1,4 +1,4 @@
-import { tad, load, make, keys, time, text, camera } from "../lib/TeachAndDraw.js";
+import { tad, load, make, keys, time, text, camera, math } from "../lib/TeachAndDraw.js";
 import { Timer } from "./timer.js";
 
 const FLY_IN_TIME = 5;
@@ -33,6 +33,7 @@ export class PlayerManager {
         // Active Ability Duration
         this.ability_activation_timer = new Timer(this.ship_data.ability_duration);
         // this.ability_activation_timer.start();   // start 
+        this.ability_percentage = 0;
         this.shots_fired = 0;       // for default ship barrage
         this.invincible = false;    // for tank ship
         
@@ -245,12 +246,18 @@ export class PlayerManager {
 
         // ---- Create HP and Boost bars ----
         text.colour = "rgb(255, 255, 255)";
-        text.size = 50;
+        text.size = 45;
         text.print(tad.w/8, 1000, "HP");
         text.print(tad.w/4, 1000, this.current_hp.toString());
 
-        text.print(495, 1000, "Fuel");
-        text.print(630, 1000, this.current_fuel.toString());
+        this.ability_percentage = this.ability_cooldown_timer.get_percentage();
+        if (this.ability_percentage === 1) { 
+            this.ability_percentage = "READY!"
+        } else {
+            this.ability_percentage = math.round(this.ability_percentage * 100) + " %";
+        }
+        text.print(435, 1000, "Ability");
+        text.print(630, 1000, this.ability_percentage.toString());
 
         // --- Draw the Player's Collider ---- 
         this.collider.draw();

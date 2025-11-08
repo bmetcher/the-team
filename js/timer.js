@@ -1,4 +1,4 @@
-import { tad, time } from "../lib/TeachAndDraw.js";
+import { tad, time, math } from "../lib/TeachAndDraw.js";
 
 export class Timer {
     constructor(duration) {
@@ -27,6 +27,11 @@ export class Timer {
 
     done() {
         return this.finished;
+    }
+
+    get_percentage() {
+        if (!this.running) return this.finished ? 1.0 : 0.0;
+        return Math.min(this.elapsed / this.duration, 1.0);
     }
 
     // 
