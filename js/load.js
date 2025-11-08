@@ -40,6 +40,7 @@ const game_screens = {
     controls_screen: load.image(tad.w/2,tad.h/2,"./images/screens/commands.jpeg"),
     pause_screen: load.image(tad.w/2,tad.h/2,"./images/screens/pause.jpeg"),
     end_game_screen: load.image(tad.w/2,tad.h/2,"./images/screens/end_game.png"),
+    victory_screen: load.image(tad.w/2,tad.h/2,"./images/screens/victory.png"),
 }
 
 // Game Pause Button image
