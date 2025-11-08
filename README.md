@@ -2,8 +2,7 @@
 **Teach and Draw 2025 MicroJam Submission**
 
 ### 🕹️ Game Prompt: *“Top-down Shooter”*
-Inspired by classics such as **Galaga** and **Raiden**  
-[Gameplay reference video](https://www.youtube.com/watch?v=VVobHYfg2rg)
+Inspired by classics such as **Galaga** and **Raiden**  s
 
 ---
 
