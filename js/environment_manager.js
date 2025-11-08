@@ -1,10 +1,10 @@
 import { tad, make, time } from "../lib/TeachAndDraw.js";
 
-const FLY_IN_TIME = 5;
+let fly_in_time = 300;
 
-const INIT_SPEED = 1;
+const INIT_SPEED = 2;
 const FINAL_SPEED = 0.4;
-const AMT_TO_REDUCE_BY = (INIT_SPEED - FINAL_SPEED) / (FLY_IN_TIME * 60);
+const AMT_TO_REDUCE_BY = (INIT_SPEED - FINAL_SPEED) / fly_in_time;
 
 export class EnvironmentManager {
     constructor(unit, all_environment_images) {
@@ -51,8 +51,9 @@ export class EnvironmentManager {
 
     draw_space() {
         // move grass down
-        if (!this.game_paused && time.seconds < FLY_IN_TIME){
+        if (!this.game_paused && fly_in_time > 0){
             this.speed -= AMT_TO_REDUCE_BY;
+            fly_in_time--;
         }
         this.space1.y+=this.speed;
         this.space2.y+=this.speed;
