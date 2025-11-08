@@ -1,2 +1,6 @@
-This is the tutorial. It is really not important. This is the tutorial. It is really not important. This is the tutorial. It is really not important. This is the tutorial. It is really not important. This is the tutorial. It is really not important. This is the tutorial. It is really not important.
-This is the second line.
+• Navigate using your keyboard to evade hostile fire
+• Engage enemies to earn combat points
+• Eliminate all hostiles and bosses to secure each level
+• Monitor your standing on the Galactic Leaderboard
+
+Objective: Survive. Dominate. Ascend.

@@ -224,7 +224,6 @@ export class ProjectileManager {
         if (target === "none") {
             if (friendly) { pew.direction = 0; }
         }
-        console.log("hey");
         if (target === "random") {
             if (friendly) {
                 pew.direction = 10 - math.random(0, 20);

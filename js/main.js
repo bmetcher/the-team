@@ -14,6 +14,7 @@ tad.w = 720;
 tad.h = 1080;
 
 // ---- Preload Assets ----
+const menu_intro_txt = assets.menu_intro_txt;
 const all_players_images = assets.all_players_images;
 const all_ammo_images = assets.all_ammo_images;
 const all_explosions = assets.all_explosions;
@@ -69,15 +70,15 @@ const BUTTON_LRG_BOTTOM_Y = tad.h - (tad.w-BUTTON_LRG_RIGHT_X) + 100;
 // Creation
 const buttons = {
     go_to_prepare: create_menu_button("large", "prepare for launch"),
-    go_to_leaderboard: create_menu_button("large", "leaderboard"),
-    go_to_tutorial: create_menu_button("large", "tutorial"),
-    return_to_main_menu: create_menu_button("large", "return to main menu"),
-    go_to_play: create_menu_button("large", "play now"),
+    go_to_leaderboard: create_menu_button("large", "galactic leaderboard"),
+    go_to_tutorial: create_menu_button("large", "briefing"),
+    return_to_main_menu: create_menu_button("large", "return to mission base"),
+    go_to_play: create_menu_button("large", "launch now"),
     return_to_pause: create_menu_button("large", "return"),
     go_to_controls: create_menu_button("large", "review controls"),
     go_to_pause: create_menu_button("small", "p"),
-    return_to_game: create_menu_button("large", "return to game"),
-    end_game: create_menu_button("large", "end game"),
+    return_to_game: create_menu_button("large", "resume mission"),
+    end_game: create_menu_button("large", "end mission"),
     play_again: create_menu_button("large", "play again"),
 }
 
@@ -86,13 +87,21 @@ const ship_name_map = {
     "Default Ship": "default_ship",
     "Tank Ship": "tank_ship"
 };
-const player_ship_dropdown = create_dropwdown(Object.keys(ship_name_map), HIGHEST_NON_TITLE_TEXT+50);
+const DROPDOWN_Y = HIGHEST_NON_TITLE_TEXT+50;
+const player_ship_dropdown = create_dropwdown(Object.keys(ship_name_map), DROPDOWN_Y);
 
-// --- Global Variables ----
+// ---- Global Variables ----
 let environment, player, enemies, projectiles;      // game elements manager variables
 let game_in_progress = false;                       // to determine if game elements should be initialised: is game in progress
 let end_game_time;                                  // holds time game ended to add as state to leaderboard
 let current_screen = INTRO;                         // track current screen; initialise to intro screen
+
+
+// ---- Camera Global Variables ----
+let camera_start_x = tad.w/2;
+let camera_start_y = tad.h/2;
+let camera_prev_x = camera_start_x
+let camera_prev_y = camera_start_y;
 
 
 // ------------------------------------------------- Update -------------------------------------------------
@@ -147,14 +156,15 @@ function display_intro_screen(){
 
     // game name text
     text.colour = TXT_COL_1;
-    text.size = 90;
+    text.alignment.x = "center";
+    text.size = 175;
     text.font = fonts.titles;
-    text.print(tad.w/2, tad.h/10*1.25, "game name");
+    text.print(tad.w/2, tad.h/10*1.5, "agalag");
 
     // directions to continue text
     text.size = 18;
     text.font = fonts.pixel_italic;
-    text.print(tad.w/2, tad.h/10*9, "press space key to continue");
+    text.print(tad.w/2, tad.h/10*8.6, "press space key to continue");
 
     // change screens logic
     if (keys.down(" ")){
@@ -168,17 +178,23 @@ function display_main_menu_screen(){
     game_screens.main_menu_screen.draw();
 
     // menu title text
-    display_menu_title("main menu");    
+    display_menu_title("mission base");
+
+    // welcome message
+    display_txt(menu_intro_txt[0], 35, TXT_COL_1, 74, tad.w/8*5, "center", tad.w/2);
+
+    // display intro text
+    display_txt(menu_intro_txt[1], 228, TXT_COL_1, 23, tad.w/8*5, "center", tad.w/2, fonts.pixel_italic);
 
     // change screens logic
     check_buttons();        
 
     // menu buttons
-    const TOP_BUTTON_POSITION = tad.h/50*38;
+    const TOP_BUTTON_POSITION = tad.h/50*36;
     const GAP_BETW_BUTTONS = buttons.go_to_prepare.h * 1.5;
     draw_button(buttons.go_to_prepare, tad.w/2, TOP_BUTTON_POSITION);                                   // to prepare for game
-    draw_button(buttons.go_to_leaderboard, tad.w/2, buttons.go_to_prepare.y + GAP_BETW_BUTTONS);        // to view leaderboard
-    draw_button(buttons.go_to_tutorial, tad.w/2, buttons.go_to_leaderboard.y + GAP_BETW_BUTTONS);       // to view game tutorial
+    draw_button(buttons.go_to_tutorial, tad.w/2, buttons.go_to_prepare.y + GAP_BETW_BUTTONS);       // to view game tutorial
+    draw_button(buttons.go_to_leaderboard, tad.w/2, buttons.go_to_tutorial.y + GAP_BETW_BUTTONS);        // to view leaderboard
 }
 
 
@@ -190,16 +206,20 @@ function display_prepare_screen(){
     display_menu_title("preparations");   
     
     // dropdown menu to select player ship
-    display_instruction_txt("select your ship");
+    display_txt("select your ship");
     player_ship_dropdown.draw();
 
     // draw selected ship
     const selected_ship = ship_name_map[player_ship_dropdown.value];
-    all_players_images[selected_ship].draw()
+    let temp = all_players_images[selected_ship];
+    temp.x = tad.w/2;
+    temp.y = DROPDOWN_Y + 115 + all_ship_data[selected_ship].menu_offset;
+    temp.scale = all_ship_data[selected_ship].menu_scale;
+    temp.draw()
 
     // display instruction on how to control ship
-    display_instruction_txt("to control your ship:", 185);
-    display_controls(220);
+    display_txt("to control your ship:", 330);
+    display_controls(365);
 
     // change screens logic
     check_buttons();
@@ -215,7 +235,7 @@ function display_leaderboard_screen(){
     game_screens.leaderboard_screen.draw();
 
     // menu title text
-    display_menu_title("leaderboard");
+    display_menu_title("galactic leaderboard");
 
     // display leaderboard statistics
     display_leaderboard();
@@ -233,10 +253,20 @@ function display_tutorial_screen(){
     game_screens.tutorial_screen.draw();
 
     // menu title text
-    display_menu_title("tutorial");
+    display_menu_title("briefing");
 
     // display tutorial instructions from tutorial.txt
-    display_instruction_txt(game_tutorial_txt[0]);
+    display_txt(game_tutorial_txt[0]);
+    let offset = 30;
+    display_txt(game_tutorial_txt[1], offset);
+    offset += 30;
+    display_txt(game_tutorial_txt[2], offset);
+    offset += 30;
+    display_txt(game_tutorial_txt[3], offset);
+    offset += 30;
+    display_txt(game_tutorial_txt[4], offset);
+    offset += 60;
+    display_txt(game_tutorial_txt[5], offset);
 
     // change screens logic
     check_buttons();    
@@ -272,7 +302,6 @@ function display_play_screen(){
     enemies.update();
 
     // change screens logic
-    projectiles.game_over = false;
     check_buttons(projectiles.game_over, enemies.won);   
     
     // pause button
@@ -292,14 +321,16 @@ function display_pause_screen(){
     // Reset the camera from in-game effects
     camera.zoom = 1;
     camera.rotation = 0;
-    camera.x = tad.w/2;
-    camera.y = tad.h/2;
+    camera_prev_x = camera.x;
+    camera.x = camera_start_x;
+    camera_prev_y = camera.y;
+    camera.y = camera_start_y;
         
     // pause screen image
     game_screens.pause_screen.draw()    // display pause screen image
 
     // menu title text
-    display_menu_title("game paused");     // pause menu title text
+    display_menu_title("mission paused");     // pause menu title text
 
     // display player performance statistics so far
     display_stats();
@@ -416,6 +447,8 @@ function check_buttons(game_over, player_won){
         
     } else if (buttons.return_to_game.released){        // to play screen (to resume existing game)
         current_screen = PLAY;
+        camera.x = camera_prev_x;
+        camera.y = camera_prev_y;
         // return all game elements to play mode
         environment.play();
         player.play();
@@ -450,18 +483,26 @@ function create_dropwdown(options, y_position){
 
 // ---------------------------------------- Text Display Helper Functions ----------------------------------------
 
-function display_instruction_txt(display_text, y_offset=0){
+function display_txt(
+    display_text,
+     y_offset=0, 
+     text_colour=TXT_COL_2, 
+     text_size=16, 
+     text_width=tad.w/8*6, 
+     x_alignment="left", 
+     start_x=LEFT_X_NON_TITLE_TEXT, 
+     font=fonts.pixel_regular){
     // Generic method to display (paragraph) text on game screens; used in TUTORIAL and PREPARE 
     //      Precondition: Assumes display_text is written using only one line
 
-    text.size=16;
-    text.font = fonts.pixel_regular;
-    text.alignment.x = "left";
+    text.size = text_size;
+    text.font = font;
+    text.alignment.x = x_alignment;
     text.alignment.y = "top";
-    text.colour = TXT_COL_2;
-    text.maxWidth = tad.w/8*6;
+    text.colour = text_colour;
+    text.maxWidth = text_width;
     
-    text.print(LEFT_X_NON_TITLE_TEXT, HIGHEST_NON_TITLE_TEXT+y_offset, display_text);
+    text.print(start_x, HIGHEST_NON_TITLE_TEXT+y_offset, display_text);
 }
 
 
