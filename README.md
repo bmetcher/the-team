@@ -41,21 +41,21 @@ Designed by **Thomas Knight**
 
 #### **Animations**
 
-Explosions:
+* Explosions:
 > CraftPix.net 2D Game Assets. (2019). *2D Battle Tanks* [PNG].  
 > Retrieved from [OpenGameArt.org](https://opengameart.org/content/2d-battle-tanks)
 
-Glass breaking:
+* Glass breaking:
 <a href='https://pngtree.com/freepng/cracking-broken-transparent-glass_6190778.html'>png image from pngtree.com/</a>
 
-Blood splatter:
+* Blood splatter:
 <a href='https://pngtree.com/freepng/realistic-blood-splatter-stain_22930222.html'>png image from pngtree.com/</a>
 
 
 
 
 ### **Fonts**
-titles from **Smack Laideth Down 2024 by Chequered Ink** at https://www.fontspace.com/smack-laideth-down-2024-font-f124420
-pixel_italic and pixel_regular from **Pixel Digivolve by Pixel Sagas** at https://www.fontspace.com/pixel-sagas
+* titles from **Smack Laideth Down 2024 by Chequered Ink** at https://www.fontspace.com/smack-laideth-down-2024-font-f124420
+* pixel_italic and pixel_regular from **Pixel Digivolve by Pixel Sagas** at https://www.fontspace.com/pixel-sagas
 
 ---
