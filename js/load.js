@@ -72,7 +72,6 @@ const all_environment_images = {
     rock2: load.image(0, 0, "./images/background/debris/rock2.png"),
     rock3: load.image(0, 0, "./images/background/debris/rock3.png"),
     fossil: load.image(0, 0, "./images/background/debris/fossil.png"),
-    terran_dry: load.animation(0,0, ...load_frames("background/terran_dry",8))
 }
 
 // Ship-Ammo data
