@@ -36,6 +36,17 @@ export class ProjectileManager {
             return;
         }
 
+        // check projectile collisions
+        this.see_if_player_hits(enemies);
+        this.see_if_enemy_hits(player);
+
+        // update projectile movement
+        // ... unnecessary for now -- default physics!
+        for (let i = 0; i < this.explodes.length; i++) {
+            this.explodes[i].h += 0.2;
+            this.explodes[i].w += 0.2;
+        }
+
         for (let enemy of enemies.all_groups) {
             enemy.rotation = 180 + enemy.getAngleToPoint(player.collider.x, player.collider.y);
         }
@@ -49,17 +60,7 @@ export class ProjectileManager {
         
         // ---- Draw All Projectiles ----
         this.all_projectiles.draw();
-
-        // update projectile movement
-        // ... unnecessary for now -- default physics!
-        for (let i = 0; i < this.explodes.length; i++) {
-            this.explodes[i].h += 0.2;
-            this.explodes[i].w += 0.2;
-        }
-
-        // check projectile collisions
-        this.see_if_player_hits(enemies);
-        this.see_if_enemy_hits(player);
+        this.explodes.draw();
 
     }
 

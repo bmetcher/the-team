@@ -73,7 +73,7 @@ const all_explosions = {
     player: load.animation(0,0, ...load_frames("explosions/player_explosion_animation", 8)),
     grunt: load.animation(0,0, ...load_frames("explosions/grunt_explosion_animation", 8)),
     binky: load.animation(0,0, ...load_frames("explosions/binky_explosion_animation", 8)),
-    ice: load.animation(0,0, ...load_frames("explosions/ice_explosion_animation", 3)),
+    ice: load.animation(0,0, ...load_frames("explosions/ice_explosion_animation", 5)),
     mini_boss: load.animation(0,0, ...load_frames("explosions/mini_boss_explosion_animation", 1)),
 }
 
