@@ -3,7 +3,7 @@ import { tad, make, time, math } from "../lib/TeachAndDraw.js";
 let fly_in_time = 300;
 
 const INIT_SPEED = 2;
-const FINAL_SPEED = 0.4;
+const FINAL_SPEED = 1;
 const AMT_TO_REDUCE_BY = (INIT_SPEED - FINAL_SPEED) / fly_in_time;
 
 export class EnvironmentManager {
@@ -55,34 +55,36 @@ export class EnvironmentManager {
 
     draw_space() {
         // move grass down
-        if (time.seconds < fly_in_time){
-            this.speed -= AMT_TO_REDUCE_BY;
+        if (time.seconds < fly_in_time) {
+            if (this.speed >= (INIT_SPEED - FINAL_SPEED)) { 
+                this.speed -= AMT_TO_REDUCE_BY; 
+            }
         }
 
         this.stars1.y += this.speed;
         this.stars2.y += this.speed;
         this.dust1.y += this.speed * 2;
         this.dust2.y += this.speed * 2;
-        // this.nebula1.y += this.images.nebula1; // ** nebula not implemented yet
-        // this.nebula2.y += this.images.nebula2;
+        // this.nebula1.y += this.speed * 3; // ** nebula not implemented yet
+        // this.nebula2.y += this.speed * 3;
         
         // when it moves below the bottom -> move above the top
-        if (this.stars1.y > tad.h * 1.8) {
+        if (this.stars1.y > tad.h * 2) {
             this.stars1.y -= this.bg_height * 2;
         }
-        if (this.stars2.y > tad.h * 1.8) {
+        if (this.stars2.y > tad.h * 2) {
             this.stars2.y -= this.bg_height * 2;
         }
-        if (this.nebula1.y > tad.h * 1.8) {
+        if (this.nebula1.y > tad.h * 2) {
             this.nebula1.y -= this.bg_height * 2;
         }
-        if (this.nebula2.y > tad.h * 1.8) {
+        if (this.nebula2.y > tad.h * 2) {
             this.nebula2.y -= this.bg_height * 2;
         }
-        if (this.dust1.y > tad.h * 1.8) {
+        if (this.dust1.y > tad.h * 2) {
             this.dust1.y -= this.bg_height * 2;
         }
-        if (this.dust2.y > tad.h * 1.8) {
+        if (this.dust2.y > tad.h * 2) {
             this.dust2.y -= this.bg_height * 2;
         }
 

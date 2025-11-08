@@ -65,26 +65,8 @@ function load_frames(directory, length) {
 
 // Animations
 const all_explosions = {
-    player: load.animation(0,0,
-        "./images/explosions/player_explosion_animation/step_1.png",
-        "./images/explosions/player_explosion_animation/step_2.png",
-        "./images/explosions/player_explosion_animation/step_3.png",
-        "./images/explosions/player_explosion_animation/step_4.png",
-        "./images/explosions/player_explosion_animation/step_5.png",
-        "./images/explosions/player_explosion_animation/step_6.png",
-        "./images/explosions/player_explosion_animation/step_7.png",
-        "./images/explosions/player_explosion_animation/step_8.png"
-    ),
-    grunt: load.animation(0,0,
-        "./images/explosions/enemy_explosion_animation/step_1.png",
-        "./images/explosions/enemy_explosion_animation/step_2.png",
-        "./images/explosions/enemy_explosion_animation/step_3.png",
-        "./images/explosions/enemy_explosion_animation/step_4.png",
-        "./images/explosions/enemy_explosion_animation/step_5.png",
-        "./images/explosions/enemy_explosion_animation/step_6.png",
-        "./images/explosions/enemy_explosion_animation/step_7.png",
-        "./images/explosions/enemy_explosion_animation/step_8.png"
-    )
+    player: load.animation(0,0, ...load_frames("explosions/player_explosion_animation", 8)),
+    grunt: load.animation(0,0, ...load_frames("explosions/enemy_explosion_animation", 8))
 }
 
 // Effect Animations
