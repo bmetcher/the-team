@@ -12,12 +12,11 @@ export class EnvironmentManager {
         this.images = all_environment_images;
         // Read background image size (for later)
         this.bg_height = this.images.stars1.h;  // should be 1620        this.game_paused = false;
+        this.bg_width = this.images.stars1.w;   // should be 1080
+        //console.log("bg_height: ", this.bg_height, " & bg_width: ", this.bg_width);
 
         this.speed = INIT_SPEED
         this.stored_speed = this.speed;
-
-        this.bg_width = this.images.stars1.w;   // should be 1080
-        //console.log("bg_height: ", this.bg_height, " & bg_width: ", this.bg_width);
 
         // ---- Load Background Images ----
         this.stars1 = this.images.stars1;
@@ -41,11 +40,6 @@ export class EnvironmentManager {
         this.debris_three = make.group();
     }
 
-    create_background() {
-        this.add_image_pair("stars");
-    }
-
-
     pause(){
         if (!this.game_paused){
             this.stored_speed = this.speed;
@@ -54,42 +48,24 @@ export class EnvironmentManager {
         this.speed = 0;
     }
 
-
     play(){
         this.game_paused = false;
         this.speed = this.stored_speed;
     }
 
-
-
-    pause(){
-        if (!this.game_paused){
-            this.stored_speed = this.speed;
-            this.game_paused = true;
-        }
-        this.speed = 0;
-    }
-
-
-    play(){
-        this.game_paused = false;
-        this.speed = this.stored_speed;
-    }
-
-    draw_space(type) {
+    draw_space() {
         // move grass down
-        if (!this.game_paused && fly_in_time > 0){
+        if (time.seconds < fly_in_time){
             this.speed -= AMT_TO_REDUCE_BY;
-            fly_in_time--;
         }
-        this.stars1.y+=speed;
-        this.stars2.y+=speed;
-        this.dust1.y+=speed*2;
-        this.dust2.y+=speed*2;
 
-        this.nebula1.y+=speed*3;
-        this.nebula2.y+=speed*3;
-
+        this.stars1.y += this.speed;
+        this.stars2.y += this.speed;
+        this.dust1.y += this.speed * 2;
+        this.dust2.y += this.speed * 2;
+        // this.nebula1.y += this.images.nebula1; // ** nebula not implemented yet
+        // this.nebula2.y += this.images.nebula2;
+        
         // when it moves below the bottom -> move above the top
         if (this.stars1.y > tad.h * 1.8) {
             this.stars1.y -= this.bg_height * 2;
@@ -127,18 +103,12 @@ export class EnvironmentManager {
 
     // DRAW updated background elements
     update() {
-        if (time.frameCount === 0) {
-            this.create_background();
-        }
-
         this.draw_space();
 
         // Have generators create debris
         this.activate_generators();
         // clean up out-of-bounds debris
         this.clean_up_debris();
-
-        
     }
 
     // Create a line of invisible debris generators just above the canvas
@@ -158,7 +128,6 @@ export class EnvironmentManager {
         return result;
     }
 
-
     // Trigger each generator to try and generate a debris  (per frame)
     activate_generators() {
         // We use colliders to check they haven't already recently created debris (overlap)
@@ -168,8 +137,7 @@ export class EnvironmentManager {
                 
                 // Check if the "choas" number was generated randomly
                 if (math.round(math.random(0, this.chaos)) === this.chaos) {
-                    
-                    console.log("generator activated! \ndebris at: ", generator.x, " ", generator.y);
+                    //console.log("generator activated! \ndebris at: ", generator.x, " ", generator.y);
                     let value = math.ceiling(math.random(0, 15));
                     
                     if (0 < value && value < 5) {  // layer 1

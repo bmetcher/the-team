@@ -2,15 +2,14 @@ import { tad, make } from "../lib/TeachAndDraw.js";
 
 export class ProjectileManager {
 
-    constructor(unit, all_ammo_data, all_enemies_data, all_ammo_images, all_explosions) { // Added enemy data to constructor
-        this.unit = unit;   // standard unit
+    constructor(all_ammo_data, all_enemies_data, all_ammo_images, all_explosions, all_effects) { // Added enemy data to constructor
         this.game_paused = false;
 
         // ---- Load Ammo Data & images ----
         this.all_ammo_data = all_ammo_data;
         this.all_ammo_images = all_ammo_images;
         this.all_explosions = all_explosions;
-        this.all_effects = all_effects;;
+        this.all_effects = all_effects;
 
         // Load enemy data from JSON
         this.all_enemies_data = all_enemies_data;
