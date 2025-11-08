@@ -17,12 +17,16 @@
         "ship_yoffset": -4,
 
         "primary_weapon": "missile",
-        "max_hp": 10,
+        "attack_speed": 2,
         "firing_origins": [
             [0, -20]
         ],
-        "explosion_animation_name": "player"
+
+        "special_ability": "barrage",
+        "ability_duration": 3,
         
+        "max_hp": 10,
+        "explosion_animation_name": "player"
     },
     "tank_ship": {
         "ship_scale": 66,
@@ -42,10 +46,14 @@
         "ship_yoffset": 9.5,
         
         "primary_weapon": "bullet",
-        "max_hp": 20,
+        "attack_speed": 1,
         "firing_origins": [
             [0, -55]
         ],
+        "special_ability": "invincibility",
+        "ability_duration": 4,
+        
+        "max_hp": 20,
         "explosion_animation_name": "player"
     }
 }

@@ -1,4 +1,4 @@
-import { tad, make, camera } from "../lib/TeachAndDraw.js";
+import { tad, make, camera, math } from "../lib/TeachAndDraw.js";
 
 export class ProjectileManager {
 
@@ -156,6 +156,10 @@ export class ProjectileManager {
     }
     // Handle damaging the player
     damage_player(player, projectile) {
+        if (player.invincible) {
+            // Tank Ship 
+        }
+
         console.log("player hit, hp: ", player.current_hp);
         if ((player.current_hp -= projectile.damage) <= 0) {
             this.game_over = true;
@@ -214,13 +218,19 @@ export class ProjectileManager {
         pew.damage = ammo.damage;
 
         // Set the direction to a given target
-        if (target !== "none") {
+        if (target !== "none" && target !== "random") {
             pew.direction = pew.getAngleToPoint(target[0], target[1]);
         }
 
         // Friendly missiles go straight up
         if (target === "none") {
             if (friendly) { pew.direction = 0; }
+        }
+        console.log("hey");
+        if (target === "random") {
+            if (friendly) {
+                pew.direction = 10 - math.random(0, 20);
+            }
         }
 
         pew.rotation = pew.direction;
