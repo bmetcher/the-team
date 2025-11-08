@@ -1,6 +1,8 @@
 {
     "default_ship": {
         "ship_scale": 100,
+        "menu_scale": 170,
+        "menu_offset": 0,
         "collider_width": 24.9,
         "collider_height": 21,
         "minimum_speed": 24,
@@ -26,6 +28,8 @@
     },
     "tank_ship": {
         "ship_scale": 66,
+        "menu_scale": 80,
+        "menu_offset": 30,
         "collider_width": 91.2,
         "collider_height": 52.4,
         "minimum_speed": 15.5,
