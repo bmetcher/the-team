@@ -75,6 +75,7 @@ const all_ship_data = load.json("./data/ships_map.json"); // Seperated into sepe
 const all_enemies_data = load.json("./data/enemies_map.json");
 const game_commands_data = load.json("./data/commands.json");
 const game_tutorial_txt = load.text("./data/tutorial.txt");
+const leaderboard = load.json("./data/leaderboard.json");
 
 // Fonts
 const fonts = {
@@ -89,6 +90,7 @@ const assets = {
     all_explosions,
     all_ammo_data, all_ship_data, all_enemies_data,
     game_commands_data, game_tutorial_txt,
+    leaderboard,
     fonts
 };
 

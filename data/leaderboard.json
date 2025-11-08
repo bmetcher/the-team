@@ -1,0 +1,20 @@
+[
+    { "player_name": "Bruce Shark",      "time": "10:25 06-11-2025", "score": 180 },
+    { "player_name": "Simba Lion",      "time": "10:32 05-01-2025", "score": 174 },
+    { "player_name": "Gill Moorish Idol",       "time": "07:22 01-10-2025", "score": 170 },
+    { "player_name": "Crush Turtle",      "time": "17:07 20-11-2025", "score": 166 },
+    { "player_name": "Marlin Clownfish",     "time": "16:33 19-08-2025", "score": 156 },
+    { "player_name": "Squirt Turtle",     "time": "09:41 03-12-2025", "score": 151 },
+    { "player_name": "Mufasa Lion",     "time": "18:12 02-02-2025", "score": 150 },
+    { "player_name": "Coral Clownfish",      "time": "18:59 18-07-2025", "score": 138 },
+    { "player_name": "Sarabi Lion",     "time": "14:45 22-04-2025", "score": 133 },
+    { "player_name": "Nala Lion",       "time": "21:47 16-01-2025", "score": 128 },
+    { "player_name": "Nemo Clownfish",       "time": "21:58 19-09-2025", "score": 114 },
+    { "player_name": "Zazu Dodo",       "time": "11:19 03-04-2025", "score": 105 },
+    { "player_name": "Scar Lion",       "time": "01:08 21-02-2025", "score": 92 },
+    { "player_name": "Dory Regal Blue Tang",       "time": "03:05 02-09-2025", "score": 89 },
+    { "player_name": "Shenzi Hyena",    "time": "09:02 07-05-2025", "score": 76 },
+    { "player_name": "Timon Meerkat",      "time": "20:24 08-03-2025", "score": 63 },
+    { "player_name": "Pumbaa Boar",     "time": "04:56 29-03-2025", "score": 58 },
+    { "player_name": "Ed Hyena",        "time": "00:51 02-06-2025", "score": 33 }
+]
