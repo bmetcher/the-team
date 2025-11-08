@@ -21,9 +21,17 @@ Designed by **Thomas Knight**
 ### **Enemy Sprites**
 Designed by **Thomas Knight**
 
-### **Explosions**
+### **Animations**
+
+Explosions:
 > CraftPix.net 2D Game Assets. (2019). *2D Battle Tanks* [PNG].  
 > Retrieved from [OpenGameArt.org](https://opengameart.org/content/2d-battle-tanks)
+
+Glass breaking:
+<a href='https://pngtree.com/freepng/cracking-broken-transparent-glass_6190778.html'>png image from pngtree.com/</a>
+
+Blood splatter:
+<a href='https://pngtree.com/freepng/realistic-blood-splatter-stain_22930222.html'>png image from pngtree.com/</a>
 
 ### **Pause Button Image**
 > Retrieved from [thoseawesomeguys.com/prompts](https://thoseawesomeguys.com/prompts/)

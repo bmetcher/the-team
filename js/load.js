@@ -24,6 +24,8 @@ const all_enemy_images = {
     boss_grunt: load.image(0,0, "./images/enemies/boss_grunt.png"),
     big_boss: load.image(0,0, "./images/enemies/big_boss.png"),
     ice_enemy: load.image(0,0, "./images/enemies/ice_enemy.png"),
+    binky_enemy: load.image(0,0, "./images/enemies/binky_enemy.png"),
+    mini_boss: load.image(0,0, "./images/enemies/mini_boss.png"),
     boss_ice_enemy: load.image(0,0, "./images/enemies/boss_ice_enemy.png"),
 }
 
@@ -69,7 +71,10 @@ function load_frames(directory, length) {
 // Animations
 const all_explosions = {
     player: load.animation(0,0, ...load_frames("explosions/player_explosion_animation", 8)),
-    grunt: load.animation(0,0, ...load_frames("explosions/enemy_explosion_animation", 8))
+    grunt: load.animation(0,0, ...load_frames("explosions/grunt_explosion_animation", 8)),
+    binky: load.animation(0,0, ...load_frames("explosions/binky_explosion_animation", 8)),
+    ice: load.animation(0,0, ...load_frames("explosions/ice_explosion_animation", 3)),
+    mini_boss: load.animation(0,0, ...load_frames("explosions/mini_boss_explosion_animation", 1)),
 }
 
 // Effect Animations

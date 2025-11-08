@@ -169,6 +169,7 @@ export class EnemyManager {
 
     spawn_wave() {
         const new_wave = this.wave_setup();
+        console.log(new_wave)
         for (let i = 0; i < this.wave_size; i++) {
             let random_x = 50 + ((i / this.wave_size) * tad.w);
             let random_y = 50 - (i / this.wave_size);
@@ -185,22 +186,29 @@ export class EnemyManager {
         // Add grunt names
         let rand_int = 0;
         for (let i = 0; i < this.grunt_number; i++){
-            rand_int = math.random(0,this.grunt_types.length-1);
+            rand_int = math.floor(math.random(0,this.grunt_types.length));
             wave.push(this.grunt_types[rand_int]);
         }
 
         // Add special names
         for (let i = 0; i < this.special_number; i++){
-            rand_int = math.random(0,this.special_types.length-1);
+            rand_int = math.floor(math.random(0,this.special_types.length));
             wave.push(this.special_types[rand_int]);
         }
         
+        // Shuffle the wave
+        for (let i = wave.length - 1; i > 0; i--) {
+            const j = math.floor(math.random(0, i + 1));
+            [wave[i], wave[j]] = [wave[j], wave[i]];
+        }
+
         return wave;
 
     }
 
     make_enemy(x, y, name) {
         let this_enemy = this.all_enemies_data[name];
+        console.log(this_enemy)
         let temp = make.boxCollider(x, y, this_enemy.height, this_enemy.width);
         // physics
         temp.direction = 180;
