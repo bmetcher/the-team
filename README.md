@@ -33,6 +33,9 @@ Glass breaking:
 Blood splatter:
 <a href='https://pngtree.com/freepng/realistic-blood-splatter-stain_22930222.html'>png image from pngtree.com/</a>
 
+Pixel Effects:
+<a href='https://codemanu.itch.io/pixelart-effect-pack'>Pixelart Effect Pack</a>
+
 ### **Pause Button Image**
 > Retrieved from [thoseawesomeguys.com/prompts](https://thoseawesomeguys.com/prompts/)
 
