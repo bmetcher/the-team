@@ -107,7 +107,7 @@ let camera_prev_y = camera_start_y;
 // ------------------------------------------------- Update -------------------------------------------------
 
 tad.use(update);
-tad.debug = true;
+//tad.debug = true;
 
 // Main draw loop
 function update() {
@@ -303,15 +303,18 @@ function display_play_screen(){
 
     // change screens logic
     check_buttons(projectiles.game_over, enemies.won);   
-    
+
     // pause button
-    //buttons.go_to_pause.movedByCamera = false;
-    draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_SMALL_BOTTOM_Y);      // to got to pause screen
+    // coords to stay fixed on screen
+    const fixedScreenX = tad.w - 50;
+    const fixedScreenY = 50;
+    const worldPos = camera.screenToWorld(fixedScreenX, fixedScreenY);  // convert screen coords to world coords
+    draw_button(buttons.go_to_pause, worldPos.x, worldPos.y);      // to go to pause screen
 
     // image for pause button
     //img_pause_button.movedByCamera = false;
-    img_pause_button.x = buttons.go_to_pause.x;
-    img_pause_button.y = buttons.go_to_pause.y;
+    img_pause_button.x = worldPos.x;
+    img_pause_button.y = worldPos.y;
     img_pause_button.scale = 80;
     img_pause_button.draw();
 }
@@ -445,7 +448,7 @@ function check_buttons(game_over, player_won){
         }
         current_screen = PLAY;
         
-    } else if (buttons.return_to_game.released){        // to play screen (to resume existing game)
+    } else if (buttons.return_to_game.released || (current_screen===PAUSE && keys.released("Escape"))){        // to play screen (to resume existing game)
         current_screen = PLAY;
         camera.x = camera_prev_x;
         camera.y = camera_prev_y;
@@ -458,7 +461,7 @@ function check_buttons(game_over, player_won){
     } else if (buttons.go_to_controls.released){        // to player ship controls screen
         current_screen = CONTROLS;
         
-    } else if (buttons.go_to_pause.released || buttons.return_to_pause.released){   // to pause game screen
+    } else if (buttons.go_to_pause.released || buttons.return_to_pause.released || (current_screen===PLAY && keys.released("Escape"))){   // to pause game screen
         current_screen = PAUSE;
         // pause all game elements
         environment.pause();
