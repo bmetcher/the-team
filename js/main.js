@@ -98,7 +98,7 @@ let current_screen = INTRO;                         // track current screen; ini
 // ------------------------------------------------- Update -------------------------------------------------
 
 tad.use(update);
-//tad.debug = true;
+// tad.debug = true;
 
 // Main draw loop
 function update() {
