@@ -12,6 +12,7 @@ export class EnemyManager {
         this.all_enemies_data = all_enemies_data;
 
         // ---- Number of enemies ----
+        this.all_wave_size = 5; // for resetting wave size
         this.max_enemies = 30;
         this.wave_size = 5;
 
@@ -32,7 +33,7 @@ export class EnemyManager {
             else if(this.all_enemies_data[key].type === "special"){
                 this.special_types.push(key);
             }
-            else{
+            else if(this.all_enemies_data[key].type === "boss"){
                 this.boss_types.push(key);
             }
 
@@ -41,7 +42,9 @@ export class EnemyManager {
         // Wave/level structure
         this.wave_count = 5;
         this.boss_wave = false;
-        
+        this.boss_number = this.boss_types.length
+        this.big_boss_wave = false;
+
         // ---- Create enemy groups + Scale all enemy images ----
         this.all_groups = make.group();    // to manage drawing for ALL enemies
         this.enemy_groups = {};     // to manage individual enemy types
@@ -72,7 +75,7 @@ export class EnemyManager {
             
             const adjusted_time = Math.floor(time.seconds - this.adjust_by);
             const ready = adjusted_time%5 === 0;
-            // spawn wave of enemies periodically while waves remain
+            // spawn wave of 
             if (this.wave_count > 0){
                 if (ready && !this.spawning) {
                     //console.log(this.all_groups)
@@ -81,27 +84,52 @@ export class EnemyManager {
                 }
                 this.spawning = ready;
             }
+            // Remove old enemies and spawn boss
             else if (this.boss_wave === false){
                 // remove old waves 
                 for (let enemy of this.all_groups) {
-                    enemy.lifespan = 10;
+                    enemy.lifespan = 15;
                 }                               
-
                 // spawn boss
                 this.boss_wave = true;
-                this.make_enemy(tad.w/2, -tad.h/2, "grunt");         
+                this.make_enemy(tad.w/2, -tad.h/2, this.boss_types.pop());
+                console.log("mini boss spawn")
             }
+            // Check if boss is dead
+            else if (this.all_groups.length === 0){
+                this.boss_number -= 1;
+                // reset waves/start new level if remaining mini bosses
+                if (this.boss_number > 0){
+                    console.log("next level")
+                    console.log(this.boss_number)
+                    this.wave_count = this.all_wave_size
+                    this.boss_wave = false;
+                }
+                // spawn game big boss
+                else if(this.boss_number === 0 && this.big_boss_wave === false) {
+                    console.log("Big boss spawn")
+                    this.big_boss_wave = true;
+                    this.make_enemy(tad.w/2, -tad.h/2, "big_boss"); 
+                }
+                else {
+                    //won game
+                    console.log("won game")
+                    console.log(this.boss_number)
+                }
+                
+
+            }
+               
         }
         
         // firing methods for each enemy group
         this.general_enemy_behaviour()
         // this.grunt_behaviour();
-        
+
         this.all_groups.collides(this.all_groups);
 
         this.all_groups.draw();
     }
-
 
     pause(){
         if (!this.game_paused){
@@ -190,14 +218,16 @@ export class EnemyManager {
         // set lifespan later
         temp.asset = this.all_enemy_images[name];
         
-        // stats
+        // ---- Stats ----
+        // Max & Current Hit Points
         temp.max_hp = this_enemy.max_hp;
         temp.current_hp = temp.max_hp;
+        // Max & Current "Speed" (Movement intensity & attack speed)
+        temp.max_speed = this_enemy.max_speed;
+        temp.current_speed = temp.max_speed;
+        temp.attack_speed = temp.max_speed;
+        // Score gained from killing this enemy
         temp.score = this_enemy.score;
-
-        //console.log("Enemy max hp:", temp.max_hp, "and current hp:", temp.current_hp);
-
-        temp.next_fire_time = this.schedule_random_shot();     
 
         this.enemy_groups[name].push(temp);
         this.all_groups.push(temp);
@@ -225,10 +255,9 @@ export class EnemyManager {
         for (let enemy_type in this.enemy_groups) {
             for (let i = 0; i < this.enemy_groups[enemy_type].length; i++) {
                 let this_enemy = this.enemy_groups[enemy_type][i];
-                this.random_pathing(this_enemy, enemy_type);
-
+                
                 // if it's time for this enemy to fire
-                if (time.seconds >= this_enemy.next_fire_time) {
+                if (this_enemy.attack_speed === 0) {
                     this.created_projectiles.push({
                         origin: [this_enemy.x, this_enemy.y],
                         target: "player",
@@ -236,29 +265,23 @@ export class EnemyManager {
                         friendly: false
                     });
 
-                    const jitter = math.random(0, 1) * 0.1;
-                    this_enemy.next_fire_time = this.schedule_random_shot() + (i * 0.02) + jitter;
+                    this_enemy.attack_speed = this_enemy.max_speed;
                 }
+
+                this.random_pathing(this_enemy, enemy_type);
             }
         }
     }
 
-
-    schedule_random_shot(){
-        const min_interval = 0;
-        const max_interval = 0.05;
-        return time.seconds + min_interval + math.random(max_interval - min_interval);
-    }
-
-
     // Cause semi-erratic movement whenever "speed < speed_limit"
-    random_pathing(unit, enemy_type, speed_limit = 2, threshold = 80) {
+    random_pathing(unit, enemy_type, threshold = 80) {
         // triggered when slower than "speed_limit"
         // direction by threshold as % of canvas (default 80% of canvas)
         for (let i = 0; i < this.enemy_groups[enemy_type].length; i++) {
             // increase unit speed when it's close to stopping
-            if (unit.speed < speed_limit) {
-                unit.speed = speed_limit * 4;
+            if (unit.speed < unit.max_speed/10) {
+                unit.speed += unit.current_speed * (math.random(2, 4));
+                unit.attack_speed -= unit.current_speed / 2;
 
                 // define each threshold on the canvas
                 let threshold_right     = tad.w * threshold/100;

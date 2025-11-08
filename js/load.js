@@ -21,9 +21,12 @@ const all_ammo_images = {
 // Enemy images
 const all_enemy_images = {
     grunt: load.image(0,0, "./images/enemies/grunt.png"),
+    boss_grunt: load.image(0,0, "./images/enemies/boss_grunt.png"),
+    big_boss: load.image(0,0, "./images/enemies/big_boss.png"),
     ice_enemy: load.image(0,0, "./images/enemies/ice_enemy.png"),
     binky_enemy: load.image(0,0, "./images/enemies/binky_enemy.png"),
     mini_boss: load.image(0,0, "./images/enemies/mini_boss.png"),
+    boss_ice_enemy: load.image(0,0, "./images/enemies/boss_ice_enemy.png"),
 }
 
 // Environment images

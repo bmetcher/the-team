@@ -64,10 +64,10 @@ export class EnvironmentManager {
 
         this.stars1.y += this.speed;
         this.stars2.y += this.speed;
-        this.dust1.y += this.speed * 2;
-        this.dust2.y += this.speed * 2;
-        // this.nebula1.y += this.speed * 3; // ** nebula not implemented yet
-        // this.nebula2.y += this.speed * 3;
+        this.dust1.y += this.speed * 1.5;
+        this.dust2.y += this.speed * 1.5;
+        // this.nebula1.y += this.speed * 2; // ** nebula not implemented yet
+        // this.nebula2.y += this.speed * 2;
         
         // when it moves below the bottom -> move above the top
         if (this.stars1.y > tad.h * 2) {

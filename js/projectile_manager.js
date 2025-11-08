@@ -1,4 +1,4 @@
-import { tad, make } from "../lib/TeachAndDraw.js";
+import { tad, make, camera } from "../lib/TeachAndDraw.js";
 
 export class ProjectileManager {
 
@@ -36,7 +36,11 @@ export class ProjectileManager {
             return;
         }
 
-        // check any projectiles being created
+        for (let enemy of enemies.all_groups) {
+            enemy.rotation = 180 + enemy.getAngleToPoint(player.collider.x, player.collider.y);
+        }
+
+        // ---- Check Entities for Queued Projectiles ----
         this.get_player_projectiles(player, enemies);
         this.get_enemy_projectiles(player, enemies);
 
@@ -217,6 +221,8 @@ export class ProjectileManager {
         if (target === "none") {
             if (friendly) { pew.direction = 0; }
         }
+
+        pew.rotation = pew.direction;
 
         // Push the projectile to relevant groups
         if (friendly) { 
