@@ -11,6 +11,42 @@
         "explosion_animation_name": "grunt",
         "score" : 20
     },
+    "boss_grunt": {
+        "type": "boss",
+        "max_hp": 10,
+        "height": 32,
+        "width": 32,
+        "mass": 1,
+        "friction": 1,
+        "primary_weapon": "missile",
+        "scale": 150,
+        "explosion_animation_name": "grunt",
+        "score" : 20
+    },
+        "big_boss": {
+        "type": "big_boss",
+        "max_hp": 20,
+        "height": 32,
+        "width": 32,
+        "mass": 1,
+        "friction": 1,
+        "primary_weapon": "missile",
+        "scale": 250,
+        "explosion_animation_name": "grunt",
+        "score" : 100
+    },
+        "boss_ice_enemy": {
+        "type": "boss",
+        "max_hp": 10,
+        "height": 32,
+        "width": 32,
+        "mass": 1,
+        "friction": 1,
+        "scale": 150,
+        "primary_weapon": "bullet",
+        "explosion_animation_name": "grunt",
+        "score" : 30
+    },
     "ice_enemy": {
         "type": "special",
         "max_hp": 3,

@@ -12,6 +12,7 @@ export class EnemyManager {
         this.all_enemies_data = all_enemies_data;
 
         // ---- Number of enemies ----
+        this.all_wave_size = 5; // for resetting wave size
         this.max_enemies = 30;
         this.wave_size = 5;
 
@@ -32,7 +33,7 @@ export class EnemyManager {
             else if(this.all_enemies_data[key].type === "special"){
                 this.special_types.push(key);
             }
-            else{
+            else if(this.all_enemies_data[key].type === "boss"){
                 this.boss_types.push(key);
             }
 
@@ -41,7 +42,9 @@ export class EnemyManager {
         // Wave/level structure
         this.wave_count = 5;
         this.boss_wave = false;
-        
+        this.boss_number = this.boss_types.length
+        this.big_boss_wave = false;
+
         // ---- Create enemy groups + Scale all enemy images ----
         this.all_groups = make.group();    // to manage drawing for ALL enemies
         this.enemy_groups = {};     // to manage individual enemy types
@@ -72,25 +75,50 @@ export class EnemyManager {
             
             const adjusted_time = Math.floor(time.seconds - this.adjust_by);
             const ready = adjusted_time%5 === 0;
-            // spawn wave of enemies periodically while waves remain
+            // spawn wave of 
             if (this.wave_count > 0){
                 if (ready && !this.spawning) {
-                    console.log(this.all_groups)
                     this.spawn_wave();
                     this.wave_count -=1;
                 }
                 this.spawning = ready;
             }
+            // Remove old enemies and spawn boss
             else if (this.boss_wave === false){
                 // remove old waves 
                 for (let enemy of this.all_groups) {
-                    enemy.lifespan = 10;
+                    enemy.lifespan = 15;
                 }                               
-
                 // spawn boss
                 this.boss_wave = true;
-                this.make_enemy(tad.w/2, -tad.h/2, "grunt");         
+                this.make_enemy(tad.w/2, -tad.h/2, this.boss_types.pop());
+                console.log("mini boss spawn")
             }
+            // Check if boss is dead
+            else if (this.all_groups.length === 0){
+                this.boss_number -= 1;
+                // reset waves/start new level if remaining mini bosses
+                if (this.boss_number > 0){
+                    console.log("next level")
+                    console.log(this.boss_number)
+                    this.wave_count = this.all_wave_size
+                    this.boss_wave = false;
+                }
+                // spawn game big boss
+                else if(this.boss_number === 0 && this.big_boss_wave === false) {
+                    console.log("Big boss spawn")
+                    this.big_boss_wave = true;
+                    this.make_enemy(tad.w/2, -tad.h/2, "big_boss"); 
+                }
+                else {
+                    //won game
+                    console.log("won game")
+                    console.log(this.boss_number)
+                }
+                
+
+            }
+               
         }
         
         // firing methods for each enemy group
