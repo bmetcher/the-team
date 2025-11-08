@@ -25,6 +25,31 @@
             "damage": 1
         },
 
+            "big_bullet":
+        {
+            "collider_width": 8,
+            "collider_height": 10,
+            "filepath": "./images/ammo/bullet.png",
+            "scale": 190,
+            "speed": 35,
+            "direction": 0,
+            "friction": 0,
+            "mass": 0.1,
+            "damage": 5
+        },
+
+        "binky_missile":
+        {
+            "collider_width": 8,
+            "collider_height": 10,
+            "filepath": "./images/ammo/bullet.png",
+            "scale": 200,
+            "speed": 160,
+            "direction": 0,
+            "friction": 0,
+            "mass": 0.1,
+            "damage": 5
+        },
     "ice_shot":
         {
             "collider_width": 4,
