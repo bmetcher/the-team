@@ -17,7 +17,7 @@ tad.h = 1080;
 const all_players_images = assets.all_players_images;
 const all_ammo_images = assets.all_ammo_images;
 const all_explosions = assets.all_explosions;
-// const all_effects = assets.all_effects;
+const all_effects = assets.all_effects;
 const all_enemy_images = assets.all_enemy_images;
 const all_environment_images = assets.all_environment_images;
 const all_ammo_data = assets.all_ammo_data;
@@ -266,14 +266,18 @@ function display_play_screen(){
     projectiles.update(player, enemies);
     player.update();
     enemies.update();
-    
+
     // change screens logic
+<<<<<<< HEAD
     // if (projectiles.game_over === true) { current_screen = END_GAME; }
     projectiles.game_over = false;
+=======
+>>>>>>> 9ed070a51d3f18b811fff38c2c46f04562693d49
     check_buttons(projectiles.game_over);   
     
-    // pause button
-    draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_SMALL_BOTTOM_Y);      // to got to pause screen
+    // pause button 🛑🛑 causes a RangeError: Maximum call stack size exceeded 🛑🛑
+    //draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_SMALL_BOTTOM_Y);      // to got to pause screen
+
     // image for pause button
     img_pause_button.x = buttons.go_to_pause.x;
     img_pause_button.y = buttons.go_to_pause.y;
@@ -607,14 +611,14 @@ function initial_setup(player_ship_name) {
     if (all_ship_data && all_ammo_data) {
         // Create managers AFTER data has loaded
         // ---- Start Background Environment ----
-        environment = new EnvironmentManager(unit, all_environment_images);
+        environment = new EnvironmentManager(all_environment_images);
 
         // ---- Initialise Player and Enemies ----
-        player = new PlayerManager(player_ship_name, all_players_images, all_ship_data);  // updated for new parameters
+        player = new PlayerManager(player_ship_name, all_players_images, all_ship_data, all_effects);  // updated for new parameters
         enemies = new EnemyManager(all_enemy_images, all_enemies_data);
 
         // ---- Initialize Projectiles -----
-        projectiles = new ProjectileManager(unit, all_ammo_data, all_enemies_data, all_ammo_images, all_explosions);
+        projectiles = new ProjectileManager(all_ammo_data, all_enemies_data, all_ammo_images, all_explosions, all_effects);
     }
     return; // skip until it's loaded
 }

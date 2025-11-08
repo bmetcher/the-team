@@ -1,38 +1,44 @@
-import { tad, make } from "../lib/TeachAndDraw.js";
+import { tad, make, time, math } from "../lib/TeachAndDraw.js";
 
 let fly_in_time = 300;
 
-const INIT_SPEED = 2;
-const FINAL_SPEED = 0.4;
+const INIT_SPEED = 3;
+const FINAL_SPEED = 1;
 const AMT_TO_REDUCE_BY = (INIT_SPEED - FINAL_SPEED) / fly_in_time;
 
 export class EnvironmentManager {
-    constructor(unit, all_environment_images) {
-        this.unit = unit;
-        this.level = 1;
-        this.game_paused = false;
+    constructor(all_environment_images) {
+        // ---- Load all background images ----
+        this.images = all_environment_images;
+        // Read background image size (for later)
+        this.bg_height = this.images.stars1.h;  // should be 1620        this.game_paused = false;
+        this.bg_width = this.images.stars1.w;   // should be 1080
+        //console.log("bg_height: ", this.bg_height, " & bg_width: ", this.bg_width);
 
         this.speed = INIT_SPEED
         this.stored_speed = this.speed;
 
-        this.generators = this.make_generators();
-        this.buildings = make.group();
-        this.space = make.group();
-        this.mountains = make.group();
+        // ---- Load Background Images ----
+        this.stars1 = this.images.stars1;
+        this.stars2 = this.images.stars2;
+        this.dust1 = this.images.dust1;
+        this.dust2 = this.images.dust2;
+        this.nebula1 = this.images.nebula1; // ** nebula not implemented yet
+        this.nebula2 = this.images.nebula2;
 
-        this.space1 = all_environment_images.space1;
-        this.space2 = all_environment_images.space2;
+        // ---- Generating Environment Debris ----
+        this.rate = 8;          // how many generators
+        this.chaos = 1000;     // '1 in "chaos" chance' to generate debris (per frame)
+        
+        // Generators to create debris (8 by default above the canvas)
+        this.generators = this.create_generators(this.rate);   
+
+        // Groups for tracking randomly-generated debris
+        this.all_debris = make.group();
+        this.debris_one = make.group();
+        this.debris_two = make.group();
+        this.debris_three = make.group();
     }
-
-    // DRAW updated background elements
-    update() {
-        // CREATE tiles if generator is empty
-        this.activate_generators();
-
-        // DRAW all items
-        this.draw_space();
-    }
-
 
     pause(){
         if (!this.game_paused){
@@ -42,40 +48,80 @@ export class EnvironmentManager {
         this.speed = 0;
     }
 
-
     play(){
         this.game_paused = false;
         this.speed = this.stored_speed;
     }
 
-
     draw_space() {
         // move grass down
-        if (!this.game_paused && fly_in_time > 0){
-            this.speed -= AMT_TO_REDUCE_BY;
-            fly_in_time--;
+        if (time.seconds < fly_in_time) {
+            // Guard for systems reversing the speed value
+            if (this.speed > FINAL_SPEED) { 
+                this.speed -= AMT_TO_REDUCE_BY; 
+            }
         }
-        this.space1.y+=this.speed;
-        this.space2.y+=this.speed;
+
+        this.stars1.y += this.speed;
+        this.stars2.y += this.speed;
+        this.dust1.y += this.speed * 2;
+        this.dust2.y += this.speed * 2;
+        // this.nebula1.y += this.speed * 3; // ** nebula not implemented yet
+        // this.nebula2.y += this.speed * 3;
+        
         // when it moves below the bottom -> move above the top
-        if (this.space1.y > tad.h * 1.5) {
-            this.space1.y -= 2 * tad.h;
+        if (this.stars1.y > tad.h * 2) {
+            this.stars1.y -= this.bg_height * 2;
         }
-        if (this.space2.y > tad.h * 1.5) {
-            this.space2.y -= 2 * tad.h;
+        if (this.stars2.y > tad.h * 2) {
+            this.stars2.y -= this.bg_height * 2;
         }
-        // draw them
-        this.space1.draw();
-        this.space2.draw();
+        if (this.nebula1.y > tad.h * 2) {
+            this.nebula1.y -= this.bg_height * 2;
+        }
+        if (this.nebula2.y > tad.h * 2) {
+            this.nebula2.y -= this.bg_height * 2;
+        }
+        if (this.dust1.y > tad.h * 2) {
+            this.dust1.y -= this.bg_height * 2;
+        }
+        if (this.dust2.y > tad.h * 2) {
+            this.dust2.y -= this.bg_height * 2;
+        }
+
+
+        // Draw all background items in order of their layers
+        this.stars1.draw();
+        this.stars2.draw();
+        this.debris_one.draw();
+
+        this.dust1.draw();
+        this.dust2.draw();
+        this.debris_two.draw();
+
+        //this.nebula1.draw();
+        //this.nebula2.draw();
+        this.debris_three.draw();
     }
 
+    // DRAW updated background elements
+    update() {
+        this.draw_space();
 
-    make_generators() {
+        // Have generators create debris
+        this.activate_generators();
+        // clean up out-of-bounds debris
+        this.clean_up_debris();
+    }
+
+    // Create a line of invisible debris generators just above the canvas
+    create_generators(amount) {
         const result = make.group();
+        let unit = tad.width / amount;  // based on the amount of generators to make
 
-        for (let i = 0; (i * this.unit) < tad.width; i++) {
-            const temp = make.boxCollider(i * this.unit, 0 - this.unit, this.unit, this.unit);
-            temp.x += this.unit/2;
+        for (let i = 0; (i * unit) < tad.width; i++) {
+            const temp = make.boxCollider(i * unit, 0 - unit * 2, unit, unit);
+            temp.x += unit/2;
             temp.static = true;
             temp.color = null;
             temp.speed = 0;
@@ -85,25 +131,68 @@ export class EnvironmentManager {
         return result;
     }
 
-
+    // Trigger each generator to try and generate a debris  (per frame)
     activate_generators() {
-        if (!this.generators.collides(this.space)) {
+        // We use colliders to check they haven't already recently created debris (overlap)
+        if (!this.generators.overlaps(this.all_debris)) {
+            
             for (let generator of this.generators) {
-                this.make_tile(generator.x, generator.y);
+                
+                // Check if the "choas" number was generated randomly
+                if (math.round(math.random(0, this.chaos)) === this.chaos) {
+                    //console.log("generator activated! \ndebris at: ", generator.x, " ", generator.y);
+                    let value = math.ceiling(math.random(0, 15));
+                    
+                    if (0 < value && value < 5) {  // layer 1
+                        this.make_debris(generator, value, "debris_one");
+                        
+                    } else if (5 < value && value < 10) {  // layer 2
+                        this.make_debris(generator, value, "debris_two");
+                        
+                    } else if (10 < value && value < 15) {  // layer 3
+                        this.make_debris(generator, value, "debris_three");
+                    }
+                }
             }
         }
     }
 
-
-    make_tile(x, y) {
-        const temp = make.boxCollider(x, y, this.unit, this.unit);
-        temp.colour = "blue";
-        temp.static = true;
-        temp.direction = 180;
-        temp.speed = 0;
-        temp.friction = 0;
-        temp.lifespan = 5;
-        this.space.push(temp);
+    // Create a random debris
+    make_debris(generator, value, layer) {
+        let debris = make.boxCollider(generator.x, generator.y, value, value);
+        debris.rotationalVelocity = value/2;    // roughly += 8 degree limit
+        debris.speed = value;
+        debris.friction = 0;
+        debris.direction = 180;
+        let asset_rng = value * 20; // 0 to 300
+        console.log(asset_rng);
+        if (asset_rng > 0 && asset_rng <= 30) {
+            debris.asset = this.images.fossil;
+        } else if (asset_rng > 30 && asset_rng <= 150) {
+            debris.asset = this.images.rock2;
+        } else if (asset_rng > 150) {
+            debris.asset = this.images.rock1;
+        }
+        debris.asset.scale = 90 * asset_rng/200;
+        if (math.round(math.random(0,this.chaos**2)) === this.chaos**2) {
+            debris.asset = this.images.rock3;
+            debris.speed = 8;
+            debris.asset.scale = 50;
+            layer = "debris_one";
+        }
+        this.all_debris.push(debris);
+        this[layer].push(debris);
     }
 
+    // Remove any debris that is leaves the canvas
+    clean_up_debris() {
+        for (let debris of this.all_debris) {
+            // if out-of-bounds -> remove it
+            if (debris.x - 100 < 0 || debris.x + 100 > tad.w || 
+                debris.y  < -500 || debris.y + 100 > tad.h) {
+                //console.log("Debris removed: ", debris);
+                debris.remove();
+            }
+        }
+    }
 }
