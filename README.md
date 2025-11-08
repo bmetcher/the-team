@@ -7,31 +7,52 @@ The game features custom player and enemy sprites, dynamically generated backgro
 
 ---
 
-## 🖼️ Image References & Asset Credits
+## ⚙️ Tech Stack
+- **JavaScript**
+- **TeachAndDraw.js** library (custom rendering + asset management)
+- **HTML5 Canvas**
+- **JSON-based game data management**
 
-### **Game Screens**
+
+---
+
+## 🖼️ References & Asset Credits
+
+### **Images**
+
+#### **Game Screens**
 Generated using **DeepAI Image Generator**
 
-### **Game Background Images**
+#### **Game Background Images**
 Generated using **DeepAI Image Generator**
 
-### **Player Sprites**
+#### **Player Sprites**
 Designed by **Thomas Knight**
 
-### **Enemy Sprites**
+#### **Enemy Sprites**
 Designed by **Thomas Knight**
 
-### **Animations**
+#### **Pause Button Image**
+> Retrieved from [thoseawesomeguys.com/prompts](https://thoseawesomeguys.com/prompts/)
 
-Explosions:
+#### **Ammo Images**
+Designed by **Thomas Knight**
+
+
+#### **Animations**
+
+* Explosions:
 > CraftPix.net 2D Game Assets. (2019). *2D Battle Tanks* [PNG].  
 > Retrieved from [OpenGameArt.org](https://opengameart.org/content/2d-battle-tanks)
 
-Glass breaking:
+* Glass breaking:
 <a href='https://pngtree.com/freepng/cracking-broken-transparent-glass_6190778.html'>png image from pngtree.com/</a>
 
-Blood splatter:
+* Blood splatter:
 <a href='https://pngtree.com/freepng/realistic-blood-splatter-stain_22930222.html'>png image from pngtree.com/</a>
+
+Pixel Effects:
+<a href='https://codemanu.itch.io/pixelart-effect-pack'>Pixelart Effect Pack</a>
 
 Pixel Effects:
 <a href='https://codemanu.itch.io/pixelart-effect-pack'>Pixelart Effect Pack</a>
@@ -39,21 +60,9 @@ Pixel Effects:
 ### **Pause Button Image**
 > Retrieved from [thoseawesomeguys.com/prompts](https://thoseawesomeguys.com/prompts/)
 
-### **Ammo Images**
-Designed by **Thomas Knight**
-
 
 ### **Fonts**
-titles from **Smack Laideth Down 2024 by Chequered Ink** at https://www.fontspace.com/smack-laideth-down-2024-font-f124420
-pixel_italic and pixel_regular from **Pixel Digivolve by Pixel Sagas** at https://www.fontspace.com/pixel-sagas
-
-
----
-
-## ⚙️ Tech Stack
-- **JavaScript**
-- **TeachAndDraw.js** library (custom rendering + asset management)
-- **HTML5 Canvas**
-- **JSON-based game data management**
+* titles from **Smack Laideth Down 2024 by Chequered Ink** at https://www.fontspace.com/smack-laideth-down-2024-font-f124420
+* pixel_italic and pixel_regular from **Pixel Digivolve by Pixel Sagas** at https://www.fontspace.com/pixel-sagas
 
 ---
