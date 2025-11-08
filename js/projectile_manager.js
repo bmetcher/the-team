@@ -40,6 +40,12 @@ export class ProjectileManager {
         this.get_player_projectiles(player, enemies);
         this.get_enemy_projectiles(player, enemies);
 
+        // ---- Clean-up Out of Bounds Projectiles ----
+        this.clean_up_all();
+        
+        // ---- Draw All Projectiles ----
+        this.all_projectiles.draw();
+
         // update projectile movement
         // ... unnecessary for now -- default physics!
         for (let i = 0; i < this.explodes.length; i++) {
@@ -51,11 +57,6 @@ export class ProjectileManager {
         this.see_if_player_hits(enemies);
         this.see_if_enemy_hits(player);
 
-        // ---- Clean-up Out of Bounds Projectiles ----
-        this.clean_up_all();
-        
-        // ---- Draw All Projectiles ----
-        this.all_projectiles.draw();
     }
 
 
@@ -115,7 +116,7 @@ export class ProjectileManager {
                     if (projectile.collides(enemy)) {
                         //console.log("BANG! enemy: ", enemy, " was hit");
                         this.damage_target(enemy, projectile);
-                        this.destroy_projectile(projectile, explosion_animation_name);
+                        this.destroy_projectile(projectile, explosion_animation_name, enemy);
                     }
                 }
 
@@ -128,7 +129,7 @@ export class ProjectileManager {
             if (projectile.collides(player.collider)) {
                 //console.log("OW! player was hit by:", projectile);
                 this.damage_player(player, projectile);
-                this.destroy_projectile(projectile, player.ship_data.explosion_animation_name);
+                this.destroy_projectile(projectile, player.ship_data.explosion_animation_name, player.collider);
             }
         }
     }
@@ -161,8 +162,8 @@ export class ProjectileManager {
         // console.log("player hit! new hp: ", player.current_hp);
     }
 
-    destroy_projectile(projectile, explosion_animation_name) {
-        let explode = make.boxCollider(projectile.x, projectile.y, 15, 15);
+    destroy_projectile(projectile, explosion_animation_name, ship) {
+        let explode = make.boxCollider(ship.x, ship.y, 15, 15);
         explode.colour = "red";
         explode.lifespan = 1;
         explode.static;

@@ -12,6 +12,18 @@
         "score" : 20
     },
     "ice_enemy": {
+        "type": "grunt",
+        "max_hp": 3,
+        "height": 32,
+        "width": 32,
+        "mass": 1,
+        "friction": 1,
+        "scale": 100,
+        "primary_weapon": "bullet",
+        "explosion_animation_name": "ice",
+        "score" : 30
+    },
+    "binky_enemy": {
         "type": "special",
         "max_hp": 3,
         "height": 32,
@@ -20,7 +32,19 @@
         "friction": 1,
         "scale": 100,
         "primary_weapon": "bullet",
-        "explosion_animation_name": "grunt",
+        "explosion_animation_name": "binky",
+        "score" : 30
+    },
+    "mini_boss": {
+        "type": "special",
+        "max_hp": 3,
+        "height": 120,
+        "width": 90,
+        "mass": 1,
+        "friction": 1,
+        "scale": 100,
+        "primary_weapon": "bullet",
+        "explosion_animation_name": "mini_boss",
         "score" : 30
     }
 }
