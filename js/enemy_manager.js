@@ -189,6 +189,8 @@ export class EnemyManager {
 
         //console.log("Enemy max hp:", temp.max_hp, "and current hp:", temp.current_hp);
 
+        temp.next_fire_time = this.schedule_random_shot();     
+
         this.enemy_groups[name].push(temp);
         this.all_groups.push(temp);
     }
@@ -214,19 +216,30 @@ export class EnemyManager {
     general_enemy_behaviour() {
         for (let enemy_type in this.enemy_groups) {
             for (let i = 0; i < this.enemy_groups[enemy_type].length; i++) {
-                this.random_pathing(this.enemy_groups[enemy_type][i], enemy_type);
-                // temporary attack timer
-                if (time.frameCount%300 === 0) {
-                    // console.log(`enemy2 ${i} firing from:`, this.enemy_groups[enemy_type][i].x, this.enemy_groups[enemy_type][i].y);
-                    this.created_projectiles.push({ 
-                        origin: [this.enemy_groups[enemy_type][i].x, this.enemy_groups[enemy_type][i].y], 
+                let this_enemy = this.enemy_groups[enemy_type][i];
+                this.random_pathing(this_enemy, enemy_type);
+
+                // if it's time for this enemy to fire
+                if (time.seconds >= this_enemy.next_fire_time) {
+                    this.created_projectiles.push({
+                        origin: [this_enemy.x, this_enemy.y],
                         target: "player",
                         type: this.all_enemies_data[enemy_type].primary_weapon,
                         friendly: false
                     });
+
+                    const jitter = math.random(0, 1) * 0.1;
+                    this_enemy.next_fire_time = this.schedule_random_shot() + (i * 0.02) + jitter;
                 }
             }
         }
+    }
+
+
+    schedule_random_shot(){
+        const min_interval = 0;
+        const max_interval = 0.05;
+        return time.seconds + min_interval + math.random(max_interval - min_interval);
     }
 
 

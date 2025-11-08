@@ -268,6 +268,8 @@ function display_play_screen(){
     enemies.update();
 
     // change screens logic
+    // if (projectiles.game_over === true) { current_screen = END_GAME; }
+    projectiles.game_over = false;
     check_buttons(projectiles.game_over);   
     
     // pause button 🛑🛑 causes a RangeError: Maximum call stack size exceeded 🛑🛑
@@ -510,8 +512,9 @@ function display_stats(){
     // current score
     text.font = fonts.pixel_italic;
     current_y += GAP_BETW_LINES + GAP_BETW_LINES;
-    text.print(tad.w/2, current_y, "your score:");
+    text.print(tad.w/2, current_y, "your score");
     current_y += GAP_BETW_LINES;
+    text.size = 30;
     text.print(tad.w/2, current_y, projectiles.player_score.toString());
 }
 
