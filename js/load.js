@@ -15,6 +15,8 @@ const all_players_images = {
 // Ammo images
 const all_ammo_images = {
     bullet: load.image(0,0,"./images/ammo/bullet.png"),
+    big_bullet: load.image(0,0,"./images/ammo/bullet.png"),
+    binky_missile: load.image(0,0,"./images/ammo/missile.png"),
     missile: load.image(0,0,"./images/ammo/missile.png")
 }
 

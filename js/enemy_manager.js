@@ -13,14 +13,14 @@ export class EnemyManager {
         this.all_enemies_data = all_enemies_data;
 
         // ---- Number of enemies ----
-        this.all_wave_size = 5; // for resetting wave size
+        this.all_wave_size = 10; // for resetting wave size
         this.max_enemies = 30;
-        this.wave_size = 5;
+        this.wave_size = this.all_wave_size;
 
         // Precaclulate enemy wave numbers
-        const grunt_percent = 0.9;
+        const grunt_percent = 0.8;
         this.grunt_number = math.floor(grunt_percent * this.wave_size);
-        this.special_number = this.wave_size - this.grunt_number;
+        this.special_number = this.all_wave_size - this.grunt_number;
 
         // ---- Retreive Enemy Types ----
         this.grunt_types = []
@@ -204,6 +204,7 @@ export class EnemyManager {
             [wave[i], wave[j]] = [wave[j], wave[i]];
         }
 
+        console.log(wave);
         return wave;
 
     }
