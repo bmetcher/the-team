@@ -1,39 +1,48 @@
-# ***the-team***
-Teach and Draw 2025 MicroJam
+# 🎮 **the-team**
+**Teach and Draw 2025 MicroJam Submission**
 
-### **Game Prompt**: "Top-down Shooter"
-Like Galaga or Raiden
-https://www.youtube.com/watch?v=VVobHYfg2rg
+### 🕹️ Game Prompt: *“Top-down Shooter”*
+Inspired by classics such as **Galaga** and **Raiden**  
+[Gameplay reference video](https://www.youtube.com/watch?v=VVobHYfg2rg)
 
-### Requirements (for simplest version)
+---
 
-#### Player
-* Can move left and right, up and down
-* Can shoot
-    * Can deal damage to enemies
-        ▪ And kill the enemies
-    * Can have multiple different weapons
-* Has health
-    * Can take damage
-    * Can gain extra health
+## 🧠 Overview
+**the-team** is a 2D top-down shooter built for the 2025 Teach and Draw MicroJam.  
+The game features custom player and enemy sprites, dynamically generated backgrounds, and visual effects designed for an engaging arcade experience.
 
-#### Enemies
-* Can take damage
-    * And die
-* Different enemy types
-    * Random trash mobs
-    * Bosses
+---
 
-#### Environment/other
-* Constant “scrolling” view
-    * Creating the appearance that the player is moving up through areas
-* Player can gain points for killing enemies
-* Different stages/levels
-    * Killing a boss at the end of the level completes the level and shows an end of level screen
-* Builds that can be shot and blown up
-    * Which drop pickups
-* Pickups:
-    * Health
-    * Temporary shields
-    * Player rate of fire increase
+## 🖼️ Image References & Asset Credits
 
+### **Game Screens**
+Generated using **DeepAI Image Generator**
+
+### **Game Background Images**
+Generated using **DeepAI Image Generator**
+
+### **Player Sprites**
+Designed by **Thomas Knight**
+
+### **Enemy Sprites**
+Designed by **Thomas Knight**
+
+### **Explosions**
+> CraftPix.net 2D Game Assets. (2019). *2D Battle Tanks* [PNG].  
+> Retrieved from [OpenGameArt.org](https://opengameart.org/content/2d-battle-tanks)
+
+### **Pause Button Image**
+> Retrieved from [thoseawesomeguys.com/prompts](https://thoseawesomeguys.com/prompts/)
+
+### **Ammo Images**
+Designed by **Thomas Knight**
+
+---
+
+## ⚙️ Tech Stack
+- **JavaScript**
+- **TeachAndDraw.js** library (custom rendering + asset management)
+- **HTML5 Canvas**
+- **JSON-based game data management**
+
+---
