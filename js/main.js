@@ -268,11 +268,8 @@ function display_play_screen(){
     enemies.update();
 
     // change screens logic
-<<<<<<< HEAD
     // if (projectiles.game_over === true) { current_screen = END_GAME; }
     projectiles.game_over = false;
-=======
->>>>>>> 9ed070a51d3f18b811fff38c2c46f04562693d49
     check_buttons(projectiles.game_over);   
     
     // pause button 🛑🛑 causes a RangeError: Maximum call stack size exceeded 🛑🛑
