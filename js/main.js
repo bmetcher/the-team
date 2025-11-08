@@ -4,7 +4,7 @@ import { EnvironmentManager } from "./environment_manager.js";
 import { PlayerManager } from "./player_manager.js";
 import { ProjectileManager } from "./projectile_manager.js";
 import { assets } from "./load.js";
-
+import { Timer } from "./timer.js";
 
 // ----------------------------------------- Initialisation for Game -----------------------------------------
 
@@ -19,6 +19,7 @@ const all_players_images = assets.all_players_images;
 const all_ammo_images = assets.all_ammo_images;
 const all_explosions = assets.all_explosions;
 const all_effects = assets.all_effects;
+const all_sounds = assets.all_sounds;
 const all_enemy_images = assets.all_enemy_images;
 const all_environment_images = assets.all_environment_images;
 const all_ammo_data = assets.all_ammo_data;
@@ -122,6 +123,7 @@ function update() {
     } else if (current_screen === MAIN_MENU){
         // player selects prepare OR navigates to LEADERBOARD OR navigates to TUTORIAL
         display_main_menu_screen();
+        play_music(current_screen);
     } else if (current_screen === PREPARE){
         // player selects a ship + displays ship controls; navigates to MAIN MENU or GAME
         display_prepare_screen();
@@ -137,12 +139,15 @@ function update() {
     } else if (current_screen === PLAY){
         // actual game
         display_play_screen();
+        play_music(current_screen);
     } else if (current_screen === PAUSE){
         // pauses game + shows game statrs; navigates to review controls OR return to game OR end game
         display_pause_screen();
+        play_music(current_screen);
     } else if (current_screen === END_GAME){
         // after game ends: show message and score; navigate to PREPARE (to play again) or MAIN MENU
         display_end_game_screen();
+        play_music(current_screen);
     }
     
 }
@@ -672,11 +677,11 @@ function initial_setup(player_ship_name) {
         environment = new EnvironmentManager(all_environment_images);
 
         // ---- Initialise Player and Enemies ----
-        player = new PlayerManager(player_ship_name, all_players_images, all_ship_data, all_effects);  // updated for new parameters
+        player = new PlayerManager(player_ship_name, all_players_images, all_ship_data, all_effects, all_sounds);  // updated for new parameters
         enemies = new EnemyManager(all_enemy_images, all_enemies_data);
 
         // ---- Initialize Projectiles -----
-        projectiles = new ProjectileManager(all_ammo_data, all_enemies_data, all_ammo_images, all_explosions, all_effects);
+        projectiles = new ProjectileManager(all_ammo_data, all_enemies_data, all_ammo_images, all_explosions, all_effects, all_sounds);
     }
     return; // skip until it's loaded
 }
@@ -697,4 +702,54 @@ function store_results(){
     leaderboard.sort((a, b) => b.score - a.score); // descending
 
     new_score_added = true;
+}
+
+// Initialize as null
+let current_music_playing = null;
+// ---- Background Music Playing ----
+function play_music(current) {
+    if (current === MAIN_MENU) {
+        // Menu Theme
+        if (current_music_playing !== 'menu') {
+            stop_all_music();
+            all_sounds.menu.volume = 12;
+            all_sounds.menu.maxCopies = 1;
+            all_sounds.menu.play();
+            current_music_playing = 'menu';
+        }
+    } else if (current === PLAY) {
+        // Ingame Theme
+        if (current_music_playing !== 'ingame') {
+            stop_all_music();
+            all_sounds.ingame.volume = 12;
+            all_sounds.ingame.maxCopies = 1;
+            all_sounds.ingame.play();
+            current_music_playing = 'ingame';
+        }
+    } else if (current === PAUSE) {
+        // Pause Theme
+        if (current_music_playing !== 'pause') {
+            stop_all_music();
+            all_sounds.pause.volume = 12;
+            all_sounds.pause.maxCopies = 1;
+            all_sounds.pause.play();
+            current_music_playing = 'pause';
+        }
+    } else if (current === END_GAME) {
+        // Ending Theme
+        if (current_music_playing !== 'ending') {
+            stop_all_music();
+            all_sounds.ending.volume = 12;
+            all_sounds.ending.maxCopies = 1;
+            all_sounds.ending.play();
+            current_music_playing = 'ending';
+        }
+    }
+}
+// Helper for the music playing
+function stop_all_music() {
+    all_sounds.menu.stop();
+    all_sounds.ingame.stop();
+    all_sounds.pause.stop();
+    all_sounds.ending.stop();
 }

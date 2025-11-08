@@ -2,7 +2,7 @@ import { tad, make, camera, math } from "../lib/TeachAndDraw.js";
 
 export class ProjectileManager {
 
-    constructor(all_ammo_data, all_enemies_data, all_ammo_images, all_explosions, all_effects) { // Added enemy data to constructor
+    constructor(all_ammo_data, all_enemies_data, all_ammo_images, all_explosions, all_effects, all_sounds) { // Added enemy data to constructor
         this.game_paused = false;
 
         // ---- Load Ammo Data & images ----
@@ -10,6 +10,19 @@ export class ProjectileManager {
         this.all_ammo_images = all_ammo_images;
         this.all_explosions = all_explosions;
         this.all_effects = all_effects;
+        // Sounds
+        this.all_sounds = all_sounds;
+        this.all_sounds.pew.volume = 18;
+        this.all_sounds.pew.endTime = 0.125;
+        this.all_sounds.pew.maxCopies = 1;
+        this.all_sounds.thud.volume = 13;
+        this.all_sounds.thud.endTime = 0.125;
+        this.all_sounds.thud.maxCopies = 1;
+        this.all_sounds.explode.volume = 11;
+        this.all_sounds.explode.endTime = 0.4;
+        this.all_sounds.explode.maxCopies = 1;
+
+
 
         // Load enemy data from JSON
         this.all_enemies_data = all_enemies_data;
@@ -82,6 +95,7 @@ export class ProjectileManager {
                 new_projectile.friendly
             );
             player.created_projectiles.shift();
+            this.all_sounds.pew.play();
         }
     }
     // Enemy version of above function
@@ -103,6 +117,8 @@ export class ProjectileManager {
                 new_projectile.friendly
             );
             enemies.created_projectiles.shift();
+            this.all_sounds.pew.volume = 15;
+            this.all_sounds.pew.play();
         }
     }
 
@@ -117,6 +133,7 @@ export class ProjectileManager {
                         //console.log("BANG! enemy: ", enemy, " was hit");
                         this.destroy_projectile(projectile, explosion_animation_name, enemy);
                         this.damage_target(enemy, projectile);
+                        this.all_sounds.thud.play();
                     }
                 }
 
@@ -130,6 +147,8 @@ export class ProjectileManager {
                 //console.log("OW! player was hit by:", projectile);
                 this.destroy_projectile(projectile, player.ship_data.explosion_animation_name, player.collider);
                 this.damage_player(player, projectile);
+                this.all_sounds.thud.volume = 15;
+                this.all_sounds.thud.play();
             }
         }
     }
@@ -139,6 +158,7 @@ export class ProjectileManager {
         // Handle if the target should be dead
         if ((target.current_hp - projectile.damage) <= 0) {
             target.remove();
+            this.all_sounds.explode.play();
             if (target.score > 0) {
             this.player_score += target.score;
             }
@@ -161,6 +181,8 @@ export class ProjectileManager {
         if ((player.current_hp - projectile.damage) <= 0) {
             this.game_over = true;
             console.log("Player died!");
+            this.all_sounds.explode.volume = 15;
+            this.all_sounds.explode.play();
         } else if (player.current_hp > 0) {
             player.current_hp -= projectile.damage;
         }
@@ -226,7 +248,7 @@ export class ProjectileManager {
         }
         if (target === "random") {
             if (friendly) {
-                pew.direction = 10 - math.random(0, 20);
+                pew.direction = 20 - math.random(0, 40);
             }
         }
 

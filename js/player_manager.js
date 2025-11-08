@@ -5,7 +5,7 @@ const FLY_IN_TIME = 5;
 
 export class PlayerManager {
 
-    constructor(player_name, all_players_images, all_ship_data, all_effects) {
+    constructor(player_name, all_players_images, all_ship_data, all_effects, all_sounds) {
         /*
         Parameters;
             player_name : str : allow selection of player image and knowing weapons, ammo, etc. belonging to specific player
@@ -16,6 +16,10 @@ export class PlayerManager {
 
         // ---- Name of Player to Determine Appropriate Actions ----
         this.ship_name = player_name;
+        // Sound Effects (just ability usage rn)
+        this.all_sounds = all_sounds;
+        this.all_sounds.protection.volume = 7;
+        this.all_sounds.protection.maxCopies = 1;
 
         // ---- Get Player Ship Image ----
         this.ship_image = all_players_images[this.ship_name];
@@ -185,6 +189,7 @@ export class PlayerManager {
                 this.ability_activation_timer.start();
                 this.ability_cooldown_timer.start();    // restart the cooldown timer
                 this.shots_fired = 0;
+                this.all_sounds.protection.play();
             } else {
                 console.log("Ability not ready yet!");
             }
@@ -195,7 +200,7 @@ export class PlayerManager {
                 //console.log("INVINCIBLE!!");
                 this.all_effects.felspell.x = this.collider.x;
                 this.all_effects.felspell.y = this.collider.y;
-                this.all_effects.felspell.scale = 150;
+                this.all_effects.felspell.scale = 200;
                 this.all_effects.felspell.draw();
                 this.invincible = true;
             } else if (this.ship_data.special_ability === "barrage") {
@@ -255,6 +260,7 @@ export class PlayerManager {
         this.ability_percentage = this.ability_cooldown_timer.get_percentage();
         if (this.ability_percentage === 1) { 
             this.ability_percentage = "READY!"
+            text.colour = "green";
         } else {
             this.ability_percentage = math.round(this.ability_percentage * 100) + " %";
         }

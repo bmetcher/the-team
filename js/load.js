@@ -48,6 +48,18 @@ const all_environment_images = {
     fossil: load.image(-tad.w, 0, "./images/background/debris/fossil.png"),
 }
 
+// Sounds
+const all_sounds = {
+    pew: load.sound("./audio/pew.wav"),
+    thud: load.sound("./audio/thud.wav"),
+    explode: load.sound("./audio/explode.wav"),
+    protection: load.sound("./audio/protection.wav"),
+    ingame: load.sound("./audio/ingame.ogg"),
+    menu: load.sound("./audio/menu.ogg"),
+    pause: load.sound("./audio/pause.ogg"),
+    ending: load.sound("./audio/ending.ogg"),
+}
+
 // Game Screen images
 const game_screens = {
     intro_screen: load.image(tad.w/2,tad.h/2,"./images/screens/intro.jpeg"),
@@ -112,7 +124,7 @@ const fonts = {
 
 const assets = { 
     all_players_images, all_ammo_images, all_enemy_images, all_environment_images, game_screens, img_pause_button,
-    all_explosions, all_effects,
+    all_explosions, all_effects, all_sounds,
     menu_intro_txt, 
     all_ammo_data, all_ship_data, all_enemies_data,
     game_controls_data, game_tutorial_txt,
