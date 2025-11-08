@@ -1,11 +1,6 @@
 # 🎮 **the-team**
 **Teach and Draw 2025 MicroJam Submission**
 
-### 🕹️ Game Prompt: *“Top-down Shooter”*
-Inspired by classics such as **Galaga** and **Raiden**  s
-
----
-
 ## 🧠 Overview
 **the-team** is a 2D top-down shooter built for the 2025 Teach and Draw MicroJam.  
 The game features custom player and enemy sprites, dynamically generated backgrounds, and visual effects designed for an engaging arcade experience.
