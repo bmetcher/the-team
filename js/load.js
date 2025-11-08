@@ -26,8 +26,18 @@ const all_enemy_images = {
 
 // Environment images
 const all_environment_images = {
-    space1: load.image(tad.w/2, 0, "./images/game_background/space1.jpeg"),
-    space2: load.image(tad.w/2, tad.h, "./images/game_background/space2.jpeg")
+    // Background Images (with initial co-ordinates)
+    stars1: load.image(tad.w/2,0, "./images/background/stars.png"),
+    stars2: load.image(tad.w/2,1620, "./images/background/stars.png"),
+    dust1: load.image(tad.w/2,0, "./images/background/dust.png"),
+    dust2: load.image(tad.w/2,1620, "./images/background/dust.png"),
+    nebula1: load.image(tad.w/2,0, "./images/background/nebula.png"),
+    nebula2: load.image(tad.w/2,1620, "./images/background/nebula.png"),
+    // Debris
+    rock1: load.image(0, 0, "./images/background/debris/rock1.png"),
+    rock2: load.image(0, 0, "./images/background/debris/rock2.png"),
+    rock3: load.image(0, 0, "./images/background/debris/rock3.png"),
+    fossil: load.image(0, 0, "./images/background/debris/fossil.png"),
 }
 
 // Game Screen images
@@ -45,28 +55,48 @@ const game_screens = {
 // Game Pause Button image
 const img_pause_button = load.image(tad.w/2,tad.h/2,"./images/screens/pause_button.png")
 
+// Load an animation from a given directory with some amount of frames
+function load_frames(directory, length) {
+    return Array.from({length: length}, (_, i) =>
+        `./images/${directory}/frame_${i}.png`
+    );
+}
+
 // Animations
 const all_explosions = {
     player: load.animation(0,0,
         "./images/explosions/player_explosion_animation/step_1.png",
-        // "./images/explosions/player_explosion_animation/step_2.png",
-        // "./images/explosions/player_explosion_animation/step_3.png",
-        // "./images/explosions/player_explosion_animation/step_4.png",
-        // "./images/explosions/player_explosion_animation/step_5.png",
-        // "./images/explosions/player_explosion_animation/step_6.png",
-        // "./images/explosions/player_explosion_animation/step_7.png",
-        // "./images/explosions/player_explosion_animation/step_8.png"
+        "./images/explosions/player_explosion_animation/step_2.png",
+        "./images/explosions/player_explosion_animation/step_3.png",
+        "./images/explosions/player_explosion_animation/step_4.png",
+        "./images/explosions/player_explosion_animation/step_5.png",
+        "./images/explosions/player_explosion_animation/step_6.png",
+        "./images/explosions/player_explosion_animation/step_7.png",
+        "./images/explosions/player_explosion_animation/step_8.png"
     ),
     grunt: load.animation(0,0,
         "./images/explosions/enemy_explosion_animation/step_1.png",
         "./images/explosions/enemy_explosion_animation/step_2.png",
         "./images/explosions/enemy_explosion_animation/step_3.png",
         "./images/explosions/enemy_explosion_animation/step_4.png",
-        // "./images/explosions/enemy_explosion_animation/step_5.png",
-        // "./images/explosions/enemy_explosion_animation/step_6.png",
-        // "./images/explosions/enemy_explosion_animation/step_7.png",
-        // "./images/explosions/enemy_explosion_animation/step_8.png"
+        "./images/explosions/enemy_explosion_animation/step_5.png",
+        "./images/explosions/enemy_explosion_animation/step_6.png",
+        "./images/explosions/enemy_explosion_animation/step_7.png",
+        "./images/explosions/enemy_explosion_animation/step_8.png"
     )
+}
+
+// Effect Animations
+const all_effects = {
+    emit: load.animation(0,0, ...load_frames("effects/emit", 31)),
+    felspell: load.animation(0,0, ...load_frames("effects/felspell", 91)),
+    fire: load.animation(0,0, ...load_frames("effects/fire", 61)),
+    freezing: load.animation(0,0, ...load_frames("effects/freezing", 86)),
+    magic8: load.animation(0,0, ...load_frames("effects/magic8", 61)),
+    midnight: load.animation(0,0, ...load_frames("effects/midnight", 61)),
+    nebula: load.animation(0,0, ...load_frames("effects/nebula", 61)),
+    sunburn: load.animation(0,0, ...load_frames("effects/sunburn", 61)),
+    vortex: load.animation(0,0, ...load_frames("effects/vortex", 61))
 }
 
 // Files
@@ -87,7 +117,7 @@ const fonts = {
 
 const assets = { 
     all_players_images, all_ammo_images, all_enemy_images, all_environment_images, game_screens, img_pause_button,
-    all_explosions,
+    all_explosions, all_effects,
     all_ammo_data, all_ship_data, all_enemies_data,
     game_controls_data, game_tutorial_txt,
     leaderboard,
