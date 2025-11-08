@@ -96,7 +96,7 @@ export class EnemyManager {
         // firing methods for each enemy group
         this.general_enemy_behaviour()
         // this.grunt_behaviour();
-        
+
         this.all_groups.collides(this.all_groups);
 
         this.all_groups.draw();
@@ -182,14 +182,16 @@ export class EnemyManager {
         // set lifespan later
         temp.asset = this.all_enemy_images[name];
         
-        // stats
+        // ---- Stats ----
+        // Max & Current Hit Points
         temp.max_hp = this_enemy.max_hp;
         temp.current_hp = temp.max_hp;
+        // Max & Current "Speed" (Movement intensity & attack speed)
+        temp.max_speed = this_enemy.max_speed;
+        temp.current_speed = temp.max_speed;
+        temp.attack_speed = temp.max_speed;
+        // Score gained from killing this enemy
         temp.score = this_enemy.score;
-
-        //console.log("Enemy max hp:", temp.max_hp, "and current hp:", temp.current_hp);
-
-        temp.next_fire_time = this.schedule_random_shot();     
 
         this.enemy_groups[name].push(temp);
         this.all_groups.push(temp);
@@ -217,10 +219,9 @@ export class EnemyManager {
         for (let enemy_type in this.enemy_groups) {
             for (let i = 0; i < this.enemy_groups[enemy_type].length; i++) {
                 let this_enemy = this.enemy_groups[enemy_type][i];
-                this.random_pathing(this_enemy, enemy_type);
-
+                
                 // if it's time for this enemy to fire
-                if (time.seconds >= this_enemy.next_fire_time) {
+                if (this_enemy.attack_speed === 0) {
                     this.created_projectiles.push({
                         origin: [this_enemy.x, this_enemy.y],
                         target: "player",
@@ -228,29 +229,23 @@ export class EnemyManager {
                         friendly: false
                     });
 
-                    const jitter = math.random(0, 1) * 0.1;
-                    this_enemy.next_fire_time = this.schedule_random_shot() + (i * 0.02) + jitter;
+                    this_enemy.attack_speed = this_enemy.max_speed;
                 }
+
+                this.random_pathing(this_enemy, enemy_type);
             }
         }
     }
 
-
-    schedule_random_shot(){
-        const min_interval = 0;
-        const max_interval = 0.05;
-        return time.seconds + min_interval + math.random(max_interval - min_interval);
-    }
-
-
     // Cause semi-erratic movement whenever "speed < speed_limit"
-    random_pathing(unit, enemy_type, speed_limit = 2, threshold = 80) {
+    random_pathing(unit, enemy_type, threshold = 80) {
         // triggered when slower than "speed_limit"
         // direction by threshold as % of canvas (default 80% of canvas)
         for (let i = 0; i < this.enemy_groups[enemy_type].length; i++) {
             // increase unit speed when it's close to stopping
-            if (unit.speed < speed_limit) {
-                unit.speed = speed_limit * 4;
+            if (unit.speed < unit.max_speed/10) {
+                unit.speed += unit.current_speed * (math.random(2, 4));
+                unit.attack_speed -= unit.current_speed / 2;
 
                 // define each threshold on the canvas
                 let threshold_right     = tad.w * threshold/100;
