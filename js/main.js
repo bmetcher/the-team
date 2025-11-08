@@ -1,4 +1,4 @@
-import { tad, text, keys, make, time } from "../lib/TeachAndDraw.js";
+import { tad, text, keys, make, time, camera } from "../lib/TeachAndDraw.js";
 import { EnemyManager } from "./enemy_manager.js";
 import { EnvironmentManager } from "./environment_manager.js";
 import { PlayerManager } from "./player_manager.js";
@@ -17,7 +17,7 @@ tad.h = 1080;
 const all_players_images = assets.all_players_images;
 const all_ammo_images = assets.all_ammo_images;
 const all_explosions = assets.all_explosions;
-// const all_effects = assets.all_effects;
+const all_effects = assets.all_effects;
 const all_enemy_images = assets.all_enemy_images;
 const all_environment_images = assets.all_environment_images;
 const all_ammo_data = assets.all_ammo_data;
@@ -266,12 +266,15 @@ function display_play_screen(){
     projectiles.update(player, enemies);
     player.update();
     enemies.update();
-    
+
     // change screens logic
-    check_buttons();   
+    // if (projectiles.game_over === true) { current_screen = END_GAME; }
+    projectiles.game_over = false;
+    check_buttons(projectiles.game_over);   
     
-    // pause button
-    draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_SMALL_BOTTOM_Y);      // to got to pause screen
+    // pause button 🛑🛑 causes a RangeError: Maximum call stack size exceeded 🛑🛑
+    //draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_SMALL_BOTTOM_Y);      // to got to pause screen
+
     // image for pause button
     img_pause_button.x = buttons.go_to_pause.x;
     img_pause_button.y = buttons.go_to_pause.y;
@@ -304,11 +307,23 @@ function display_pause_screen(){
 
 
 function display_end_game_screen(){
+    // Reset the camera from in-game effects
+    camera.zoom = 1;
+    camera.rotation = 0;
+    camera.x = tad.w/2;
+    camera.y = tad.h/2;
     // end game screen image
-    game_screens.end_game_screen.draw();
+    let won = true;
+    if (won){
+        game_screens.victory_screen.draw();
+        // menu title text
+        display_menu_title("you won!");     // game over menu title text
+    } else {
+        game_screens.end_game_screen.draw();
+        // menu title text
+        display_menu_title("game over!");     // game over menu title text
+    }
 
-    // menu title text
-    display_menu_title("game over!");     // game over menu title text
 
     // if not alread added, add new player score to game results
     if (!new_score_added){
@@ -316,7 +331,7 @@ function display_end_game_screen(){
     }
 
     // display player results for this game just finished
-    display_results();
+    display_results(won);
 
     // change screens logic
     check_buttons();   
@@ -360,7 +375,7 @@ function draw_button(button, desired_x, desired_y){
 }
 
 
-function check_buttons(){
+function check_buttons(game_over){
     // Checks to see if any button has been pressed, and performs relevant state changes and redirects.
 
     if (buttons.go_to_prepare.released || buttons.play_again.released){     // to prepare screen
@@ -375,7 +390,7 @@ function check_buttons(){
     } else if (buttons.return_to_main_menu.released){   // to main menu screen
         current_screen = MAIN_MENU;
 
-    } else if (buttons.end_game.released){              // to end game screen
+    } else if (buttons.end_game.released || game_over){              // to end game screen
         end_game_time = new Date();     // to hold time game ended, for leaderboard stat
         game_in_progress = false;       // to ensure that, if new game started, game elements are re-initialised
         current_screen = END_GAME;
@@ -497,13 +512,14 @@ function display_stats(){
     // current score
     text.font = fonts.pixel_italic;
     current_y += GAP_BETW_LINES + GAP_BETW_LINES;
-    text.print(tad.w/2, current_y, "your score:");
+    text.print(tad.w/2, current_y, "your score");
     current_y += GAP_BETW_LINES;
+    text.size = 30;
     text.print(tad.w/2, current_y, projectiles.player_score.toString());
 }
 
 
-function display_results(){
+function display_results(won){
     // Used to display results at end of game; used in END_GAME
 
     text.alignment.x = "center";
@@ -513,14 +529,18 @@ function display_results(){
 
     // display a dynamic congratulatory message
     let messg;
-    if (projectiles.player_score < 50){
-        messg = "Good Effort!"
-    } else if (projectiles.player_score < 75){
-        messg = "Nice Job!"
-    } else if (projectiles.player_score < 100){
-        messg = "Congratulations!"
-    } else if (projectiles.player_score > 100){
-        messg = "Wow!! Fantastic Job!"
+    if (won){
+        messg = ""
+    } else {
+        if (projectiles.player_score < 50){
+            messg = "Good Effort!"
+        } else if (projectiles.player_score < 75){
+            messg = "Nice Job!"
+        } else if (projectiles.player_score < 100){
+            messg = "Congratulations!"
+        } else if (projectiles.player_score > 100){
+            messg = "Wow!! Fantastic Job!"
+        }
     }
     text.font = fonts.pixel_regular;
     text.size=25;
@@ -593,14 +613,14 @@ function initial_setup(player_ship_name) {
     if (all_ship_data && all_ammo_data) {
         // Create managers AFTER data has loaded
         // ---- Start Background Environment ----
-        environment = new EnvironmentManager(unit, all_environment_images);
+        environment = new EnvironmentManager(all_environment_images);
 
         // ---- Initialise Player and Enemies ----
-        player = new PlayerManager(player_ship_name, all_players_images, all_ship_data);  // updated for new parameters
+        player = new PlayerManager(player_ship_name, all_players_images, all_ship_data, all_effects);  // updated for new parameters
         enemies = new EnemyManager(all_enemy_images, all_enemies_data);
 
         // ---- Initialize Projectiles -----
-        projectiles = new ProjectileManager(unit, all_ammo_data, all_enemies_data, all_ammo_images, all_explosions);
+        projectiles = new ProjectileManager(all_ammo_data, all_enemies_data, all_ammo_images, all_explosions, all_effects);
     }
     return; // skip until it's loaded
 }

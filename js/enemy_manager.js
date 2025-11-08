@@ -78,6 +78,7 @@ export class EnemyManager {
             // spawn wave of 
             if (this.wave_count > 0){
                 if (ready && !this.spawning) {
+                    //console.log(this.all_groups)
                     this.spawn_wave();
                     this.wave_count -=1;
                 }
@@ -124,12 +125,11 @@ export class EnemyManager {
         // firing methods for each enemy group
         this.general_enemy_behaviour()
         // this.grunt_behaviour();
-        
+
         this.all_groups.collides(this.all_groups);
 
         this.all_groups.draw();
     }
-
 
     pause(){
         if (!this.game_paused){
@@ -210,12 +210,16 @@ export class EnemyManager {
         // set lifespan later
         temp.asset = this.all_enemy_images[name];
         
-        // stats
+        // ---- Stats ----
+        // Max & Current Hit Points
         temp.max_hp = this_enemy.max_hp;
         temp.current_hp = temp.max_hp;
+        // Max & Current "Speed" (Movement intensity & attack speed)
+        temp.max_speed = this_enemy.max_speed;
+        temp.current_speed = temp.max_speed;
+        temp.attack_speed = temp.max_speed;
+        // Score gained from killing this enemy
         temp.score = this_enemy.score;
-
-        //console.log("Enemy max hp:", temp.max_hp, "and current hp:", temp.current_hp);
 
         this.enemy_groups[name].push(temp);
         this.all_groups.push(temp);
@@ -242,30 +246,34 @@ export class EnemyManager {
     general_enemy_behaviour() {
         for (let enemy_type in this.enemy_groups) {
             for (let i = 0; i < this.enemy_groups[enemy_type].length; i++) {
-                this.random_pathing(this.enemy_groups[enemy_type][i], enemy_type);
-                // temporary attack timer
-                if (time.frameCount%300 === 0) {
-                    // console.log(`enemy2 ${i} firing from:`, this.enemy_groups[enemy_type][i].x, this.enemy_groups[enemy_type][i].y);
-                    this.created_projectiles.push({ 
-                        origin: [this.enemy_groups[enemy_type][i].x, this.enemy_groups[enemy_type][i].y], 
+                let this_enemy = this.enemy_groups[enemy_type][i];
+                
+                // if it's time for this enemy to fire
+                if (this_enemy.attack_speed === 0) {
+                    this.created_projectiles.push({
+                        origin: [this_enemy.x, this_enemy.y],
                         target: "player",
                         type: this.all_enemies_data[enemy_type].primary_weapon,
                         friendly: false
                     });
+
+                    this_enemy.attack_speed = this_enemy.max_speed;
                 }
+
+                this.random_pathing(this_enemy, enemy_type);
             }
         }
     }
 
-
     // Cause semi-erratic movement whenever "speed < speed_limit"
-    random_pathing(unit, enemy_type, speed_limit = 2, threshold = 80) {
+    random_pathing(unit, enemy_type, threshold = 80) {
         // triggered when slower than "speed_limit"
         // direction by threshold as % of canvas (default 80% of canvas)
         for (let i = 0; i < this.enemy_groups[enemy_type].length; i++) {
             // increase unit speed when it's close to stopping
-            if (unit.speed < speed_limit) {
-                unit.speed = speed_limit * 4;
+            if (unit.speed < unit.max_speed/10) {
+                unit.speed += unit.current_speed * (math.random(2, 4));
+                unit.attack_speed -= unit.current_speed / 2;
 
                 // define each threshold on the canvas
                 let threshold_right     = tad.w * threshold/100;

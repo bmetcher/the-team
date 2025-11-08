@@ -1,30 +1,31 @@
-import { tad, make } from "../lib/TeachAndDraw.js";
+import { tad, make, camera } from "../lib/TeachAndDraw.js";
 
 export class ProjectileManager {
 
-    constructor(unit, all_ammo_data, all_enemies_data, all_ammo_images, all_explosions) { // Added enemy data to constructor
-        this.unit = unit;   // standard unit
+    constructor(all_ammo_data, all_enemies_data, all_ammo_images, all_explosions, all_effects) { // Added enemy data to constructor
         this.game_paused = false;
 
-        // load all ammo .json data && images
+        // ---- Load Ammo Data & images ----
         this.all_ammo_data = all_ammo_data;
         this.all_ammo_images = all_ammo_images;
         this.all_explosions = all_explosions;
+        this.all_effects = all_effects;
 
         // Load enemy data from JSON
         this.all_enemies_data = all_enemies_data;
 
-        // track existing projectiles for entities
+        // ---- Track Active Projectiles ----
         this.all_projectiles = make.group();    // global tracker
 
         this.player_projectiles = make.group();
         this.enemy_projectiles = make.group();
 
-        // temporary -- replace with ACTUAL explosions later
+        // Explosion effects group
         this.explodes = make.group();
 
         // Add score system
         this.player_score = 0;
+        this.game_over = false;
 
         // Enemy points
         this.enemy_score = this.all_enemies_data.grunt.score;
@@ -35,27 +36,22 @@ export class ProjectileManager {
             return;
         }
 
-        // check any projectiles being created
+        for (let enemy of enemies.all_groups) {
+            enemy.rotation = 180 + enemy.getAngleToPoint(player.collider.x, player.collider.y);
+        }
+
+        // ---- Check Entities for Queued Projectiles ----
         this.get_player_projectiles(player, enemies);
         this.get_enemy_projectiles(player, enemies);
 
-        // update projectile movement
-        // ... unnecessary for now -- default physics!
-        for (let i = 0; i < this.explodes.length; i++) {
-            this.explodes[i].h += 0.2;
-            this.explodes[i].w += 0.2;
-        }
-
-        // check projectile collisions
+        // ---- Check Projectile Collisions ----
         this.see_if_player_hits(enemies);
         this.see_if_enemy_hits(player);
-        
-        // return entity updates
 
-        // clean-up out of bounds projectiles
+        // ---- Clean-up Out of Bounds Projectiles ----
         this.clean_up_all();
         
-        // draw all projectiles
+        // ---- Draw All Projectiles ----
         this.all_projectiles.draw();
     }
 
@@ -70,8 +66,8 @@ export class ProjectileManager {
     }
 
 
-    // process any queued player projectiles to be created
-    get_player_projectiles(player) {
+    // Process any queued player projectiles to be created
+    get_player_projectiles(player, enemy) {
         while (player.created_projectiles.length > 0) {
             let new_projectile = player.created_projectiles[0];
             // create front projectile (origin, target, type) & then pop it
@@ -84,7 +80,7 @@ export class ProjectileManager {
             player.created_projectiles.shift();
         }
     }
-    // enemy version of above function
+    // Enemy version of above function
     get_enemy_projectiles(player, enemies) {
         while (enemies.created_projectiles.length > 0) {
             let new_projectile = enemies.created_projectiles[0];
@@ -106,6 +102,7 @@ export class ProjectileManager {
         }
     }
 
+    // See if any player projectiles collide with any of the enemies
     see_if_player_hits(enemies) {
         // for each enemy, check if any player projectiles landed
         for (let enemy_type in enemies.enemy_groups) {
@@ -118,10 +115,11 @@ export class ProjectileManager {
                         this.destroy_projectile(projectile, explosion_animation_name);
                     }
                 }
+
             }
         }
     }
-
+    // See if any enemy projectiles collide with the player
     see_if_enemy_hits(player) {
         for (let projectile of this.enemy_projectiles) {
             if (projectile.collides(player.collider)) {
@@ -132,8 +130,9 @@ export class ProjectileManager {
         }
     }
 
+    // Calculate damage for some target that was hit by a projectile
     damage_target(target, projectile) {
-        // if the target should die
+        // Handle if the target should be dead
         if ((target.current_hp -= projectile.damage) <= 0) {
             target.remove();
             if (target.score > 0) {
@@ -142,13 +141,20 @@ export class ProjectileManager {
             // console.log(this.player_score);
             // console.log("Enemy Killed!");
         } else if (target.current_hp > 0) {
-            // just damage the target
+            // Handle a regular damage interval
             target.current_hp -= projectile.damage;
         }
     }
-    
+    // Handle damaging the player
     damage_player(player, projectile) {
-        player.current_hp -= projectile.damage;
+        console.log("player hit, hp: ", player.current_hp);
+        if ((player.current_hp -= projectile.damage) <= 0) {
+            this.game_over = true;
+            console.log("Player died!");
+        } else if (player.current_hp > 0) {
+            player.current_hp -= projectile.damage;
+        }
+        console.log("new hp: ", player.current_hp);
         // console.log("player hit! new hp: ", player.current_hp);
     }
 
@@ -162,7 +168,7 @@ export class ProjectileManager {
         this_explosion.looping = false;
         this_explosion.scale = 25;
         explode.asset = this_explosion
-        explode.scale = 0.5;
+        explode.scale = 0.1;
         this.explodes.push(explode);
         this.all_projectiles.push(explode);
         projectile.remove();
@@ -182,7 +188,7 @@ export class ProjectileManager {
             ammo.collider_height
         );
         
-        // set movement attributes (speed, friction, mass)
+        // Set movement attributes (speed, friction, mass)
         pew.speed = ammo.speed;
         pew.friction = ammo.friction;
         pew.mass = ammo.mass;
@@ -190,35 +196,40 @@ export class ProjectileManager {
         // 15 seconds default safeguard (just in case)
         pew.lifespan = 15;  
 
-        // fetch image, scale it, attach as asset
+        // Fetch image -> Scale it -> Attach as asset
         let image = this.all_ammo_images[type]
         image.scale = ammo.scale;
         pew.asset = image;
 
-        // custom stats
+        // Custom stats (damage, effect, etc.)
         pew.damage = ammo.damage;
 
+        // Set the direction to a given target
         if (target !== "none") {
             pew.direction = pew.getAngleToPoint(target[0], target[1]);
         }
 
+        // Friendly missiles go straight up
         if (target === "none") {
             if (friendly) { pew.direction = 0; }
         }
 
-        // push the projectile to relevant groups
+        pew.rotation = pew.direction;
+
+        // Push the projectile to relevant groups
         if (friendly) { 
-            this.player_projectiles.push(pew)
-        } else if (!friendly) { 
-            this.enemy_projectiles.push(pew) 
+            this.player_projectiles.push(pew);
+        } else if (!friendly) {
+            this.enemy_projectiles.push(pew);
         };
-        // either way goes to "all_projectiles" group
+        // Either way goes to "all_projectiles" group
         this.all_projectiles.push(pew);
     }
 
+    // Clean any projectiles that leave the canvas
     clean_up_all() {
         for (let projectile of this.all_projectiles) {
-
+            // if out-of-bounds -> remove it
             if (projectile.x < 0 || projectile.x > tad.w ||
                 projectile.y < 0 || projectile.y > tad.h) {
                 projectile.remove();

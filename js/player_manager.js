@@ -1,10 +1,10 @@
-import { tad, make, keys, time } from "../lib/TeachAndDraw.js";
+import { tad, load, make, keys, time, text, camera } from "../lib/TeachAndDraw.js";
 
 const FLY_IN_TIME = 5;
 
 export class PlayerManager {
 
-    constructor(player_name, all_players_images, all_ship_data) {
+    constructor(player_name, all_players_images, all_ship_data, all_effects) {
         /*
         Parameters;
             player_name : str : allow selection of player image and knowing weapons, ammo, etc. belonging to specific player
@@ -21,6 +21,7 @@ export class PlayerManager {
         this.ship_data = all_ship_data[this.ship_name];
         this.max_hp = this.ship_data.max_hp;
         this.current_hp = this.max_hp;
+        
         // TODO player iframe
         
         this.collider = null;
@@ -149,11 +150,27 @@ export class PlayerManager {
             }
         }
 
-        if (keys.down("g")) {
-            //tad.camera.rotation += 1;
-            tad.camera.zoom -= 0.01;
+
+        // --- Experimental Reactive Camera Effect ---
+
+        // Rotate camera slightly according to player's x co-ordinate
+        //camera.rotation = 1 + ((tad.w/2 - this.collider.x) / 100);
+
+        // Pan camera slightly in a direction according to the player's x/y co-ordinates
+        camera.x = tad.w/2 - ((tad.w/2 - this.collider.x) / 10);
+        camera.y = tad.h/2 - ((tad.h/2 - this.collider.y) / 10);
+        // Zoom the camera slightly as the player moves upwards 
+        camera.zoom = 1.1 - (this.collider.y / tad.h) / 4;  // arbitrary; should we clamp this?
+
+        // 🛑🛑🛑🛑 NO CAMERA USED (YET???) 🛑🛑🛑🛑
+        // Would we like manual camera controls? We could add them here
+
+        // Dev's "t" hotkey (put whatever you wanna activate/test here if you like!)
+        if (keys.down("t")) {
+            camera.zoom = 0.25;
         }
 
+        // --- Draw the Player's Collider ---- 
         this.collider.draw();
 
     }
@@ -190,7 +207,6 @@ export class PlayerManager {
         tmp.yOffset = this.ship_data.ship_yoffset;
         return tmp;
     }
-
 
     specialise_player_settings(){
         // mass or static?
