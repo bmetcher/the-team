@@ -25,6 +25,7 @@ export class ProjectileManager {
 
         // Add score system
         this.player_score = 0;
+        this.game_over = false;
 
         // Enemy points
         this.enemy_score = this.all_enemies_data.grunt.score;
@@ -148,7 +149,14 @@ export class ProjectileManager {
     }
     
     damage_player(player, projectile) {
-        player.current_hp -= projectile.damage;
+        console.log("player hit, hp: ", player.current_hp);
+        if ((player.current_hp -= projectile.damage) <= 0) {
+            this.game_over = true;
+            console.log("Player died!");
+        } else if (player.current_hp > 0) {
+            player.current_hp -= projectile.damage;
+        }
+        console.log("new hp: ", player.current_hp);
         // console.log("player hit! new hp: ", player.current_hp);
     }
 
