@@ -4,8 +4,8 @@
         {"action": "MOVE LEFT", "control": "A"},
         {"action": "MOVE DOWN", "control": "S"},
         {"action": "MOVE RIGHT", "control": "D"},
-        {"action": "SPECIAL ABILITY", "control": "G"},
-        {"action": "FIRE", "control": "SPACE"},
+        {"action": "SPECIAL ABILITY", "control": "G | MOUSE RIGHT"},
+        {"action": "FIRE", "control": "SPACE | MOUSE LEFT"},
         {"action": "BOOST", "control": "SHIFT"},
         {"action": "DIAGONAL", "control": "TWO WASD KEYS"}
     ]

@@ -15,8 +15,8 @@
     "boss_grunt": {
         "type": "boss",
         "max_hp": 10,
-        "height": 32,
-        "width": 32,
+        "height": 64,
+        "width": 64,
         "mass": 2,
         "friction": 1,
         "primary_weapon": "missile",
@@ -41,8 +41,8 @@
         "boss_ice_enemy": {
         "type": "boss",
         "max_hp": 10,
-        "height": 32,
-        "width": 32,
+        "height": 53,
+        "width": 50,
         "mass": 2,
         "friction": 1,
         "scale": 150,
