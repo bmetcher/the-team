@@ -306,10 +306,17 @@ function display_pause_screen(){
 
 function display_end_game_screen(){
     // end game screen image
-    game_screens.end_game_screen.draw();
+    let won = true;
+    if (won){
+        game_screens.victory_screen.draw();
+        // menu title text
+        display_menu_title("you won!");     // game over menu title text
+    } else {
+        game_screens.end_game_screen.draw();
+        // menu title text
+        display_menu_title("game over!");     // game over menu title text
+    }
 
-    // menu title text
-    display_menu_title("game over!");     // game over menu title text
 
     // if not alread added, add new player score to game results
     if (!new_score_added){
@@ -317,7 +324,7 @@ function display_end_game_screen(){
     }
 
     // display player results for this game just finished
-    display_results();
+    display_results(won);
 
     // change screens logic
     check_buttons();   
@@ -504,7 +511,7 @@ function display_stats(){
 }
 
 
-function display_results(){
+function display_results(won){
     // Used to display results at end of game; used in END_GAME
 
     text.alignment.x = "center";
@@ -514,14 +521,18 @@ function display_results(){
 
     // display a dynamic congratulatory message
     let messg;
-    if (projectiles.player_score < 50){
-        messg = "Good Effort!"
-    } else if (projectiles.player_score < 75){
-        messg = "Nice Job!"
-    } else if (projectiles.player_score < 100){
-        messg = "Congratulations!"
-    } else if (projectiles.player_score > 100){
-        messg = "Wow!! Fantastic Job!"
+    if (won){
+        messg = ""
+    } else {
+        if (projectiles.player_score < 50){
+            messg = "Good Effort!"
+        } else if (projectiles.player_score < 75){
+            messg = "Nice Job!"
+        } else if (projectiles.player_score < 100){
+            messg = "Congratulations!"
+        } else if (projectiles.player_score > 100){
+            messg = "Wow!! Fantastic Job!"
+        }
     }
     text.font = fonts.pixel_regular;
     text.size=25;
