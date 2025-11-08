@@ -165,7 +165,7 @@ export class EnvironmentManager {
         debris.friction = 0;
         debris.direction = 180;
         let asset_rng = value * 20; // 0 to 300
-        console.log(asset_rng);
+        //console.log(asset_rng);
         if (asset_rng > 0 && asset_rng <= 30) {
             debris.asset = this.images.fossil;
         } else if (asset_rng > 30 && asset_rng <= 150) {
