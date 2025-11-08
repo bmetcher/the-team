@@ -9,7 +9,7 @@ import { assets } from "./load.js";
 // ----------------------------------------- Initialisation for Game -----------------------------------------
 
 // ---- Game Size ----
-const unit = 64;
+const unit = 64;        // for projectile and environment initialisation
 tad.w = 720;
 tad.h = 1080;
 
@@ -25,28 +25,28 @@ const all_ship_data = assets.all_ship_data;
 const all_enemies_data = assets.all_enemies_data;
 let leaderboard = assets.leaderboard;
 
-let new_score_added = false;
+let new_score_added = false;    // to ensure only adding new player scores once per game (instead of updating every frme)
 
 
 // --------------------------------------- Initialisation for Screens ---------------------------------------
 
 // ---- Define Screens ----
-const INTRO = 0;            // display game name; press space key to continue
-const MAIN_MENU = 1;        // player selects start OR navigates to CONTROLS OR navigates to LEADERBOARD
-const PREPARE = 2;          // after player selects "PREPARE FOR LAUNCH", must select a ship (has default ship); provides "PLAY" button
-const LEADERBOARD = 3;      // scores so far + stored
+const INTRO = 0;            // display game name; press space key to continue (i.e. initial screen)
+const MAIN_MENU = 1;        // player selects prepare OR navigates to LEADERBOARD OR navigates to TUTORIAL
+const PREPARE = 2;          // player selects a ship + displays ship controls; navigates to MAIN MENU or GAME
+const LEADERBOARD = 3;      // displays top scores so far + stored; navigate to MAIN MENU
 const TUTORIAL = 4;         // explains how game works
-const CONTROLS = 5;         // explains game controls
+const CONTROLS = 5;         // explains ship game controls
 const PLAY = 6;             // actual game
-const PAUSE = 7;            // pauses game; provides "RETURN TO GAME" or "END GAME"
-const END_GAME = 8;         // after game ends: show message and score; provides "RETURN TO MAIN MENU" or "PLAY AGAIN"
+const PAUSE = 7;            // pauses game + shows game statrs; navigates to review controls OR return to game OR end game
+const END_GAME = 8;         // after game ends: show message and score; navigate to PREPARE (to play again) or MAIN MENU
 
 // ---- Preload Assets ----
 // Images
 const game_screens = assets.game_screens;
 const img_pause_button = assets.img_pause_button;
 // Files
-const game_commands_data = assets.game_commands_data;
+const game_controls_data = assets.game_controls_data;
 const game_tutorial_txt = assets.game_tutorial_txt;
 // Fonts
 const fonts = assets.fonts;
@@ -74,7 +74,7 @@ const buttons = {
     return_to_main_menu: create_menu_button("large", "return to main menu"),
     go_to_play: create_menu_button("large", "play now"),
     return_to_pause: create_menu_button("large", "return"),
-    go_to_commands: create_menu_button("large", "review controls"),
+    go_to_controls: create_menu_button("large", "review controls"),
     go_to_pause: create_menu_button("small", ""),
     return_to_game: create_menu_button("large", "return to game"),
     end_game: create_menu_button("large", "end game"),
@@ -86,14 +86,13 @@ const ship_name_map = {
     "Default Ship": "default_ship",
     "Tank Ship": "tank_ship"
 };
-const player_ship_dropdown = create_ship_dropwdown(Object.keys(ship_name_map));
+const player_ship_dropdown = create_dropwdown(Object.keys(ship_name_map), HIGHEST_NON_TITLE_TEXT+50);
 
 // --- Global Variables ----
-let environment, player, enemies, projectiles;      // manager variables
-let prep_frame_count;       // hold starting frame of PREPARE screen
-let game_in_progress = false;       // is game being played or paused OR has game ended or not begun
-let end_game_time;
-let current_screen = INTRO;      // initial screen
+let environment, player, enemies, projectiles;      // game elements manager variables
+let game_in_progress = false;                       // to determine if game elements should be initialised: is game in progress
+let end_game_time;                                  // holds time game ended to add as state to leaderboard
+let current_screen = INTRO;                         // track current screen; initialise to intro screen
 
 
 // ------------------------------------------------- Update -------------------------------------------------
@@ -104,36 +103,37 @@ tad.use(update);
 
 // Main draw loop
 function update() {
+    
     if (time.frameCount===0){
         leaderboard = Object.values(leaderboard) // convert to array
     }
 
     if (current_screen === INTRO){
-        // display game name; press space key to continue
+        // display game name; press space key to continue (i.e. initial screen)
         display_intro_screen();
     } else if (current_screen === MAIN_MENU){
-        // player selects start OR navigates to CONTROLS OR navigates to LEADERBOARD
+        // player selects prepare OR navigates to LEADERBOARD OR navigates to TUTORIAL
         display_main_menu_screen();
     } else if (current_screen === PREPARE){
-        // after player selects "PREPARE FOR LAUNCH", must select a ship (has default ship); provides "PLAY" button
+        // player selects a ship + displays ship controls; navigates to MAIN MENU or GAME
         display_prepare_screen();
     } else if (current_screen === LEADERBOARD){
-        // scores so far + stored
+        // displays top scores so far + stored; navigate to MAIN MENU
         display_leaderboard_screen();
     } else if (current_screen === TUTORIAL){
         // explains how game works
         display_tutorial_screen();
     } else if (current_screen === CONTROLS){
-        // explains game controls
-        display_commands_screen();
+        // explains ship game controls
+        display_controls_screen();
     } else if (current_screen === PLAY){
         // actual game
         display_play_screen();
     } else if (current_screen === PAUSE){
-        // pauses game; provides "RETURN TO GAME" or "END GAME"
+        // pauses game + shows game statrs; navigates to review controls OR return to game OR end game
         display_pause_screen();
     } else if (current_screen === END_GAME){
-        // after game ends: show message and score; provides "RETURN TO MAIN MENU" or "PLAY AGAIN"
+        // after game ends: show message and score; navigate to PREPARE (to play again) or MAIN MENU
         display_end_game_screen();
     }
     
@@ -143,6 +143,7 @@ function update() {
 // --------------------------------------------- Display Screens ---------------------------------------------
 
 function display_intro_screen(){
+    // intro screen image
     game_screens.intro_screen.draw();
 
     // game name text
@@ -164,30 +165,99 @@ function display_intro_screen(){
 
 
 function display_main_menu_screen(){
-    game_screens.main_menu_screen.draw();    // display main menu screen image
-    display_menu_title("main menu");    // main menu title text
-    check_buttons();        // change screens logic
+    // main menu screen image
+    game_screens.main_menu_screen.draw();
+
+    // menu title text
+    display_menu_title("main menu");    
+
+    // change screens logic
+    check_buttons();        
 
     // menu buttons
     const TOP_BUTTON_POSITION = tad.h/50*38;
     const GAP_BETW_BUTTONS = buttons.go_to_prepare.h * 1.5;
-    text.font = fonts.pixel_regular;
-    draw_button(buttons.go_to_prepare, tad.w/2, TOP_BUTTON_POSITION);
-    draw_button(buttons.go_to_leaderboard, tad.w/2, buttons.go_to_prepare.y + GAP_BETW_BUTTONS);
-    draw_button(buttons.go_to_tutorial, tad.w/2, buttons.go_to_leaderboard.y + GAP_BETW_BUTTONS);
+    draw_button(buttons.go_to_prepare, tad.w/2, TOP_BUTTON_POSITION);                                   // to prepare for game
+    draw_button(buttons.go_to_leaderboard, tad.w/2, buttons.go_to_prepare.y + GAP_BETW_BUTTONS);        // to view leaderboard
+    draw_button(buttons.go_to_tutorial, tad.w/2, buttons.go_to_leaderboard.y + GAP_BETW_BUTTONS);       // to view game tutorial
 }
 
 
 function display_prepare_screen(){
-    game_screens.prepare_screen.draw();    // display prepare screen image
-    display_menu_title("preparations");     // prepare menu title text
-    display_instruction_txt("select your ship", HIGHEST_NON_TITLE_TEXT);
-    display_instruction_txt("to control your ship:", HIGHEST_NON_TITLE_TEXT + 185);
-    display_commands(220);
+    // prepare menu screen image
+    game_screens.prepare_screen.draw();    
+
+    // menu title text
+    display_menu_title("preparations");   
+    
+    // dropdown menu to select player ship
+    display_instruction_txt("select your ship");
     player_ship_dropdown.draw();
-    check_buttons();     // change screens logic
-    draw_button(buttons.return_to_main_menu, BUTTON_LRG_LEFT_X, BUTTON_LRG_BOTTOM_Y);  // button to return to main menu
-    draw_button(buttons.go_to_play, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);     // button to go to game
+
+    // display instruction on how to control ship
+    display_instruction_txt("to control your ship:", 185);
+    display_controls(220);
+
+    // change screens logic
+    check_buttons();
+
+    // menu buttons
+    draw_button(buttons.return_to_main_menu, BUTTON_LRG_LEFT_X, BUTTON_LRG_BOTTOM_Y);   // to return to main menu
+    draw_button(buttons.go_to_play, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);           // to go to game
+}
+
+
+function display_leaderboard_screen(){
+    // leaderboard screen image
+    game_screens.leaderboard_screen.draw();
+
+    // menu title text
+    display_menu_title("leaderboard");
+
+    // display leaderboard statistics
+    display_leaderboard();
+
+    // change screens logic
+    check_buttons();    
+
+    // menu buttons
+    draw_button(buttons.return_to_main_menu, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);    // to return to main menu
+}
+
+
+function display_tutorial_screen(){
+    // tutorial screen image
+    game_screens.tutorial_screen.draw();
+
+    // menu title text
+    display_menu_title("tutorial");
+
+    // display tutorial instructions from tutorial.txt
+    display_instruction_txt(game_tutorial_txt[0]);
+
+    // change screens logic
+    check_buttons();    
+
+    // menu buttons
+    draw_button(buttons.return_to_main_menu, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);  // to return to main menu
+}
+
+
+function display_controls_screen(){
+    // controls screen image
+    game_screens.controls_screen.draw();
+
+    // menu title text
+    display_menu_title("controls");
+
+    // display game controls for ship (from controls.json)
+    display_controls();
+
+    // change screens logic
+    check_buttons();  
+    
+    // menu buttons
+    draw_button(buttons.return_to_pause, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);   // to return to pause screen
 }
 
 
@@ -197,9 +267,13 @@ function display_play_screen(){
     projectiles.update(player, enemies);
     player.update();
     enemies.update();
-    check_buttons();     // change screens logic
+    
+    // change screens logic
+    check_buttons();   
+    
     // pause button
-    draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_SMALL_BOTTOM_Y);  // button to got to pause screen
+    draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_SMALL_BOTTOM_Y);      // to got to pause screen
+    // image for pause button
     img_pause_button.x = buttons.go_to_pause.x;
     img_pause_button.y = buttons.go_to_pause.y;
     img_pause_button.scale = 80;
@@ -208,72 +282,64 @@ function display_play_screen(){
 
 
 function display_pause_screen(){
+    // pause screen image
     game_screens.pause_screen.draw()    // display pause screen image
-    environment.pause();
-    player.pause();
-    enemies.pause();
-    projectiles.pause();
+
+    // menu title text
     display_menu_title("game paused");     // pause menu title text
+
+    // display player performance statistics so far
     display_stats();
-    check_buttons();     // change screens logic
-    draw_button(buttons.go_to_commands, tad.w/2, BUTTON_LRG_BOTTOM_Y-70);      // button to review game controls
-    draw_button(buttons.return_to_game, BUTTON_LRG_LEFT_X, BUTTON_LRG_BOTTOM_Y);     // button to return to game
-    draw_button(buttons.end_game, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);     // button to delte current game progress and return to main menu
+
+    // change screens logic
+    check_buttons();  
+    
+    // menu buttons
+    draw_button(buttons.go_to_controls, tad.w/2, BUTTON_LRG_BOTTOM_Y-70);           // to review game controls
+    draw_button(buttons.return_to_game, BUTTON_LRG_LEFT_X, BUTTON_LRG_BOTTOM_Y);    // to return to game
+    draw_button(buttons.end_game, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);         // to end current game
+
+    // variable to ensure adding player score for this game to leaderboard only once (instead of once every frame)
     new_score_added = false;
 }
 
 
 function display_end_game_screen(){
-    // after game ends: show message and score; provides "RETURN TO MAIN MENU" or "PLAY AGAIN"
+    // end game screen image
     game_screens.end_game_screen.draw();
+
+    // menu title text
     display_menu_title("game over!");     // game over menu title text
+
+    // if not alread added, add new player score to game results
     if (!new_score_added){
         store_results();
     }
+
+    // display player results for this game just finished
     display_results();
-    check_buttons();     // change screens logic
-    draw_button(buttons.play_again, BUTTON_LRG_LEFT_X, BUTTON_LRG_BOTTOM_Y);     // button to return to game
-    draw_button(buttons.return_to_main_menu, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);     // button to delte current game progress and return to main menu
+
+    // change screens logic
+    check_buttons();   
+    
+    // menu buttons
+    draw_button(buttons.play_again, BUTTON_LRG_LEFT_X, BUTTON_LRG_BOTTOM_Y);            // to got to prepare screen to play again
+    draw_button(buttons.return_to_main_menu, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);  // to return to main menu
 }
-
-
-function display_leaderboard_screen(){
-    game_screens.leaderboard_screen.draw();    // display leaderboard screen image
-    display_menu_title("leaderboard");  // leaderboard menu title text
-    display_leaderboard();
-    check_buttons();     // change screens logic
-    draw_button(buttons.return_to_main_menu, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);    // button to return to main menu
-}
-
-
-function display_tutorial_screen(){
-    game_screens.tutorial_screen.draw();    // display tutorial screen image
-    display_menu_title("tutorial");     // tutorial menu title text
-    display_instruction_txt(game_tutorial_txt[0]);
-    check_buttons();     // change screens logic
-    draw_button(buttons.return_to_main_menu, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);  // button to return to main menu
-}
-
-
-function display_commands_screen(){
-    game_screens.controls_screen.draw();    // display controls screen image
-    display_menu_title("controls");     // controls menu title text
-    display_commands();
-    check_buttons();     // change screens logic
-    draw_button(buttons.return_to_pause, BUTTON_LRG_LEFT_X, BUTTON_LRG_BOTTOM_Y);  // button to return to main menu
-}
-
 
 // ------------------------------------------  Button Helper Functions ------------------------------------------
 
 function create_menu_button(button_size, button_text){
+    // Generic method to create all game buttons
 
     let button_width;
     let button_height;
+
+    // set dimensions for large buttons
     if (button_size==="large"){
         button_width = 225;
         button_height = 40;
-    } else {
+    } else {    // set dimensions for small button
         button_width = 38;
         button_height = 38;
     }
@@ -286,6 +352,8 @@ function create_menu_button(button_size, button_text){
 
 
 function draw_button(button, desired_x, desired_y){
+    // Generic method to draw each game button to specified x,y position
+
     text.font = fonts.pixel_regular;
     button.x = desired_x;
     button.y = desired_y;
@@ -294,58 +362,61 @@ function draw_button(button, desired_x, desired_y){
 
 
 function check_buttons(){
+    // Checks to see if any button has been pressed, and performs relevant state changes and redirects.
 
-    if (buttons.go_to_prepare.released || buttons.play_again.released){
-        prep_frame_count = time.frameCount + 1;
+    if (buttons.go_to_prepare.released || buttons.play_again.released){     // to prepare screen
         current_screen = PREPARE;
 
-    } else if (buttons.go_to_leaderboard.released){
+    } else if (buttons.go_to_leaderboard.released){     // to leaderboard screen
         current_screen = LEADERBOARD;
 
-    } else if (buttons.go_to_tutorial.released){
+    } else if (buttons.go_to_tutorial.released){        // to tutorial screen
         current_screen = TUTORIAL;
-
-    } else if (buttons.return_to_main_menu.released){
+    
+    } else if (buttons.return_to_main_menu.released){   // to main menu screen
         current_screen = MAIN_MENU;
 
-    } else if (buttons.end_game.released){
-        end_game_time = new Date();
+    } else if (buttons.end_game.released){              // to end game screen
+        end_game_time = new Date();     // to hold time game ended, for leaderboard stat
+        game_in_progress = false;       // to ensure that, if new game started, game elements are re-initialised
         current_screen = END_GAME;
-        game_in_progress = false;
 
-    } else if (buttons.go_to_play.released){
+    } else if (buttons.go_to_play.released){            // to play screen (to start new game)
         if (!game_in_progress){
-            initial_setup(ship_name_map[player_ship_dropdown.value]);
-            game_in_progress = true;
+            initial_setup(ship_name_map[player_ship_dropdown.value]);       // initialise game elements
+            game_in_progress = true;    // to ensure that game is not re-initialised every frame
         }
         current_screen = PLAY;
         
-    } else if (buttons.return_to_game.released){
-        // initial_setup(ship_name_map[player_ship_dropdown.value]);
+    } else if (buttons.return_to_game.released){        // to play screen (to resume existing game)
         current_screen = PLAY;
+        // return all game elements to play mode
         environment.play();
         player.play();
         enemies.play();
         projectiles.play();
         
-    } else if (buttons.go_to_commands.released){
+    } else if (buttons.go_to_controls.released){        // to player ship controls screen
         current_screen = CONTROLS;
         
-    } else if (buttons.go_to_pause.released || buttons.return_to_pause.released){
+    } else if (buttons.go_to_pause.released || buttons.return_to_pause.released){   // to pause game screen
         current_screen = PAUSE;
+        // pause all game elements
+        environment.pause();
+        player.pause();
+        enemies.pause();
+        projectiles.pause();
     } 
 }
 
 
 // -----------------------------------------  Dropdown Helper Functions -----------------------------------------
-function create_ship_dropwdown(options){
+function create_dropwdown(options, y_position){
+    // Generic method to create dropdown menus
+
     text.font = fonts.pixel_regular;
     const dropdown_width = 300;
-    const tmp = make.dropdown(
-        LEFT_X_NON_TITLE_TEXT + dropdown_width/2, 
-        HIGHEST_NON_TITLE_TEXT+50, 
-        dropdown_width, 
-        options);
+    const tmp = make.dropdown( LEFT_X_NON_TITLE_TEXT + dropdown_width/2, y_position, dropdown_width, options);
     tmp.openDirection = "down";
     return tmp;
 }
@@ -353,7 +424,34 @@ function create_ship_dropwdown(options){
 
 // ---------------------------------------- Text Display Helper Functions ----------------------------------------
 
-function display_commands(y_offset=0){
+function display_instruction_txt(display_text, y_offset=0){
+    // Generic method to display (paragraph) text on game screens; used in TUTORIAL and PREPARE 
+    //      Precondition: Assumes display_text is written using only one line
+
+    text.size=16;
+    text.font = fonts.pixel_regular;
+    text.alignment.x = "left";
+    text.alignment.y = "top";
+    text.colour = TXT_COL_2;
+    text.maxWidth = tad.w/8*6;
+    
+    text.print(LEFT_X_NON_TITLE_TEXT, HIGHEST_NON_TITLE_TEXT+y_offset, display_text);
+}
+
+
+function display_menu_title(title){
+    // Generic method to display menu titles
+
+    text.colour = TXT_COL_1;
+    text.size = 60;
+    text.font = fonts.titles;
+    text.print(tad.w/2, tad.h/8, title);
+}
+
+
+function display_controls(y_offset=0){
+    // Used to display player ship controls; used in PREPARE and CONTROLS screens
+
     text.colour = TXT_COL_2;
     text.font = fonts.pixel_regular;
     const DIST_FROM_VERTICAL_CENTRE = 30; 
@@ -368,27 +466,31 @@ function display_commands(y_offset=0){
     
     // info
     text.size = 15;
-    for (const command of game_commands_data.commands){
+    for (const this_control of game_controls_data.controls){
         current_y += GAP_BETW_LINES;
         
         text.alignment.x = "right";
-        text.print(tad.w/2-DIST_FROM_VERTICAL_CENTRE, current_y, command.action);
+        text.print(tad.w/2-DIST_FROM_VERTICAL_CENTRE, current_y, this_control.action);
         
         text.alignment.x = "left";
-        text.print(tad.w/2+DIST_FROM_VERTICAL_CENTRE, current_y, command.command);
+        text.print(tad.w/2+DIST_FROM_VERTICAL_CENTRE, current_y, this_control.control);
     }
 }
 
 
 function display_stats(){
+    // Displays player's statistics; used in PAUSE screen.
+
     let current_y = HIGHEST_NON_TITLE_TEXT;
     text.font = fonts.pixel_regular;
     text.colour = TXT_COL_2;
 
+    // title 1
     text.size = 20;
     text.alignment.x = "center";
     text.print(tad.w/2, current_y, "Great Job!");
 
+    // title 2
     text.size = 18;
     current_y += GAP_BETW_LINES + GAP_BETW_LINES;
     text.print(tad.w/2, current_y, "your stats so far:");
@@ -402,34 +504,15 @@ function display_stats(){
 }
 
 
-function display_instruction_txt(display_text){
-    // Precondition: Assumes tutorial is written using only one line
-    text.size=16;
-    text.alignment.x = "left";
-    text.alignment.y = "top";
-    text.colour = TXT_COL_2;
-    text.font = fonts.pixel_regular;
-    text.maxWidth = tad.w/8*6;
-    
-    text.print(LEFT_X_NON_TITLE_TEXT, HIGHEST_NON_TITLE_TEXT, display_text);
-}
-
-
-function display_menu_title(title){
-    text.colour = TXT_COL_1;
-    text.size = 60;
-    text.font = fonts.titles;
-    text.print(tad.w/2, tad.h/8, title);
-}
-
-
 function display_results(){
+    // Used to display results at end of game; used in END_GAME
+
     text.alignment.x = "center";
     text.alignment.y = "top";
     text.colour = TXT_COL_1;
     text.maxWidth = tad.w/8*6;
 
-    // display a dynamic message
+    // display a dynamic congratulatory message
     let messg;
     if (projectiles.player_score < 50){
         messg = "Good Effort!"
@@ -444,10 +527,10 @@ function display_results(){
     text.size=25;
     text.print(tad.w/2, HIGHEST_NON_TITLE_TEXT-40, messg);
     
+    // display score
     text.font = fonts.pixel_italic;
     text.size=20;
     text.print(tad.w/2, HIGHEST_NON_TITLE_TEXT+10, "your score is:");
-
     text.font = fonts.pixel_regular;
     text.size=40;
     text.print(tad.w/2, HIGHEST_NON_TITLE_TEXT+40, projectiles.player_score.toString());
@@ -455,6 +538,8 @@ function display_results(){
 
 
 function display_leaderboard(){
+    // Used to display stats from leaderboard; used in LEADERBOARD
+
     const top_scores = leaderboard.slice(0,20);  // get top 20 by score
     let current_y = HIGHEST_NON_TITLE_TEXT - GAP_BETW_LINES;
     text.colour = TXT_COL_2;
@@ -482,7 +567,7 @@ function display_leaderboard(){
     text.print(RIGHT_X_NON_TITLE_TEXT, current_y, "score");
 
     
-    // actual scores
+    // actual scores for each player
     text.font = fonts.pixel_regular;
     text.size = 15;
     for (const this_player of top_scores){
@@ -504,6 +589,7 @@ function display_leaderboard(){
 
 function initial_setup(player_ship_name) {
     // Asset loading & manager initialization
+
     // check if all JSON assets are loaded
     if (all_ship_data && all_ammo_data) {
         // Create managers AFTER data has loaded
@@ -522,6 +608,9 @@ function initial_setup(player_ship_name) {
 
 
 function store_results(){
+    // Helper method to store player's new performance statistic
+    //      Note: this data is not saved to leaderboard.json; it is only saved during runtime in 'leaderboard' array
+
     const formatted_time = `${String(end_game_time.getHours()).padStart(2,'0')}:${String(end_game_time.getMinutes()).padStart(2,'0')} ${String(end_game_time.getDate()).padStart(2,'0')}-${String(end_game_time.getMonth()+1).padStart(2,'0')}-${end_game_time.getFullYear()}`;
     const new_player = {
         player_name: "you",

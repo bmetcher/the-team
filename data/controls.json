@@ -1,0 +1,11 @@
+{
+    "controls": [
+        {"action": "FIRE", "control": "SPACE"},
+        {"action": "BOOST", "control": "SHIFT"},
+        {"action": "MOVE UP", "control": "W"},
+        {"action": "MOVE LEFT", "control": "A"},
+        {"action": "MOVE DOWN", "control": "S"},
+        {"action": "MOVE RIGHT", "control": "D"},
+        {"action": "DIAGONAL", "control": "TWO WASD KEYS"}
+    ]
+}

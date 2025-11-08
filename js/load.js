@@ -73,7 +73,7 @@ const all_explosions = {
 const all_ammo_data = load.json("./data/ammo_map.json");
 const all_ship_data = load.json("./data/ships_map.json"); // Seperated into seperate JSON files
 const all_enemies_data = load.json("./data/enemies_map.json");
-const game_commands_data = load.json("./data/commands.json");
+const game_controls_data = load.json("./data/controls.json");
 const game_tutorial_txt = load.text("./data/tutorial.txt");
 const leaderboard = load.json("./data/leaderboard.json");
 
@@ -89,7 +89,7 @@ const assets = {
     all_players_images, all_ammo_images, all_enemy_images, all_environment_images, game_screens, img_pause_button,
     all_explosions,
     all_ammo_data, all_ship_data, all_enemies_data,
-    game_commands_data, game_tutorial_txt,
+    game_controls_data, game_tutorial_txt,
     leaderboard,
     fonts
 };
