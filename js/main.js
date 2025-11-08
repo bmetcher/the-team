@@ -214,8 +214,9 @@ function display_pause_screen(){
     enemies.pause();
     projectiles.pause();
     display_menu_title("game paused");     // pause menu title text
+    display_stats();
     check_buttons();     // change screens logic
-    draw_button(buttons.go_to_commands, tad.w/2, BUTTON_LRG_BOTTOM_Y-80);      // button to review game controls
+    draw_button(buttons.go_to_commands, tad.w/2, BUTTON_LRG_BOTTOM_Y-70);      // button to review game controls
     draw_button(buttons.return_to_game, BUTTON_LRG_LEFT_X, BUTTON_LRG_BOTTOM_Y);     // button to return to game
     draw_button(buttons.end_game, BUTTON_LRG_RIGHT_X, BUTTON_LRG_BOTTOM_Y);     // button to delte current game progress and return to main menu
     new_score_added = false;
@@ -354,7 +355,7 @@ function create_ship_dropwdown(options){
 
 function display_commands(y_offset=0){
     text.colour = TXT_COL_2;
-    text.font = fonts.pixel_regular
+    text.font = fonts.pixel_regular;
     const DIST_FROM_VERTICAL_CENTRE = 30; 
     let current_y = HIGHEST_NON_TITLE_TEXT+y_offset;
     
@@ -368,7 +369,6 @@ function display_commands(y_offset=0){
     // info
     text.size = 15;
     for (const command of game_commands_data.commands){
-        
         current_y += GAP_BETW_LINES;
         
         text.alignment.x = "right";
@@ -376,11 +376,33 @@ function display_commands(y_offset=0){
         
         text.alignment.x = "left";
         text.print(tad.w/2+DIST_FROM_VERTICAL_CENTRE, current_y, command.command);
-        
     }
 }
 
-function display_instruction_txt(display_text, y_position){
+
+function display_stats(){
+    let current_y = HIGHEST_NON_TITLE_TEXT;
+    text.font = fonts.pixel_regular;
+    text.colour = TXT_COL_2;
+
+    text.size = 20;
+    text.alignment.x = "center";
+    text.print(tad.w/2, current_y, "Great Job!");
+
+    text.size = 18;
+    current_y += GAP_BETW_LINES + GAP_BETW_LINES;
+    text.print(tad.w/2, current_y, "your stats so far:");
+
+    // current score
+    text.font = fonts.pixel_italic;
+    current_y += GAP_BETW_LINES + GAP_BETW_LINES;
+    text.print(tad.w/2, current_y, "your score:");
+    current_y += GAP_BETW_LINES;
+    text.print(tad.w/2, current_y, projectiles.player_score.toString());
+}
+
+
+function display_instruction_txt(display_text){
     // Precondition: Assumes tutorial is written using only one line
     text.size=16;
     text.alignment.x = "left";
@@ -389,7 +411,7 @@ function display_instruction_txt(display_text, y_position){
     text.font = fonts.pixel_regular;
     text.maxWidth = tad.w/8*6;
     
-    text.print(LEFT_X_NON_TITLE_TEXT, y_position, display_text);
+    text.print(LEFT_X_NON_TITLE_TEXT, HIGHEST_NON_TITLE_TEXT, display_text);
 }
 
 
