@@ -52,7 +52,7 @@ Designed by **Thomas Knight**
 
 * Pixel Effects: <a href='https://codemanu.itch.io/pixelart-effect-pack'>Pixelart Effect Pack</a>
 
-### **Pause Button Image**
+#### **Pause Button Image**
 > Retrieved from [thoseawesomeguys.com/prompts](https://thoseawesomeguys.com/prompts/)
 
 
