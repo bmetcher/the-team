@@ -213,7 +213,7 @@ function display_prepare_screen(){
     const selected_ship = ship_name_map[player_ship_dropdown.value];
     let temp = all_players_images[selected_ship];
     temp.x = tad.w/2;
-    temp.y = DROPDOWN_Y + 120 + all_ship_data[selected_ship].menu_offset;
+    temp.y = DROPDOWN_Y + 115 + all_ship_data[selected_ship].menu_offset;
     temp.scale = all_ship_data[selected_ship].menu_scale;
     temp.draw()
 
@@ -302,8 +302,6 @@ function display_play_screen(){
     enemies.update();
 
     // change screens logic
-    // if (projectiles.game_over === true) { current_screen = END_GAME; }
-    projectiles.game_over = false;
     check_buttons(projectiles.game_over, enemies.won);   
     
     // pause button

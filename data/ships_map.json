@@ -2,7 +2,7 @@
     "default_ship": {
         "ship_scale": 100,
         "menu_scale": 170,
-        "menu_offset": 0,
+        "menu_offset": -12,
         "collider_width": 24.9,
         "collider_height": 21,
         "minimum_speed": 24,
