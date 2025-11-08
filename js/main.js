@@ -210,12 +210,7 @@ function display_prepare_screen(){
     player_ship_dropdown.draw();
 
     // draw selected ship
-    const selected_ship = ship_name_map[player_ship_dropdown.value];
-    let temp = all_players_images[selected_ship];
-    temp.x = tad.w/2;
-    temp.y = DROPDOWN_Y + 115 + all_ship_data[selected_ship].menu_offset;
-    temp.scale = all_ship_data[selected_ship].menu_scale;
-    temp.draw()
+    draw_ship();
 
     // display instruction on how to control ship
     display_txt("to control your ship:", 330);
@@ -256,17 +251,11 @@ function display_tutorial_screen(){
     display_menu_title("briefing");
 
     // display tutorial instructions from tutorial.txt
-    display_txt(game_tutorial_txt[0]);
     let offset = 30;
-    display_txt(game_tutorial_txt[1], offset);
-    offset += 30;
-    display_txt(game_tutorial_txt[2], offset);
-    offset += 30;
-    display_txt(game_tutorial_txt[3], offset);
-    offset += 30;
-    display_txt(game_tutorial_txt[4], offset);
-    offset += 60;
-    display_txt(game_tutorial_txt[5], offset);
+    for (const this_line of game_tutorial_txt){
+        display_txt(this_line, offset);
+        offset +=30;
+    }
 
     // change screens logic
     check_buttons();    
@@ -697,4 +686,13 @@ function store_results(){
     leaderboard.sort((a, b) => b.score - a.score); // descending
 
     new_score_added = true;
+}
+
+function draw_ship(){
+    const selected_ship = ship_name_map[player_ship_dropdown.value];
+    let temp = all_players_images[selected_ship];
+    temp.x = tad.w/2;
+    temp.y = DROPDOWN_Y + 115 + all_ship_data[selected_ship].menu_offset;
+    temp.scale = all_ship_data[selected_ship].menu_scale;
+    temp.draw()
 }
