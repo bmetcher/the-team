@@ -8,29 +8,27 @@ const amt_to_reduce_by = (speed - FINAL_SPEED) / (FLY_IN_TIME * 120); // 60 for 
 
 export class EnvironmentManager {
     constructor(all_environment_images) {
-        // Load all background images
+        // ---- Load all background images ----
         this.images = all_environment_images;
         // Read background image size (for later)
         this.bg_height = this.images.stars1.h;  // should be 1620
         this.bg_width = this.images.stars1.w;   // should be 1080
         //console.log("bg_height: ", this.bg_height, " & bg_width: ", this.bg_width);
 
-
         // ---- Load Background Images ----
         this.stars1 = this.images.stars1;
         this.stars2 = this.images.stars2;
         this.dust1 = this.images.dust1;
         this.dust2 = this.images.dust2;
-        this.nebula1 = this.images.nebula1;
+        this.nebula1 = this.images.nebula1; // ** nebula not implemented yet
         this.nebula2 = this.images.nebula2;
-
 
         // ---- Generating Environment Debris ----
         this.rate = 8;          // how many generators
         this.chaos = 1000;     // '1 in "chaos" chance' to generate debris (per frame)
+        
         // Generators to create debris (8 by default above the canvas)
         this.generators = this.create_generators(this.rate);   
-
 
         // Groups for tracking randomly-generated debris
         this.all_debris = make.group();
@@ -84,17 +82,14 @@ export class EnvironmentManager {
         // Draw all background items in order of their layers
         this.stars1.draw();
         this.stars2.draw();
-
         this.debris_one.draw();
 
         this.dust1.draw();
         this.dust2.draw();
-
         this.debris_two.draw();
 
         //this.nebula1.draw();
         //this.nebula2.draw();
-
         this.debris_three.draw();
     }
 
@@ -118,6 +113,7 @@ export class EnvironmentManager {
     create_generators(amount) {
         const result = make.group();
         let unit = tad.width / amount;  // based on the amount of generators to make
+
         for (let i = 0; (i * unit) < tad.width; i++) {
             const temp = make.boxCollider(i * unit, 0 - unit * 2, unit, unit);
             temp.x += unit/2;

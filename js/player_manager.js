@@ -2,13 +2,6 @@ import { tad, load, make, keys, time, text, camera } from "../lib/TeachAndDraw.j
 
 const FLY_IN_TIME = 5;
 
-// for testing effects
-const effect_dropdown = make.dropdown(tad.w/2, tad.h + 100, 200, [
-            "emit", "felspell", "fire",
-            "freezing", "magic8", "midnight", 
-            "nebula", "sunburn", "vortex"
-        ])
-
 export class PlayerManager {
 
     constructor(player_name, all_players_images, all_ship_data, all_effects) {
@@ -29,8 +22,6 @@ export class PlayerManager {
         this.current_hp = this.max_hp;
         
         // TODO player iframe
-        this.all_effects = all_effects;
-        this.test_effect = effect_dropdown.value;
         
         this.collider = null;
         // track projectiles to be created
@@ -154,41 +145,27 @@ export class PlayerManager {
         }
 
 
-        // --- Experimental Reactive Camera Tilt/Pan Effect ---
-        // rotate camera slightly according to player's x co-ordinate
+        // --- Experimental Reactive Camera Effect ---
+
+        // Rotate camera slightly according to player's x co-ordinate
         //camera.rotation = 1 + ((tad.w/2 - this.collider.x) / 100);
-        
-        // pan the camera slightly left/right   (by the player's x; centered at tad.w/2)
+
+        // Pan camera slightly in a direction according to the player's x/y co-ordinates
         camera.x = tad.w/2 - ((tad.w/2 - this.collider.x) / 10);
-        // pan the camera slightly up/down      (by the player's y; centered ~= "750")
         camera.y = tad.h/2 - ((tad.h/2 - this.collider.y) / 10) - this.collider.h;
-        // zoom the camera slightly as the player moves upwards 
-        camera.zoom = 1.4 - (this.collider.y / tad.h) / 2;  // arbitrary; should we clamp this?
+        // Zoom the camera slightly as the player moves upwards 
+        camera.zoom = 1.1 - (this.collider.y / tad.h) / 4;  // arbitrary; should we clamp this?
 
         // 🛑🛑🛑🛑 NO CAMERA USED (YET???) 🛑🛑🛑🛑
         // Would we like manual camera controls? We could add them here
 
         // Dev's "t" hotkey (put whatever you wanna activate/test here if you like!)
         if (keys.down("t")) {
-            this.custom_effect_testing(effect_dropdown.value);
             camera.zoom = 0.25;
         }
-        console.log(effect_dropdown.value)
-        effect_dropdown.draw();
 
         // --- Draw the Player's Collider ---- 
         this.collider.draw();
-    }
-
-    custom_effect_testing(selection) {
-        this.all_effects[selection].x = this.collider.x + 2;
-        this.all_effects[selection].y = this.collider.y + 2;
-        this.all_effects[selection].scale = 100;
-        this.all_effects[selection].duration = 3;
-        this.all_effects[selection].rotation = 180;
-        this.all_effects[selection].draw();
-
-        this.test_effect = selection;
     }
 
     create_player_collider(){

@@ -5,53 +5,39 @@ export class ProjectileManager {
     constructor(unit, all_ammo_data, all_ammo_images, all_explosions, all_effects) {
         this.unit = unit;   // standard unit
 
-        // load all ammo .json data && images
+        // ---- Load Ammo Data & images ----
         this.all_ammo_data = all_ammo_data;
         this.all_ammo_images = all_ammo_images;
         this.all_explosions = all_explosions;
         this.all_effects = all_effects;
 
-        // track existing projectiles for entities
+        // ---- Track Active Projectiles ----
         this.all_projectiles = make.group();    // global tracker
 
         this.player_projectiles = make.group();
         this.enemy_projectiles = make.group();
 
-        this.test_effect = null;  // TESTING
-
-        // temporary -- replace with ACTUAL explosions later
+        // Explosion effects group
         this.explodes = make.group();
     }
 
     update(player, enemy){
-        // check any projectiles being created
+        // ---- Fetch Any Created Projectiles ----
         this.get_player_projectiles(player, enemy);
         this.get_enemy_projectiles(player, enemy);
 
-        // TESTING**
-        this.test_effect = player.test_effect;
-
-        // update projectile movement
-        // ... unnecessary for now -- default physics!
-        for (let i = 0; i < this.explodes.length; i++) {
-            this.explodes[i].h += 0.2;
-            this.explodes[i].w += 0.2;
-        }
-
-        // check projectile collisions
+        // ---- Check Projectile Collisions ----
         this.see_if_player_hits(enemy);
         this.see_if_enemy_hits(player);
-        
-        // return entity updates
 
-        // clean-up out of bounds projectiles
+        // ---- Clean-up Out of Bounds Projectiles ----
         this.clean_up_all();
         
-        // draw all projectiles
+        // ---- Draw All Projectiles ----
         this.all_projectiles.draw();
     }
 
-    // process any queued player projectiles to be created
+    // Process any queued player projectiles to be created
     get_player_projectiles(player, enemy) {
         while (player.created_projectiles.length > 0) {
             let new_projectile = player.created_projectiles[0];
@@ -65,7 +51,7 @@ export class ProjectileManager {
             player.created_projectiles.shift();
         }
     }
-    // enemy version of above function
+    // Enemy version of above function
     get_enemy_projectiles(player, enemy) {
         while (enemy.created_projectiles.length > 0) {
             let new_projectile = enemy.created_projectiles[0];
@@ -87,20 +73,21 @@ export class ProjectileManager {
         }
     }
 
+    // See if any player projectiles collide with any of the enemies
     see_if_player_hits(enemies) {
-        // for each enemy, check if any player projectiles landed
         for (let enemy of enemies.all) {
             for (let projectile of this.player_projectiles) {
+                
                 if (projectile.collides(enemy)) {
                     //console.log("BANG! enemy: ", enemy, " was hit");
                     this.damage_target(enemy, projectile);
-                    console.log(enemy.name);
                     this.destroy_projectile(projectile, "enemy");
                 }
+
             }
         }
     }
-
+    // See if any enemy projectiles collide with the player
     see_if_enemy_hits(player) {
         for (let projectile of this.enemy_projectiles) {
             if (projectile.collides(player.collider)) {
@@ -111,26 +98,30 @@ export class ProjectileManager {
         }
     }
 
+    // Calculate damage for some target that was hit by a projectile
     damage_target(target, projectile) {
-        // if the target should die
+        // Handle if the target should be dead
         if ((target.current_hp -= projectile.damage) <= 0) {
             target.remove();
         } else if (target.current_hp > 0) {
-            // just damage the target
+            // Handle a regular damage interval
             target.current_hp -= projectile.damage;
         }
     }
-    
+    // Handle damaging the player
     damage_player(player, projectile) {
         player.current_hp -= projectile.damage;
+        // ** TBD ** Player Death
     }
 
+    // Remove the projectile and create an explosion animation in it's place
     destroy_projectile(projectile, dieing_sprite_name) {
         let explode = make.boxCollider(projectile.x, projectile.y, 15, 15);
         explode.colour = "red";
         explode.lifespan = 1;
         explode.static;
         let this_explosion;
+        // Handle if the explosion should be purple (enemy) or orange (player)
         if (dieing_sprite_name=="player"){
             this_explosion = this.all_explosions.player_explosion;
         } else if (dieing_sprite_name=="enemy"){
@@ -160,7 +151,7 @@ export class ProjectileManager {
             ammo.collider_height
         );
         
-        // set movement attributes (speed, friction, mass)
+        // Set movement attributes (speed, friction, mass)
         pew.speed = ammo.speed;
         pew.friction = ammo.friction;
         pew.mass = ammo.mass;
@@ -168,40 +159,35 @@ export class ProjectileManager {
         // 15 seconds default safeguard (just in case)
         pew.lifespan = 15;  
 
-        // fetch image, scale it, attach as asset
+        // Fetch image -> Scale it -> Attach as asset
         let image = this.all_ammo_images[type]
         image.scale = ammo.scale;
         pew.asset = image;
 
-        // custom stats
+        // Custom stats (damage, effect, etc.)
         pew.damage = ammo.damage;
 
+        // Set the direction to a given target
         if (target !== "none") {
             pew.direction = pew.getAngleToPoint(target[0], target[1]);
         }
 
+        // Friendly missiles go straight up
         if (target === "none") {
             if (friendly) { pew.direction = 0; }
         }
 
-        // push the projectile to relevant groups
+        // Push the projectile to relevant groups
         if (friendly) { 
-            // TESTING ASSETS
-            pew.asset = this.all_effects[this.test_effect];
-            
-            pew.rotationalVelocity = tad.math.random(10, 30);
-            pew.speed = 20;
-            pew.scale = 20;
-            pew.lifespan = 10;
-
             this.player_projectiles.push(pew);
-        } else if (!friendly) { 
+        } else if (!friendly) {
             this.enemy_projectiles.push(pew);
         };
-        // either way goes to "all_projectiles" group
+        // Either way goes to "all_projectiles" group
         this.all_projectiles.push(pew);
     }
 
+    // Clean any projectiles that leave the canvas
     clean_up_all() {
         for (let projectile of this.all_projectiles) {
             // if out-of-bounds -> remove it
