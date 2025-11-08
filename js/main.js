@@ -277,11 +277,11 @@ function display_play_screen(){
     check_buttons(projectiles.game_over, enemies.won);   
     
     // pause button
-    buttons.go_to_pause.movedByCamera = false;
+    //buttons.go_to_pause.movedByCamera = false;
     draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_SMALL_BOTTOM_Y);      // to got to pause screen
 
     // image for pause button
-    img_pause_button.movedByCamera = false;
+    //img_pause_button.movedByCamera = false;
     img_pause_button.x = buttons.go_to_pause.x;
     img_pause_button.y = buttons.go_to_pause.y;
     img_pause_button.scale = 80;
