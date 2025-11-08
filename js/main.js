@@ -272,7 +272,6 @@ function display_play_screen(){
     enemies.update();
 
     // change screens logic
-    // if (projectiles.game_over === true) { current_screen = END_GAME; }
     projectiles.game_over = false;
     check_buttons(projectiles.game_over, enemies.won);   
     
