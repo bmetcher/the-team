@@ -2,7 +2,7 @@ import { tad, make, time, math } from "../lib/TeachAndDraw.js";
 
 let fly_in_time = 300;
 
-const INIT_SPEED = 2;
+const INIT_SPEED = 3;
 const FINAL_SPEED = 1;
 const AMT_TO_REDUCE_BY = (INIT_SPEED - FINAL_SPEED) / fly_in_time;
 
@@ -56,7 +56,8 @@ export class EnvironmentManager {
     draw_space() {
         // move grass down
         if (time.seconds < fly_in_time) {
-            if (this.speed >= (INIT_SPEED - FINAL_SPEED)) { 
+            // Guard for systems reversing the speed value
+            if (this.speed > FINAL_SPEED) { 
                 this.speed -= AMT_TO_REDUCE_BY; 
             }
         }

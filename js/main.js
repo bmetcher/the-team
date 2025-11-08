@@ -262,26 +262,16 @@ function display_controls_screen(){
 
 function display_play_screen(){
     // update game elements
-    console.log("Play is reached");
-
     environment.update();
     projectiles.update(player, enemies);
     player.update();
     enemies.update();
 
-    console.log("Things are drawn");
-
     // change screens logic
-    // if (projectiles.game_over === true) { current_screen = END_GAME; }
     check_buttons(projectiles.game_over);   
     
-    console.log("Buttons are checked");
-
-    // pause button
-    
-    // draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_SMALL_BOTTOM_Y);      // to got to pause screen
-    
-    console.log("Pause is drawn");
+    // pause button 🛑🛑 causes a RangeError: Maximum call stack size exceeded 🛑🛑
+    //draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_SMALL_BOTTOM_Y);      // to got to pause screen
 
     // image for pause button
     img_pause_button.x = buttons.go_to_pause.x;
