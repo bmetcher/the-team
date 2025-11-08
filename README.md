@@ -7,21 +7,39 @@ The game features custom player and enemy sprites, dynamically generated backgro
 
 ---
 
-## 🖼️ Image References & Asset Credits
+## ⚙️ Tech Stack
+- **JavaScript**
+- **TeachAndDraw.js** library (custom rendering + asset management)
+- **HTML5 Canvas**
+- **JSON-based game data management**
 
-### **Game Screens**
+
+---
+
+## 🖼️ References & Asset Credits
+
+### **Images**
+
+#### **Game Screens**
 Generated using **DeepAI Image Generator**
 
-### **Game Background Images**
+#### **Game Background Images**
 Generated using **DeepAI Image Generator**
 
-### **Player Sprites**
+#### **Player Sprites**
 Designed by **Thomas Knight**
 
-### **Enemy Sprites**
+#### **Enemy Sprites**
 Designed by **Thomas Knight**
 
-### **Animations**
+#### **Pause Button Image**
+> Retrieved from [thoseawesomeguys.com/prompts](https://thoseawesomeguys.com/prompts/)
+
+#### **Ammo Images**
+Designed by **Thomas Knight**
+
+
+#### **Animations**
 
 Explosions:
 > CraftPix.net 2D Game Assets. (2019). *2D Battle Tanks* [PNG].  
@@ -33,24 +51,11 @@ Glass breaking:
 Blood splatter:
 <a href='https://pngtree.com/freepng/realistic-blood-splatter-stain_22930222.html'>png image from pngtree.com/</a>
 
-### **Pause Button Image**
-> Retrieved from [thoseawesomeguys.com/prompts](https://thoseawesomeguys.com/prompts/)
 
-### **Ammo Images**
-Designed by **Thomas Knight**
 
 
 ### **Fonts**
 titles from **Smack Laideth Down 2024 by Chequered Ink** at https://www.fontspace.com/smack-laideth-down-2024-font-f124420
 pixel_italic and pixel_regular from **Pixel Digivolve by Pixel Sagas** at https://www.fontspace.com/pixel-sagas
-
-
----
-
-## ⚙️ Tech Stack
-- **JavaScript**
-- **TeachAndDraw.js** library (custom rendering + asset management)
-- **HTML5 Canvas**
-- **JSON-based game data management**
 
 ---
