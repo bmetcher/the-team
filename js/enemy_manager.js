@@ -44,6 +44,7 @@ export class EnemyManager {
         this.boss_wave = false;
         this.boss_number = this.boss_types.length
         this.big_boss_wave = false;
+        this.won = false;
 
         // ---- Create enemy groups + Scale all enemy images ----
         this.all_groups = make.group();    // to manage drawing for ALL enemies
