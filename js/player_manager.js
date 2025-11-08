@@ -1,4 +1,5 @@
-import { tad, load, make, keys, time, text, camera } from "../lib/TeachAndDraw.js";
+import { tad, load, make, keys, time, text, camera, math } from "../lib/TeachAndDraw.js";
+import { Timer } from "./timer.js";
 
 const FLY_IN_TIME = 5;
 
@@ -19,10 +20,22 @@ export class PlayerManager {
         // ---- Get Player Ship Image ----
         this.ship_image = all_players_images[this.ship_name];
         this.ship_data = all_ship_data[this.ship_name];
+        this.all_effects = all_effects;
         this.max_hp = this.ship_data.max_hp;
         this.current_hp = this.max_hp;
-        
-        // TODO player iframe
+        // ---- Player Attack Timers ----
+        // Primary Attack (attack_speed = how many attacks per second)
+        this.attack_cooldown_timer = new Timer(1 / this.ship_data.attack_speed);
+        this.attack_cooldown_timer.start();
+        // Ability Cooldown (requires 4*duration to recharge)
+        this.ability_cooldown_timer = new Timer(this.ship_data.ability_duration * 4);
+        this.ability_cooldown_timer.start();
+        // Active Ability Duration
+        this.ability_activation_timer = new Timer(this.ship_data.ability_duration);
+        // this.ability_activation_timer.start();   // start 
+        this.ability_percentage = 0;
+        this.shots_fired = 0;       // for default ship barrage
+        this.invincible = false;    // for tank ship
         
         this.collider = null;
         // track projectiles to be created
@@ -135,21 +148,82 @@ export class PlayerManager {
             this.collider.y = tad.h - y_gap
         }
 
-        // ---- Shoot ----
-        if (keys.released(" ")){
-            //this.ammo_manager.fire(this.collider.x, this.collider.y);
-            for (const this_point in this.ship_data.firing_origins){
-                const this_x = this.collider.x + this.ship_data.firing_origins[this_point][0];
-                const this_y = this.collider.y + this.ship_data.firing_origins[this_point][1];
-                this.created_projectiles.push({
-                    origin: [this_x, this_y],
-                    target: "none",
-                    type: this.ship_data.primary_weapon,
-                    friendly: true
-                });
+        // ---- Primary Attack (default: "space") ----
+        this.attack_cooldown_timer.update();
+        if (keys.down(" ")) {
+            if (this.attack_cooldown_timer.done()) {
+                for (const this_point in this.ship_data.firing_origins){
+                    const this_x = this.collider.x + this.ship_data.firing_origins[this_point][0];
+                    const this_y = this.collider.y + this.ship_data.firing_origins[this_point][1];
+                    this.created_projectiles.push({
+                        origin: [this_x, this_y],
+                        target: "none",
+                        type: this.ship_data.primary_weapon,
+                        friendly: true
+                    });
+                    this.attack_cooldown_timer.start(); // back to max 100 value
+                }
             }
         }
+        // console.log("Attack Timer running: ", this.attack_cooldown_timer.running,
+        //     "\nFinished: ", this.attack_cooldown_timer.finished);
 
+        // Update invincibility (can be overwritten by later states/cases here)
+        this.invincible = false;
+
+        // ---- Special Ability (default: "G") ----
+        this.ability_cooldown_timer.update();
+        this.ability_activation_timer.update();
+        if (keys.released("g")) {
+            // if "cooldown is finished" and "ability isn't already being used"
+            if (this.ability_cooldown_timer.done() && !this.ability_activation_timer.running) {
+                console.log("Ability activated!");
+                this.ability_activation_timer.start();
+                this.ability_cooldown_timer.start();    // restart the cooldown timer
+                this.shots_fired = 0;
+            } else {
+                console.log("Ability not ready yet!");
+            }
+        }
+        // console.log(this.ability_activation_timer.running);
+        if (this.ability_activation_timer.running) {
+            if (this.ship_data.special_ability === "invincibility") {
+                //console.log("INVINCIBLE!!");
+                this.all_effects.felspell.x = this.collider.x;
+                this.all_effects.felspell.y = this.collider.y;
+                this.all_effects.felspell.scale = 150;
+                this.all_effects.felspell.draw();
+                this.invincible = true;
+            } else if (this.ship_data.special_ability === "barrage") {
+                //console.log("BARRAGING!!");
+                this.all_effects.vortex.x = this.collider.x;
+                this.all_effects.vortex.y = this.collider.y;
+                this.all_effects.vortex.scale = 100;
+                this.all_effects.vortex.draw();
+
+                const intervals = this.ability_activation_timer.intervals(30);
+
+                if (intervals > this.shots_fired) {
+                    let x = this.collider.x;
+                    let y = this.collider.y;
+                    for (const this_point in this.ship_data.firing_origins){
+                        const this_x = this.collider.x + this.ship_data.firing_origins[this_point][0];
+                        const this_y = this.collider.y + this.ship_data.firing_origins[this_point][1];
+                        this.created_projectiles.push({
+                            origin: [this_x, this_y],
+                            target: "random",
+                            type: this.ship_data.primary_weapon,
+                            friendly: true
+                        });
+                    this.attack_cooldown_timer.start(); // back to max 100 value
+                    }
+                    this.shots_fired = intervals;
+                }
+
+                
+
+            }
+        }
 
         // --- Experimental Reactive Camera Effect ---
 
@@ -166,13 +240,27 @@ export class PlayerManager {
         // Would we like manual camera controls? We could add them here
 
         // Dev's "t" hotkey (put whatever you wanna activate/test here if you like!)
-        if (keys.down("t")) {
+        if (keys.down("t") && tad.debug === true) {
             camera.zoom = 0.25;
         }
 
+        // ---- Create HP and Boost bars ----
+        text.colour = "rgb(255, 255, 255)";
+        text.size = 45;
+        text.print(tad.w/8, 1000, "HP");
+        text.print(tad.w/4, 1000, this.current_hp.toString());
+
+        this.ability_percentage = this.ability_cooldown_timer.get_percentage();
+        if (this.ability_percentage === 1) { 
+            this.ability_percentage = "READY!"
+        } else {
+            this.ability_percentage = math.round(this.ability_percentage * 100) + " %";
+        }
+        text.print(435, 1000, "Ability");
+        text.print(630, 1000, this.ability_percentage.toString());
+
         // --- Draw the Player's Collider ---- 
         this.collider.draw();
-
     }
 
 

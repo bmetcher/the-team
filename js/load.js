@@ -5,30 +5,31 @@ tad.w = 720;
 tad.h = 1080;
 
 // ---- Preload Assets ----
+// (we load most assets with "x = -tad.w" to hide them off-screen)
 
 // Player images
 const all_players_images = {
-    default_ship: load.image(0,0,"./images/player/default_ship.png"),
-    tank_ship: load.image(0,0,"./images/player/tank_ship.png")  // Added the ships here with correct names
+    default_ship: load.image(tad.w * 0.8,tad.h/3,"./images/player/default_ship.png"),
+    tank_ship: load.image(tad.w * 0.8,tad.h/3,"./images/player/tank_ship.png")  // Added the ships here with correct names
 }
 
 // Ammo images
 const all_ammo_images = {
-    bullet: load.image(0,0,"./images/ammo/bullet.png"),
-    big_bullet: load.image(0,0,"./images/ammo/bullet.png"),
-    binky_missile: load.image(0,0,"./images/ammo/missile.png"),
-    missile: load.image(0,0,"./images/ammo/missile.png")
+    bullet: load.image(-tad.w,0,"./images/ammo/bullet.png"),
+    big_bullet: load.image(-tad.w,0,"./images/ammo/bullet.png"),
+    binky_missile: load.image(-tad.w,0,"./images/ammo/missile.png"),
+    missile: load.image(-tad.w,0,"./images/ammo/missile.png")
 }
 
 // Enemy images
 const all_enemy_images = {
-    grunt: load.image(0,0, "./images/enemies/grunt.png"),
-    boss_grunt: load.image(0,0, "./images/enemies/boss_grunt.png"),
-    big_boss: load.image(0,0, "./images/enemies/big_boss.png"),
-    ice_enemy: load.image(0,0, "./images/enemies/ice_enemy.png"),
-    binky_enemy: load.image(0,0, "./images/enemies/binky_enemy.png"),
-    mini_boss: load.image(0,0, "./images/enemies/mini_boss.png"),
-    boss_ice_enemy: load.image(0,0, "./images/enemies/boss_ice_enemy.png"),
+    grunt: load.image(-tad.w,0, "./images/enemies/grunt.png"),
+    boss_grunt: load.image(-tad.w,0, "./images/enemies/boss_grunt.png"),
+    big_boss: load.image(-tad.w,0, "./images/enemies/big_boss.png"),
+    ice_enemy: load.image(-tad.w,0, "./images/enemies/ice_enemy.png"),
+    binky_enemy: load.image(-tad.w,0, "./images/enemies/binky_enemy.png"),
+    mini_boss: load.image(-tad.w,0, "./images/enemies/mini_boss.png"),
+    boss_ice_enemy: load.image(-tad.w,0, "./images/enemies/boss_ice_enemy.png"),
 }
 
 // Environment images
@@ -41,10 +42,10 @@ const all_environment_images = {
     nebula1: load.image(tad.w/2,0, "./images/background/nebula.png"),
     nebula2: load.image(tad.w/2,1620, "./images/background/nebula.png"),
     // Debris
-    rock1: load.image(0, 0, "./images/background/debris/rock1.png"),
-    rock2: load.image(0, 0, "./images/background/debris/rock2.png"),
-    rock3: load.image(0, 0, "./images/background/debris/rock3.png"),
-    fossil: load.image(0, 0, "./images/background/debris/fossil.png"),
+    rock1: load.image(-tad.w, 0, "./images/background/debris/rock1.png"),
+    rock2: load.image(-tad.w, 0, "./images/background/debris/rock2.png"),
+    rock3: load.image(-tad.w, 0, "./images/background/debris/rock3.png"),
+    fossil: load.image(-tad.w, 0, "./images/background/debris/fossil.png"),
 }
 
 // Game Screen images
@@ -72,24 +73,24 @@ function load_frames(directory, length) {
 
 // Animations
 const all_explosions = {
-    player: load.animation(0,0, ...load_frames("explosions/player_explosion_animation", 8)),
-    grunt: load.animation(0,0, ...load_frames("explosions/grunt_explosion_animation", 8)),
-    binky: load.animation(0,0, ...load_frames("explosions/binky_explosion_animation", 8)),
-    ice: load.animation(0,0, ...load_frames("explosions/ice_explosion_animation", 5)),
-    mini_boss: load.animation(0,0, ...load_frames("explosions/mini_boss_explosion_animation", 1)),
+    player: load.animation(-tad.w,0, ...load_frames("explosions/player_explosion_animation", 8)),
+    grunt: load.animation(-tad.w,0, ...load_frames("explosions/grunt_explosion_animation", 8)),
+    binky: load.animation(-tad.w,0, ...load_frames("explosions/binky_explosion_animation", 8)),
+    ice: load.animation(-tad.w,0, ...load_frames("explosions/ice_explosion_animation", 5)),
+    mini_boss: load.animation(-tad.w,0, ...load_frames("explosions/mini_boss_explosion_animation", 1)),
 }
 
 // Effect Animations
 const all_effects = {
-    emit: load.animation(0,0, ...load_frames("effects/emit", 31)),
-    felspell: load.animation(0,0, ...load_frames("effects/felspell", 91)),
-    fire: load.animation(0,0, ...load_frames("effects/fire", 61)),
-    freezing: load.animation(0,0, ...load_frames("effects/freezing", 86)),
-    magic8: load.animation(0,0, ...load_frames("effects/magic8", 61)),
-    midnight: load.animation(0,0, ...load_frames("effects/midnight", 61)),
-    nebula: load.animation(0,0, ...load_frames("effects/nebula", 61)),
-    sunburn: load.animation(0,0, ...load_frames("effects/sunburn", 61)),
-    vortex: load.animation(0,0, ...load_frames("effects/vortex", 61))
+    emit: load.animation(-tad.w,0, ...load_frames("effects/emit", 31)),
+    felspell: load.animation(-tad.w,0, ...load_frames("effects/felspell", 91)),
+    fire: load.animation(-tad.w,0, ...load_frames("effects/fire", 61)),
+    freezing: load.animation(-tad.w,0, ...load_frames("effects/freezing", 86)),
+    magic8: load.animation(-tad.w,0, ...load_frames("effects/magic8", 61)),
+    midnight: load.animation(-tad.w,0, ...load_frames("effects/midnight", 61)),
+    nebula: load.animation(-tad.w,0, ...load_frames("effects/nebula", 61)),
+    sunburn: load.animation(-tad.w,0, ...load_frames("effects/sunburn", 61)),
+    vortex: load.animation(-tad.w,0, ...load_frames("effects/vortex", 61))
 }
 
 // Files
