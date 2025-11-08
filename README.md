@@ -2,7 +2,7 @@
 **Teach and Draw 2025 MicroJam Project**
 
 ## 🧠 Overview
-**the-team** is a 2D top-down shooter built for the 2025 Teach and Draw MicroJam.  
+**the-team** is a 2D top-down shooter built for the 1-week 2025 Teach and Draw MicroJam.  
 The game features custom player and enemy sprites, dynamically generated backgrounds, and visual effects designed for an engaging arcade experience.
 
 ---
