@@ -268,7 +268,8 @@ function display_play_screen(){
     enemies.update();
     
     // change screens logic
-    check_buttons();   
+    // if (projectiles.game_over === true) { current_screen = END_GAME; }
+    check_buttons(projectiles.game_over);   
     
     // pause button
     draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_SMALL_BOTTOM_Y);      // to got to pause screen
@@ -360,7 +361,7 @@ function draw_button(button, desired_x, desired_y){
 }
 
 
-function check_buttons(){
+function check_buttons(game_over){
     // Checks to see if any button has been pressed, and performs relevant state changes and redirects.
 
     if (buttons.go_to_prepare.released || buttons.play_again.released){     // to prepare screen
@@ -375,7 +376,7 @@ function check_buttons(){
     } else if (buttons.return_to_main_menu.released){   // to main menu screen
         current_screen = MAIN_MENU;
 
-    } else if (buttons.end_game.released){              // to end game screen
+    } else if (buttons.end_game.released || game_over){              // to end game screen
         end_game_time = new Date();     // to hold time game ended, for leaderboard stat
         game_in_progress = false;       // to ensure that, if new game started, game elements are re-initialised
         current_screen = END_GAME;
