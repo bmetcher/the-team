@@ -218,8 +218,8 @@ function display_prepare_screen(){
     temp.draw()
 
     // display instruction on how to control ship
-    display_txt("to control your ship:", 340);
-    display_controls(375);
+    display_txt("to control your ship:", 330);
+    display_controls(365);
 
     // change screens logic
     check_buttons();
