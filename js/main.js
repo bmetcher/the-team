@@ -64,7 +64,7 @@ const RIGHT_X_NON_TITLE_TEXT = tad.w - LEFT_X_NON_TITLE_TEXT;
 const BUTTON_LRG_LEFT_X = tad.w/10*2.5;
 const BUTTON_LRG_RIGHT_X = tad.w/10*7.5;
 const BUTTON_SMALL_RIGHT_X = tad.w/50*47;
-const BUTTON_SMALL_BOTTOM_Y = tad.h - (tad.w-BUTTON_SMALL_RIGHT_X);
+const BUTTON_SMALL_BOTTOM_Y =  tad.h - (tad.w-BUTTON_SMALL_RIGHT_X);
 const BUTTON_LRG_BOTTOM_Y = tad.h - (tad.w-BUTTON_LRG_RIGHT_X) + 100;
 // Creation
 const buttons = {
@@ -75,7 +75,7 @@ const buttons = {
     go_to_play: create_menu_button("large", "play now"),
     return_to_pause: create_menu_button("large", "return"),
     go_to_controls: create_menu_button("large", "review controls"),
-    go_to_pause: create_menu_button("small", ""),
+    go_to_pause: create_menu_button("small", "p"),
     return_to_game: create_menu_button("large", "return to game"),
     end_game: create_menu_button("large", "end game"),
     play_again: create_menu_button("large", "play again"),
@@ -273,7 +273,7 @@ function display_play_screen(){
     check_buttons(projectiles.game_over, enemies.won);   
     
     // pause button 🛑🛑 causes a RangeError: Maximum call stack size exceeded 🛑🛑
-    //draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_SMALL_BOTTOM_Y);      // to got to pause screen
+    draw_button(buttons.go_to_pause, BUTTON_SMALL_RIGHT_X, BUTTON_SMALL_BOTTOM_Y);      // to got to pause screen
 
     // image for pause button
     img_pause_button.x = buttons.go_to_pause.x;
@@ -284,6 +284,12 @@ function display_play_screen(){
 
 
 function display_pause_screen(){
+    // Reset the camera from in-game effects
+    camera.zoom = 1;
+    camera.rotation = 0;
+    camera.x = tad.w/2;
+    camera.y = tad.h/2;
+        
     // pause screen image
     game_screens.pause_screen.draw()    // display pause screen image
 
