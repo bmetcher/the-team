@@ -158,7 +158,7 @@ export class PlayerManager {
 
         // Pan camera slightly in a direction according to the player's x/y co-ordinates
         camera.x = tad.w/2 - ((tad.w/2 - this.collider.x) / 10);
-        camera.y = tad.h/2 - ((tad.h/2 - this.collider.y) / 10) - this.collider.h;
+        camera.y = tad.h/2 - ((tad.h/2 - this.collider.y) / 10);
         // Zoom the camera slightly as the player moves upwards 
         camera.zoom = 1.1 - (this.collider.y / tad.h) / 4;  // arbitrary; should we clamp this?
 

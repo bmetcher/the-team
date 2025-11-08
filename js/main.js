@@ -1,4 +1,4 @@
-import { tad, text, keys, make, time } from "../lib/TeachAndDraw.js";
+import { tad, text, keys, make, time, camera } from "../lib/TeachAndDraw.js";
 import { EnemyManager } from "./enemy_manager.js";
 import { EnvironmentManager } from "./environment_manager.js";
 import { PlayerManager } from "./player_manager.js";
@@ -98,7 +98,7 @@ let current_screen = INTRO;                         // track current screen; ini
 // ------------------------------------------------- Update -------------------------------------------------
 
 tad.use(update);
-// tad.debug = true;
+tad.debug = true;
 
 // Main draw loop
 function update() {
@@ -305,6 +305,11 @@ function display_pause_screen(){
 
 
 function display_end_game_screen(){
+    // Reset the camera from in-game effects
+    camera.zoom = 1;
+    camera.rotation = 0;
+    camera.x = tad.w/2;
+    camera.y = tad.h/2;
     // end game screen image
     let won = true;
     if (won){
