@@ -1,5 +1,6 @@
 {
     "grunt": {
+        "type": "grunt",
         "max_hp": 2,
         "height": 32,
         "width": 32,
@@ -8,8 +9,9 @@
         "primary_weapon": "missile",
         "scale": 100,
         "explosion_animation_name": "grunt"
-    },
+    }, 
     "enemy2": {
+        "type": "special",
         "max_hp": 2,
         "height": 32,
         "width": 32,
