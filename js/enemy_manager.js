@@ -75,7 +75,7 @@ export class EnemyManager {
             // spawn wave of enemies periodically while waves remain
             if (this.wave_count > 0){
                 if (ready && !this.spawning) {
-                    console.log(this.all_groups)
+                    //console.log(this.all_groups)
                     this.spawn_wave();
                     this.wave_count -=1;
                 }
