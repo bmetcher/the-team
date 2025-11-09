@@ -107,7 +107,7 @@ let camera_prev_y = camera_start_y;
 // ------------------------------------------------- Update -------------------------------------------------
 
 tad.use(update);
-//tad.debug = true;
+// tad.debug = true;
 
 // Main draw loop
 function update() {
