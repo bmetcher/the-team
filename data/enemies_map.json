@@ -15,8 +15,8 @@
     "boss_grunt": {
         "type": "boss",
         "max_hp": 10,
-        "height": 64,
-        "width": 64,
+        "height": 75,
+        "width": 75,
         "mass": 2,
         "friction": 1,
         "primary_weapon": "missile",
@@ -28,8 +28,8 @@
         "big_boss": {
         "type": "big_boss",
         "max_hp": 20,
-        "height": 32,
-        "width": 32,
+        "height": 200,
+        "width": 240,
         "mass": 2,
         "friction": 1,
         "primary_weapon": "missile",
@@ -80,8 +80,8 @@
     "mini_boss": {
         "type": "special",
         "max_hp": 6,
-        "height": 120,
-        "width": 90,
+        "height": 80,
+        "width": 60,
         "mass": 1,
         "friction": 1,
         "scale": 100,

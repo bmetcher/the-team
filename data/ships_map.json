@@ -57,7 +57,7 @@
         "special_ability": "invincibility",
         "ability_duration": 4,
         
-        "max_hp": 20,
+        "max_hp": 1000,
         "explosion_animation_name": "player"
     }
 }

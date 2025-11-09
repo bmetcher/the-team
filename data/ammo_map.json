@@ -30,7 +30,7 @@
             "collider_width": 8,
             "collider_height": 10,
             "filepath": "./images/ammo/bullet.png",
-            "scale": 190,
+            "scale": 110,
             "speed": 35,
             "direction": 0,
             "friction": 0,
