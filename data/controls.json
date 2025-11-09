@@ -7,6 +7,7 @@
         {"action": "SPECIAL ABILITY", "control": "G | MOUSE RIGHT"},
         {"action": "FIRE", "control": "SPACE | MOUSE LEFT"},
         {"action": "BOOST", "control": "SHIFT"},
-        {"action": "DIAGONAL", "control": "TWO WASD KEYS"}
+        {"action": "DIAGONAL", "control": "TWO WASD KEYS"},
+        {"action": "PAUSE GAME", "control": "ESCAPE | PAUSE BUTTON"}
     ]
 }
